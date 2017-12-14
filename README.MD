@@ -1,0 +1,34 @@
+# A Simple Chat Server
+A simple chat server build entirely with node.js a test server is available at
+chat.techcentroid.com/ room id
+It can be anything you want
+eg: chat.techcentroid.com/123
+Then share that URL with your friend so that they can join your room.
+
+**How to use:**
+1. You must have node and npm installed
+2. Download the source then in terminal type npm install to install the dependencies.
+3. Then type node app.js to run the app
+4. Go to localhost:3000/unique+id
+eg http://localhost:3000/12
+12 is the dynamic room which you've created, similarly you can create any number of rooms when someone visits http://localhost:3000/12 they'll get connected to your room i.e 12
+
+
+**Features**
+* Dynamic Chat Rooms
+* Users online in a chat room
+* Mobile Support (iPhone, iPad - mobile webkit tested)
+
+
+**TODO:**
+* Delete the room from the array when no users are online
+* Create a admin interface to view all the users connected and active rooms
+* Create a index page that allows random generation of unique urls
+
+**NOTE: Security Issue**
+This is not secure as the client directly calls the server to addUser and sendMessage.
+A possible implementation to solve this problem would be to remove socket.emit("adduser"), and storing the username in the client session storage and allow the server to fetch the username from the session storage (or a cookie).
+
+Another problem is when the user sends message, it directly calls the server, to prevent this we can send the message as "post" to a specific url and the server can fetch the message from the response.
+
+I am working on another project right now otherwise I'd have fixed it myself, but I'll fix it in couple of days.
