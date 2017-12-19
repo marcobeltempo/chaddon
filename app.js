@@ -40,11 +40,15 @@ app.get('/', function(req, res) {
 	res.sendfile('views/index.html', {root:__dirname});
     });
 
-
+app.get('/login', function(req, res) {
+        params = req.params.id;
+        res.sendfile('views/login.html', {root:__dirname});
+    });
+    
 
 app.get('/:id', function(req, res) {
     params = req.params.id;
-	res.sendfile('views/post.html', {root:__dirname});
+	res.sendfile('views/chatroom.html', {root:__dirname});
     });
 
 io = io.listen(app);
