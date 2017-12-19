@@ -24,3 +24,16 @@
 #usernameLabel {
 	color: #fff;
 }
+
+#googleSignIn {
+	display: inline-block; 
+	margin-left: 10px;
+}
+
+.hide {
+	display: none;
+}
+
+#message {
+	margin-bottom: 3px;
+}
