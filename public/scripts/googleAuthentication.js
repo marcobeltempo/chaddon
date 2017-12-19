@@ -11,9 +11,9 @@ function onSignIn(googleUser) {
     sessionStorage.username = profile.getName();
     userProf = profile.getName();
     $("#usernameLabel").text("Welcome, " + profile.getName());
-    $("#message").removeClass("hide");
-    $("#googleSignIn").hide();
-    $("#send").removeClass("hide");
+    $('#loginGoogleAccountBar').addClass("hide");
+    $('#googleSignIn').attr("disabled", true);
+    $("#sendMessageBar").removeClass("hide");
     if(userProf != "") {
              var usr = userProf;
              var safe = usr.replace(/&/g, '&amp;').replace(/</g, '&lt;')

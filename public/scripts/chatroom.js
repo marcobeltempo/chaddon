@@ -32,24 +32,24 @@ $(function () {
             console.log("message is not null");
             socket.emit('message', {message: safe, user: sessionStorage.username, timestamp: new Date()}); 
         }
-        $("#message").val('');  
-        $("#message" ).focus();          
+        document.getElementById("message").value = "";        
     });
 
+    
     //handle enter key event on messagebox
     $("#message").keydown(function (e) {
         if(e.which === 13){
             //handle message send
             var msg = $('#message').val();
             $('#message').val('');
+            e.preventDefault();
             if(msg != ""){
                 var safe = msg.replace(/&/g, '&amp;').replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
                 console.log("message is not null");
                 socket.emit('message', {message: safe, user: user, timestamp: new Date()}); 
-            }        
-            $("#message").val('');    
-            e.preventDefault();           
+            }
+            document.getElementById("message").value = "";            
         }
     });
 
@@ -94,7 +94,7 @@ $(function () {
         var html = "<div class='" + postClass + "'> <div class='post-inner'><b>"
         + data.user + "</b> " + data.message + "</div></div>";
         console.log("Message " + html);
-        $('#livechat').append(html);
+        $('#liveChat').append(html);
         $("html, body").animate({ scrollTop: $(document).height() }, "slow");
     });
 });
