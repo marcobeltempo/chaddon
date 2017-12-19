@@ -3,7 +3,9 @@
    <head>
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <meta name="google-signin-scope" content="profile email">	  
+	  <meta name="google-signin-client_id" content="94568658962-oqp52u4s7kk7nl45j06hgppiisc34olq.apps.googleusercontent.com">  
       <title>Chaddon</title>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -12,7 +14,8 @@
       <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-      <![endif]-->
+	  <![endif]-->
+	  <script src="https://apis.google.com/js/platform.js" async defer></script>
       <link rel="stylesheet" href="stylesheets/style.css">
    </head>
    <body>
@@ -45,11 +48,12 @@
       </div>
       <nav class="navbar navbar-inverse navbar-fixed-bottom">
          <div class="container-fluid">
+				
             <form class="navbar-form">
-               <label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label>
-               <input type="text" id="username" placeholder="Enter username" style="margin-bottom: 3px;" />
+			   <label id="usernameLabel" class="col-2 col-form-label">Please Sign In, <a class="brand"></a></label>
+			   <div id="googleSignIn" style="display: inline-block; margin-left: 10px;"class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>			   			   
                <input class="span8" type="text" id="message" placeholder="Be nice" style="margin-bottom: 3px;" />
-               <input class="btn btn-primary span2" type="button" id="send" value="Send" />
+               <input style="display: none;" class="btn btn-primary span2" type="button" id="send" value="Send" />
             </form>
          </div>
          </div>
@@ -59,15 +63,34 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
       <script src="/socket.io/socket.io.js"></script>
       <script>
-         var user = null;
+		 var user = null;
+		 var userProf;
+		 
+		 function onSignIn(googleUser) {
+		    // Useful data for your client-side scripts:
+			var profile = googleUser.getBasicProfile();
+			console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+			console.log('Full Name: ' + profile.getName());					
+			// The ID token you need to pass to your backend:
+			var id_token = googleUser.getAuthResponse().id_token;
+			//console.log("ID Token: " + id_token);
+			sessionStorage.username = profile.getName();
+			userProf = profile.getName();
+			$("#usernameLabel").text("Welcome, " + profile.getName());
+			$("#message").show();
+			$("#googleSignIn").hide();
+			$("#send").show();
+		 };
+
          $(function () {
          	var socket = io.connect(document.location.origin);
          	socket.on('news', function (data) {
          		console.log(data);
          	});
-         
+         	
          	//check weather username is stored in the session, if yes then directly authenticate the user
          	if(sessionStorage.username != undefined){
+				 console.info("user session undefined");
          		$('#username').hide(sessionStorage.username);
          		$('.brand').html();
          		$('.brand').show();
@@ -83,8 +106,8 @@
          	}	
          
          	function addUser() {
-         		if($('#username').val() != ""){
-         			var usr = $('#username').val();
+         		if(userProf != ""){
+         			var usr = userProf;
          			var safe = usr.replace(/&/g, '&amp;').replace(/</g, '&lt;')
          			.replace(/>/g, '&gt;').replace(/"/g, '&quot;');
          			sessionStorage.username = safe;
@@ -111,14 +134,13 @@
          	});
          
          	//handle enter key event on username textbox
-         	$('#username').keydown(function (e) {
-         		if(e.which === 13){
-         			addUser();
-         		}
-         	});
+         //	$('#username').keydown(function (e) {
+         	//	if(e.which === 13){
+         	//	}
+         	//});
          
          	//handle enter key event on messagebox
-         	$("#message").keydown(function (e) {
+         /*	$("#message").keydown(function (e) {
          		if(e.which === 13){
          			//handle message send
          			var msg = $('#message').val();
@@ -130,7 +152,7 @@
          				socket.emit('message', {message: safe, user: user, timestamp: new Date()}); 
          			}
          		}
-         	});
+         	});*/
          
          	socket.on('userAdded', function(data) {
          		//add banner containing the username
