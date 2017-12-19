@@ -32,7 +32,8 @@ $(function () {
             console.log("message is not null");
             socket.emit('message', {message: safe, user: sessionStorage.username, timestamp: new Date()}); 
         }
-        $("#message").val('');           
+        $("#message").val('');  
+        $("#message" ).focus();          
     });
 
     //handle enter key event on messagebox

@@ -46,17 +46,13 @@
          </div>
       </div>
       <nav class="navbar navbar-inverse navbar-fixed-bottom">
-        <div class="container-fluid hide" id="sendMessageBar">
-            <div class="container-fluid" id="loginGoogleAccountBar">
-               <label id="signInLabel" class="col-2 col-form-label">Please Sign In,</label>
-               <div id="googleSignIn" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-            </div>
-         </div>
-         <form class="navbar-form" >
-         <label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label>
-         <input class="span8" type="text" id="message" placeholder="Be nice"/>
-         <!--<input class="btn btn-primary span2" type="button" id="sendGoogleLogin" value="Login" />*/-->
-         <input class="btn btn-primary span2"  type="button" id="send" value="Send" />
+         <div class="container-fluid">	
+            <form class="navbar-form">
+			   <label id="usernameLabel" class="col-2 col-form-label">Please Sign In, <a class="brand"></a></label>
+			   <div id="googleSignIn" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>			   			   
+			   <input class="span8 hide" type="text" id="message" placeholder="Be nice"/>
+               <input class="btn btn-primary span2 hide" type="button" id="send" value="Send" />
+            </form>
          </div>
          </div>
       </nav>
