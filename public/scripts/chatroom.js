@@ -32,7 +32,7 @@ $(function () {
             console.log("message is not null");
             socket.emit('message', {message: safe, user: sessionStorage.username, timestamp: new Date()}); 
         }
-        document.getElementById("message").value = "";        
+        $("#message").val('');           
     });
 
     //handle enter key event on messagebox
@@ -46,8 +46,9 @@ $(function () {
                 .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
                 console.log("message is not null");
                 socket.emit('message', {message: safe, user: user, timestamp: new Date()}); 
-            }
-            document.getElementById("message").value = "";            
+            }        
+            $("#message").val('');    
+            e.preventDefault();           
         }
     });
 
