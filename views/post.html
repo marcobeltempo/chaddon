@@ -52,7 +52,9 @@
             <form class="navbar-form">
 			   <label id="usernameLabel" class="col-2 col-form-label">Please Sign In, <a class="brand"></a></label>
 			   <div id="googleSignIn" style="display: inline-block; margin-left: 10px;"class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>			   			   
-               <input class="span8" type="text" id="message" placeholder="Be nice" style="margin-bottom: 3px;" />
+			   <input style="display: none;" class="span8" type="text" id="message2" placeholder="Be nice2" style="margin-bottom: 3px;" />
+			   <input class="span8" type="text" id="message" placeholder="Be nice" style="margin-bottom: 3px;" />
+			   
                <input style="display: none;" class="btn btn-primary span2" type="button" id="send" value="Send" />
             </form>
          </div>
@@ -130,17 +132,12 @@
          			.replace(/>/g, '&gt;').replace(/"/g, '&quot;');
          			console.log("message is not null");
          			socket.emit('message', {message: safe, user: sessionStorage.username, timestamp: new Date()}); 
-         		}
+				 }
+				 document.getElementById("message").value = "";
          	});
          
-         	//handle enter key event on username textbox
-         //	$('#username').keydown(function (e) {
-         	//	if(e.which === 13){
-         	//	}
-         	//});
-         
          	//handle enter key event on messagebox
-         /*	$("#message").keydown(function (e) {
+         	$("#message").keydown(function (e) {
          		if(e.which === 13){
          			//handle message send
          			var msg = $('#message').val();
@@ -152,7 +149,7 @@
          				socket.emit('message', {message: safe, user: user, timestamp: new Date()}); 
          			}
          		}
-         	});*/
+         	});
          
          	socket.on('userAdded', function(data) {
          		//add banner containing the username
