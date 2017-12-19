@@ -1,39 +1,68 @@
+* {
+    box-sizing: border-box;
+}
+.chat-row {
+    height: 500px;
+    bottom: 0;
+    display: flex;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: #e7e7e7;
+}
+
+/*Chat Column*/
+.chat-left {
+    width: 75%;
+    max-height: inherit;
+    float: left;
+    overflow-y: auto;
+    flex-direction: column;
+}
 .post-current {
-	border-left: 6px solid #636ee7;
+    border-left: 6px solid #FAC32B;
+    background-color: #d4d0f7;
 }
-
 .post-inner {
-	margin-left: 10px;
-	word-wrap: break-word;
+    margin-left: 10px;
+    word-wrap: break-word;
 }
-
 .post-other {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	border-left: 6px solid #c3b8b8;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-left: 6px solid #505050;
+    background-color: #d8d8d8;
+}
+#liveChat {
+    padding: 10px 73px;
 }
 
-.users_online {
-	background-color:#FAC32B
+/*Users Column*/
+.chat-right {
+    width: 25%;
+    max-height: inherit;
+    float: right;
+    padding: 16px;
+    background-color: #FAC32B;
+    overflow-y: auto;
 }
-
-#online {
-	list-style: none;
+#onlineUserList {
+    list-style: none;
 }
-
 #usernameLabel {
 	color: #fff;
 }
-
 #googleSignIn {
 	display: inline-block; 
 	margin-left: 10px;
 }
-
 .hide {
 	display: none;
 }
-
 #message {
 	margin-bottom: 3px;
+  color: #fff;
+}
+#messageField {
+    margin-left: 20px;
+    width: 85%;
 }
