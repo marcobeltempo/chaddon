@@ -9,8 +9,8 @@
     box-sizing: border-box;
     background-color: #e7e7e7;
 }
-/*Chat Column*/
 
+/*Chat Column*/
 .chat-left {
     width: 75%;
     max-height: inherit;
@@ -35,8 +35,8 @@
 #liveChat {
     padding: 10px 73px;
 }
-/*Users Column*/
 
+/*Users Column*/
 .chat-right {
     width: 25%;
     max-height: inherit;
@@ -49,7 +49,18 @@
     list-style: none;
 }
 #usernameLabel {
-    color: #fff;
+	color: #fff;
+}
+#googleSignIn {
+	display: inline-block; 
+	margin-left: 10px;
+}
+.hide {
+	display: none;
+}
+#message {
+	margin-bottom: 3px;
+  color: #fff;
 }
 #messageField {
     margin-left: 20px;
