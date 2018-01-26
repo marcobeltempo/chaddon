@@ -26,7 +26,6 @@
 }
 
 #googleSignIn {
-	display: inline-block; 
 	margin-left: 10px;
 }
 
@@ -36,4 +35,86 @@
 
 #message {
 	margin-bottom: 3px;
+}
+
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#text{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+.signIn {
+	text-align: center;
+	margin-left:50px;
+}
+
+.overlayLogo1 {
+	position: absolute;
+	color: white;
+    top: 34%;
+    left: 45%;
+}
+
+.chatAlign {
+    position: fixed;
+    height: 50px;
+}
+
+.parallax { 
+    /* The image used */
+    background-image: url("../images/blurry_blue.jpg");
+
+    /* Set a specific height */
+    height: 500px; 
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.overlayLogo2 {
+	color: white;
+	position: absolute;
+    top: 40%;
+    left: 45%;
+}
+
+.usernameOverlay {
+	color: white;
+	position: absolute;
+    top: 40%;
+    left: 45%;
+    padding-top: 10px;
+}
+
+.usernameOverlay2 {
+	color: white;
+	position: absolute;
+    top: 43%;
+    left: 45%;
+}
+
+.chatPad {
+	padding-top: 10px;
+	text-align: center;
 }
