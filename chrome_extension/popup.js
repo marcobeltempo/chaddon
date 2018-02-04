@@ -16,7 +16,7 @@ function getCurrentTabUrl(callback) {
     currentWindow: true
   };
 
-  chrome.tabs.query(queryInfo, (tabs) => {
+  chrome.tabs.query(queryInfo, tabs => {
     // chrome.tabs.query invokes the callback with a list of tabs that match the
     // query. When the popup is opened, there is certainly a window and at least
     // one tab, so we can safely assume that |tabs| is a non-empty array.
@@ -32,11 +32,10 @@ function getCurrentTabUrl(callback) {
     // If you want to see the URL of other tabs (e.g. after removing active:true
     // from |queryInfo|), then the "tabs" permission is required to see their
     // "url" properties.
-    console.assert(typeof url == 'string', 'tab.url should be a string');
+    console.assert(typeof url == "string", "tab.url should be a string");
 
     callback(url);
   });
-
 }
 
 /**
@@ -67,7 +66,7 @@ function getSavedBackgroundColor(url, callback) {
   // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
   // for chrome.runtime.lastError to ensure correctness even when the API call
   // fails.
-  chrome.storage.sync.get(url, (items) => {
+  chrome.storage.sync.get(url, items => {
     callback(chrome.runtime.lastError ? null : items[url]);
   });
 }
@@ -87,26 +86,25 @@ function saveBackgroundColor(url, color) {
   chrome.storage.sync.set(items);
 }
 
-
 /**
  * Add text to chatroom
  *
  * @param {string} Chat message to be added.
  */
 function updateChat(message) {
-  document.getElementById('chatroom').innerHTML += ('<br>' + message);
+  document.getElementById("chatroom").innerHTML += "<br>" + message;
 }
 
-function clearChatField(){
-	document.getElementById("message").value = "";
+function clearChatField() {
+  document.getElementById("message").value = "";
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    var chatroom = document.getElementById('chat');
+document.addEventListener("DOMContentLoaded", () => {
+  var chatroom = document.getElementById("chat");
 
-    // Update chat and clear message field
-    chatroom.addEventListener('click', () => {
-      updateChat(document.getElementById('message').value);
-	  clearChatField();
-    });
+  // Update chat and clear message field
+  chatroom.addEventListener("click", () => {
+    updateChat(document.getElementById("message").value);
+    clearChatField();
+  });
 });
