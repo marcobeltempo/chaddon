@@ -1,4 +1,4 @@
-![Chaddon Logo](public/chaddon_logo.jpeg)
+![Chaddon Logo](https://chaddon.herokuapp.com/images/chaddon_logo.jpeg)
 
 ## Getting Started
 
