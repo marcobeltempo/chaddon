@@ -14,7 +14,18 @@
 }
 
 .users_online {
-	background-color:#FAC32B
+	border: 3px groove #555555;
+	background-color:#FAFAFA;
+	height:190px;
+	padding-top:10px;
+	text-align: center;
+}
+
+.chaddon_headings {
+	font-family: "Bookman Old Style","Times New Roman";
+	font-weight: bold;
+	text-align: center;
+	font-size: 24px;
 }
 
 #online {
