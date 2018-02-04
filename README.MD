@@ -1,6 +1,4 @@
-![Chaddon Logo](./public/chaddon_logo.jpeg)
-
-[![Build Status](https://travis-ci.org/marcobeltempo/chaddon.svg?branch=master)](https://travis-ci.org/marcobeltempo/chaddon)
+![Chaddon Logo](public/chaddon_logo.jpeg)
 
 ## Getting Started
 
