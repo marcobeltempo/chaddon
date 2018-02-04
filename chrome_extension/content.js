@@ -22,9 +22,29 @@ chatWindow.style.zIndex="9999";
 //positioned in the chatroom window, the rest of the chat functionality from heroku
 var iframe = document.createElement('iframe');
 chatWindow.appendChild(iframe);
-iframe.src = "https://chaddon.herokuapp.com"; 
+iframe.src = "https://chaddon.herokuapp.com/" + extractHostname(document.URL); 
 iframe.style.height="560px";
-iframe.style.width="380px";
+iframe.style.width="800px";
+
+
+function extractHostname(url) {
+    var hostname;
+    //find & remove protocol (http, ftp, etc.) and get hostname
+
+    if (url.indexOf("://") > -1) {
+        hostname = url.split('/')[2];
+    }
+    else {
+        hostname = url.split('/')[0];
+    }
+
+    //find & remove port number
+    hostname = hostname.split(':')[0];
+    //find & remove "?"
+    hostname = hostname.split('?')[0];
+
+    return hostname;
+}
 
 notify.addEventListener("click",
 	function (){
@@ -41,7 +61,6 @@ chrome.runtime.onMessage.addListener(
     function getUrl (request, sender, sendResponse) {
       if( request.message === "clicked_browser_action" ) {
         var firstHref = $("a[href^='http']").eq(0).attr("href");
-  
         console.log('The URL is: ', firstHref);
         sendRespone= firstHref;
       }
