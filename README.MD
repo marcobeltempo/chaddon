@@ -1,34 +1,40 @@
-# A Simple Chat Server
-A simple chat server build entirely with node.js a test server is available at
-chat.techcentroid.com/ room id
-It can be anything you want
-eg: chat.techcentroid.com/123
-Then share that URL with your friend so that they can join your room.
+![Chaddon Logo](http://i64.tinypic.com/nd7mop.jpg)
 
-**How to use:**
-1. You must have node and npm installed
-2. Download the source then in terminal type npm install to install the dependencies.
-3. Then type node app.js to run the app
-4. Go to localhost:3000/unique+id
-eg http://localhost:3000/12
-12 is the dynamic room which you've created, similarly you can create any number of rooms when someone visits http://localhost:3000/12 they'll get connected to your room i.e 12
+## Getting Started
+
+### Examples
 
 
-**Features**
-* Dynamic Chat Rooms
-* Users online in a chat room
-* Mobile Support (iPhone, iPad - mobile webkit tested)
+### Prerequisites
+
+* node v8.9 and up
+* npm 5.5 and up
+
+### Chrome extension Dev-Isntall
+
+### Dev-Install
+Setup chaddon on your local machine
+
+1.  Fork the chaddon repository to your profile
+2. `git clone https://github.com/marcobeltempo/chaddon`
+3. `cd chaddon`
+4. `npm install`
+5. `npm run start:dev` //(optional)
+6.  Navigate to http://localhost:3000/ to view the results
+
+## Running the Test Suite
+* `npm start:dev` - automatically refreshes the server when changes are made
+* `npm test` - performs an eslint + prettier
+* `npm run test:lint:fix` - automatically fix any styling and validation errors. (Double check your changes)
+
+## Contributing
 
 
-**TODO:**
-* Delete the room from the array when no users are online
-* Create a admin interface to view all the users connected and active rooms
-* Create a index page that allows random generation of unique urls
+## Authors
 
-**NOTE: Security Issue**
-This is not secure as the client directly calls the server to addUser and sendMessage.
-A possible implementation to solve this problem would be to remove socket.emit("adduser"), and storing the username in the client session storage and allow the server to fetch the username from the session storage (or a cookie).
+* **Michael Pierre**
+* **Evan Davies**
+* **Geoff McCollam**
+* **Marco Beltempo**
 
-Another problem is when the user sends message, it directly calls the server, to prevent this we can send the message as "post" to a specific url and the server can fetch the message from the response.
-
-I am working on another project right now otherwise I'd have fixed it myself, but I'll fix it in couple of days.
+## License
