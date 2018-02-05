@@ -17,50 +17,58 @@
 	  <![endif]-->
       <link rel="stylesheet" href="stylesheets/style.css">
    </head>
-   <body>
-      <nav class="navbar navbar-inverse">
-         <div class="container-fluid">
-            <div class="navbar-header">
-               <a class="navbar-brand" href="#"><img src="./images/chaddon_logo.jpeg" alt="Chaddon Logo" height="28" width="28">
-               </a>
-            </div>
-            <ul class="nav navbar-nav">
-               <li><a href="#">Home</a></li>
-               <li class="active"><a href="/lobby">Lobby</a></li>
-            </ul>
-            <form class="navbar-form navbar-right" id="search-form" onSubmit="return channelSearch();">
-               <div class="form-group">
-                  <div class="input-group">
-                     <input id="channel-search" type="text" class="form-control" name="search"  placeholder="Find a channel..">
-                     <span class="search-btn input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
-                  </div>
-               </div>
-            </form>
-         </div>
-      </nav>
-      <div class="row">
-         <div class="col-sm-10">
-            <div id="liveChat" class="well"></div>
-         </div>
-         <div class="users_online col-sm-2">
-            <h4>Online</h4>
-            <ul id="onlineUserList"></ul>
-         </div>
-      </div>
-      <nav class="navbar navbar-inverse navbar-fixed-bottom">
-   <div class="container-fluid" id="loginGoogleAccountBar">
-      <label id="signInLabel" class="col-2 col-form-label">Please Sign In,</label>
-      <div id="googleSignIn" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-   </div>
-   <div class="container-fluid hide" id="sendMessageBar">
+   <body  onload="checkUsername()">
+ <!--Login Overlay -->
+            <div id="overlay">
+                        <div id="text">Chaddon</div>                  
+                              <h3 class="overlayLogo1">Temporary User</h3>                             
+                              <div class="form-group usernameOverlay">
+                                    <label for="usr">Name:</label>
+                                    <input id="usrName" type="text" class="form-control" id="usr" maxlength="10" placeholder="Enter username"> 
+                                    <h3>Or Sign In with Google</h3> 
+                                    <div class="signIn">
+                                          <div id="googleSignIn" class="g-signin2 signIn" data-onsuccess="onSignIn" data-theme="dark"></div>
+                                    </div>  
+                                    <div class="chatPad">
+                                          <button id="enterChat" onclick="userLogin()" type="submit" class="btn btn-primary">Let's Chat!</button>
+                                    </div>
+                              </div>
+                        </div>
 
-<form class="navbar-form" >
-<label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label>
-<input class="span8" type="text" id="message" placeholder="Be nice"/>
-<!--<input class="btn btn-primary span2" type="button" id="sendGoogleLogin" value="Login" />*/-->
-<input class="btn btn-primary span2"  type="button" id="send" value="Send" />
-</div>
-</div>
+
+	   <div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="chaddon_headings">Channels</div>
+				<div class="users_online">
+				   <ul class="list-group list-unstyled">
+					<li class="list-group-item-action"><a href="#">Home</a></li>
+					<li class="list-group-item-action active"><a href="/lobby">Lobby</a></li>
+					</ul>
+				</div>
+				
+				<div class="chaddon_headings">Online</div>
+				<div class="users_online">
+					<ul id="onlineUserList" class="list-unstyled"></ul>
+				</div>
+            </div>
+			
+			<div class="col-sm-9">
+				<div class="chaddon_headings" id="current-channel"></div>
+				<div id="liveChat" class="well"></div>
+			</div>
+           
+		</div>
+	   </div>
+   
+      <nav class="navbar navbar-inverse navbar-fixed-bottom">
+	   <div class="container-fluid" id="loginGoogleAccountBar">
+		  
+	   </div>
+	   <div class="container-fluid hide" id="sendMessageBar">
+
+			
+		</div>
 
       </nav>
 	  <!-- Including Bootstrap JS (with its jQuery dependency) so that dynamic components work -->
