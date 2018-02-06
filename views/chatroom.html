@@ -17,7 +17,25 @@
 	  <![endif]-->
       <link rel="stylesheet" href="stylesheets/style.css">
    </head>
-   <body>
+   <body  onload="checkUsername()">
+ <!--Login Overlay -->
+            <div id="overlay">
+                        <div id="text">Chaddon</div>                  
+                              <h3 class="overlayLogo1">Temporary User</h3>                             
+                              <div class="form-group usernameOverlay">
+                                    <label for="usr">Name:</label>
+                                    <input id="usrName" type="text" class="form-control" id="usr" maxlength="10" placeholder="Enter username"> 
+                                    <h3>Or Sign In with Google</h3> 
+                                    <div class="signIn">
+                                          <div id="googleSignIn" class="g-signin2 signIn" data-onsuccess="onSignIn" data-theme="dark"></div>
+                                    </div>  
+                                    <div class="chatPad">
+                                          <button id="enterChat" onclick="userLogin()" type="submit" class="btn btn-primary">Let's Chat!</button>
+                                    </div>
+                              </div>
+                        </div>
+
+
 	   <div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-3">
@@ -36,7 +54,7 @@
             </div>
 			
 			<div class="col-sm-9">
-				<div class="chaddon_headings" id="current-channel">Example chat</div>
+				<div class="chaddon_headings" id="current-channel"></div>
 				<div id="liveChat" class="well"></div>
 			</div>
            
@@ -45,16 +63,11 @@
    
       <nav class="navbar navbar-inverse navbar-fixed-bottom">
 	   <div class="container-fluid" id="loginGoogleAccountBar">
-		  <label id="signInLabel" class="col-2 col-form-label">Please Sign In,</label>
-		  <div id="googleSignIn" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+		  
 	   </div>
 	   <div class="container-fluid hide" id="sendMessageBar">
 
-			<form class="navbar-form" >
-			<label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label>
-			<input class="span8" type="text" id="message" placeholder="Be nice"/>
-			<!--<input class="btn btn-primary span2" type="button" id="sendGoogleLogin" value="Login" />*/-->
-			<input class="btn btn-primary span2"  type="button" id="send" value="Send" />
+			
 		</div>
 
       </nav>
