@@ -1,14 +1,12 @@
-![Chaddon Logo](./public/chaddon_logo.jpeg)
-
-[![Build Status](https://travis-ci.org/marcobeltempo/chaddon.svg?branch=master)](https://travis-ci.org/marcobeltempo/chaddon)
-
-## Getting Started
-
-### Examples
-
-
 ### Prerequisites
 
+* node v8.9 and up
+* npm 5.5 and up
+
+### Chrome extension Dev-Isntall
+
+### Dev-Install
+Setup chaddon on your local machine
 * node v8.9 and up
 * npm 5.5 and up
 
