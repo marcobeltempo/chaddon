@@ -1,12 +1,12 @@
-![Chaddon Logo](http://i64.tinypic.com/nd7mop.jpg)
-
-## Getting Started
-
-### Examples
-
-
 ### Prerequisites
 
+* node v8.9 and up
+* npm 5.5 and up
+
+### Chrome extension Dev-Isntall
+
+### Dev-Install
+Setup chaddon on your local machine
 * node v8.9 and up
 * npm 5.5 and up
 
