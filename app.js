@@ -11,8 +11,7 @@ var app = (module.exports = express.createServer());
 const { Client } = require("pg");
 
 const client = new Client({
-  connectionString:
-  process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
   ssl: true
 });
 
@@ -165,24 +164,36 @@ io.sockets.on("connection", function(socket) {
   //pierre
   socket.on("verifyUser", function(data) {
     var token = generateUnid();
-    var sql =
-      "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
-      data +
-      "','" +
-      token +
-      "')";
-    client.query(sql, (err, result) => {
+    var insert;
+    var usernameCheck =
+      "SELECT name FROM tbl_verified_user WHERE name=" + "'" + data + "'";
+    client.query(usernameCheck, (err, result) => {
       if (err) {
-        console.info(err);
+        console.log(err);
+      } else if (result.rowCount > 0) {
+        console.log("Record found");
+        io.sockets.emit("usernameTaken", insert);
+      } else {
+        var sql =
+          "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
+          data +
+          "','" +
+          token +
+          "')";
+        client.query(sql, (err, result) => {
+          if (err) {
+            console.info(err);
+          }
+          console.log("1 record inserted");
+        });
+        io.sockets.emit("verifySuccess", {
+          username: data,
+          token: token
+        });
       }
-      console.log("1 record inserted");
     });
 
     console.log(generateUnid());
-    io.sockets.emit("verifySuccess", {
-      username: data,
-      token: token
-    });
   });
 
   socket.on("sendChatName", function() {
