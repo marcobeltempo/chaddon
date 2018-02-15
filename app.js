@@ -11,8 +11,7 @@ var app = (module.exports = express.createServer());
 const { Client } = require("pg");
 
 const client = new Client({
-  connectionString:
-    "postgres://vzmybolmqnqawz:9c76c9b8acb8d24c9525d7a2ffed581ece9a00da74d823a4379b648a46eb2183@ec2-54-197-253-122.compute-1.amazonaws.com:5432/d53mgdp1b3o5r0",
+  connectionString: process.env.DATABASE_URL,
   ssl: true
 });
 
