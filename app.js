@@ -12,7 +12,7 @@ const { Client } = require("pg");
 
 const client = new Client({
   connectionString:
-  process.env.DATABASE_URL,
+    "postgres://vzmybolmqnqawz:9c76c9b8acb8d24c9525d7a2ffed581ece9a00da74d823a4379b648a46eb2183@ec2-54-197-253-122.compute-1.amazonaws.com:5432/d53mgdp1b3o5r0",
   ssl: true
 });
 
@@ -165,24 +165,36 @@ io.sockets.on("connection", function(socket) {
   //pierre
   socket.on("verifyUser", function(data) {
     var token = generateUnid();
-    var sql =
-      "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
-      data +
-      "','" +
-      token +
-      "')";
-    client.query(sql, (err, result) => {
+    var insert;
+    var usernameCheck =
+      "SELECT name FROM tbl_verified_user WHERE name=" + "'" + data + "'";
+    client.query(usernameCheck, (err, result) => {
       if (err) {
-        console.info(err);
+        console.log(err);
+      } else if (result.rowCount > 0) {
+        console.log("Record found");
+        io.sockets.emit("usernameTaken", insert);
+      } else {
+        var sql =
+          "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
+          data +
+          "','" +
+          token +
+          "')";
+        client.query(sql, (err, result) => {
+          if (err) {
+            console.info(err);
+          }
+          console.log("1 record inserted");
+        });
+        io.sockets.emit("verifySuccess", {
+          username: data,
+          token: token
+        });
       }
-      console.log("1 record inserted");
     });
 
     console.log(generateUnid());
-    io.sockets.emit("verifySuccess", {
-      username: data,
-      token: token
-    });
   });
 
   socket.on("sendChatName", function() {

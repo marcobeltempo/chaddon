@@ -12,6 +12,19 @@
 	margin-bottom: 10px;
 	border-left: 6px solid #c3b8b8;
 }
+.userError::-webkit-input-placeholder {
+    opacity: 0.7;
+    color: #FF0000;
+}
+.userError1::placeholder {
+    opacity: 0.7;
+    color: #FF0000;
+}
+
+.userError2::-ms-placeholder {
+    opacity: 0.7;
+    color: #FF0000;
+}
 
 .users_online {
 	border: 3px groove #555555;
