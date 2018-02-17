@@ -124,8 +124,10 @@ io.sockets.on("connection", function(socket) {
           rooms.push(params);
           //add client username to global list
           usernames[username] = username;
+		  
+		  logAction("Joined room",socket.room,socket.username);
 
-          //adding client to the room speicify array
+          //adding client to the room specific array
           if (localUser["" + params] === undefined) {
             localUser["" + params] = {};
             localUser["" + params][username] = username;
@@ -230,6 +232,7 @@ io.sockets.on("connection", function(socket) {
     message.user = htmlEntities(msg.user);
     message.timestamp = new Date();
     console.log("message");
+	
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + msg.token + "'";
     client.query(sql, (err, result) => {
@@ -248,11 +251,16 @@ io.sockets.on("connection", function(socket) {
       } else {
       }
     });
+	
+	logAction("Message sent",socket.room,msg.user);
   });
 
   socket.on("disconnect", function() {
     console.log("disconnect called");
     //remove username from the global username list
+	
+	logAction("Left room",socket.room,socket.username);
+	
     console.info("Removing " + socket.username);
     if (delete usernames[socket.username]) {
       console.info("deleted true 1");
@@ -277,6 +285,7 @@ io.sockets.on("connection", function(socket) {
     // Update userlist
     console.log("FIRST CALL TO UPDATE USERS");
     var disconnectFlag = true;
+
     io.sockets.in(socket.room).emit("updateUsers", {
       disconnectFlag: disconnectFlag,
       removeUser: socket.username,
@@ -307,4 +316,22 @@ function generateUnid(
           generateUnid // random hex digits
         )
         .toUpperCase();
+}
+
+function logAction(action,room,user){
+	var sql =
+      "INSERT INTO logaction (action,roomname,username) VALUES ('" +
+	  action +
+      "','" +
+      room +
+      "','" +
+      user +
+      "')";
+	  console.log(sql);
+    client.query(sql, (err, result) => {
+      if (err) {
+		  console.log(err);
+      }
+      console.log("logged action");
+    });
 }
