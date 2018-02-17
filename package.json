@@ -1,6 +1,6 @@
 {
-    "name": "Chaddon",
-    "version": "0.0.1",
+    "name": "chaddon",
+    "version": "0.0.2",
     "description": "A Chrome browser extension connecting visitors of a specific url.",
     "keywords": [
         "chaddon, chrome, bowser, addon"
@@ -9,11 +9,9 @@
     "author": "Michael Pierre, Even Davies, Geoff McCollam, Marco Beltempo",
     "dependencies": {
         "body-parser": "^1.18.2",
-        "errorhandler": "^1.5.0",
         "express": "^4.16.0",
-        "method-override": "^2.3.10",
         "pg": "7.4.1",
-        "socket.io": "^0.9.19"
+        "socket.io": "^2.0.3"
     },
     "devDependencies": {
         "babel-eslint": "^8.2.1",
@@ -26,11 +24,11 @@
         "prettier": "^1.9.2"
     },
     "engines": {
-        "node": ">= 8.9.1"
+        "node": ">= 8.9.4"
     },
     "scripts": {
-        "start": "node app.js",
-        "start:dev": "nodemon ./bin/www",
+        "start": "node ./src/chaddon.js",
+        "start:dev": "nodemon ./src/chaddon.js",
         "test:lint": "eslint .",
         "test:lint:fix": "eslint . --fix"
     }
