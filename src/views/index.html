@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Chaddon</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!-- Leave those next 4 lines if you care about users using IE8 -->
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <nav class="navbar navbar-inverse">
+         <div class="container-fluid">
+            <div class="navbar-header">
+               <a class="navbar-brand" href="/"><img src="../images/chaddon_logo.jpeg" alt="Chaddon Logo" height="28" width="28">
+               </a>
+            </div>
+            <ul class="nav navbar-nav">
+               <li class="active"><a href="/">Home</a></li>
+               <li><a href="/lobby">Lobby</a></li>
+            </ul>
+            <form class="navbar-form navbar-right" id="search-form" onSubmit="return channelSearch();">
+               <div class="form-group">
+                  <div class="input-group">
+                     <input id="channel-search" type="text" class="form-control" name="search"  placeholder="Find a channel..">
+                     <span class="search-btn input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </nav>
+      <div class="container">
+         <div class="hero-unit">
+            <h1>Chaddon Beta</h1>
+            <p>Navigate to the channel of your choice - <b>chaddon.herokuapp.com/your_room_name</b></p>
+            <p>eg: https://chaddon.herokuapp.com/prj666 </p>
+            <p>And share with your friends, or you could simply hang out in the lobby.
+            <p><a class="btn btn-warning btn-large" href="/lobby">Go to lobby &raquo;</a></p>
+         </div>
+         <hr>
+         <footer>
+            <p>&copy; Chaddon 2018</p>
+         </footer>
+      </div>
+      <!-- Including Bootstrap JS (with its jQuery dependency) so that dynamic components work -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+      <script src="../scripts/chat.js"></script>
+   </body>
+</html>
