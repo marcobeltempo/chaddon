@@ -22,7 +22,7 @@ chatWindow.style.zIndex = "9999";
 //positioned in the chatroom window, the rest of the chat functionality from heroku
 var iframe = document.createElement("iframe");
 chatWindow.appendChild(iframe);
-iframe.src = "https://chaddon.herokuapp.com/" + extractHostname(document.URL);
+iframe.src = "https://chaddon-dev.herokuapp.com/" + extractHostname(document.URL);
 iframe.style.height = "560px";
 iframe.style.width = "800px";
 
