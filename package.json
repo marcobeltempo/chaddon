@@ -9,13 +9,13 @@
     "author": "Michael Pierre, Even Davies, Geoff McCollam, Marco Beltempo",
     "dependencies": {
         "body-parser": "^1.18.2",
+        "dotenv": "^5.0.0",
         "express": "^4.16.0",
         "pg": "7.4.1",
         "socket.io": "^2.0.3"
     },
     "devDependencies": {
         "babel-eslint": "^8.2.1",
-        "dotenv": "^5.0.0",
         "eslint": "^4.13.1",
         "eslint-plugin-prettier": "^2.3.1",
         "eslint-plugin-react": "^7.6.1",
