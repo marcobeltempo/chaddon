@@ -1,6 +1,7 @@
 //Dependacies
 const express = require("express");
 const fs = require("fs");
+const http = require("http");
 const https = require("https");
 let io = require("socket.io");
 
@@ -21,41 +22,43 @@ app.use(express.static("./src/public"));
 app.use(bodyParser);
 var keys_dir = "./sslcert/";
 //Set HTTPS/SSL options
-const httpsOptions = {
-  key: fs.readFileSync("./ssl/server.key"),
-  cert: fs.readFileSync("./ssl/server.csr")
-};
+
+var server;
 
 if (config.env === "production") {
+  //Create HTTP server
+  server = http.createServer(app);
   app.use(config.forceSsl);
+} else {
+  //Create HTTPS server
+  const httpsOptions = {
+    key: fs.readFileSync("./ssl/server.key"),
+    cert: fs.readFileSync("./ssl/server.csr")
+  };
+  server = https.createServer(httpsOptions, app);
 }
-//Create HTTPS server
-const serverHttps = https
-  .createServer(httpsOptions, app)
-  .listen(config.port, () => {
-    console.log(
-      "\n__________________________________________________________\n"
-    );
-    console.log(
-      `Chaddon Express Server Started\nMode: ` +
-        app.get("env") +
-        `\nPort: ${config.port}\nProtocol: HTTPS`
-    );
-    console.log(`Link: https://localhost:${config.port}`);
-    console.log(
-      "\n__________________________________________________________\n"
-    );
 
-    //monitor idle db clients
-    db.getClient(function(result) {
-      console.log("Checking for idle clients...");
-    });
+//Connect server
+server.listen(config.port, () => {
+  console.log("\n__________________________________________________________\n");
+  console.log(
+    `Chaddon Express Server Started\nMode: ` +
+      app.get("env") +
+      `\nPort: ${config.port}`
+  );
+  console.log(`Link: https://localhost:${config.port}`);
+  console.log("\n__________________________________________________________\n");
+
+  //monitor idle db clients
+  db.getClient(function(result) {
+    console.log("Checking for idle clients...");
   });
+});
 
 //global variable to store input parameter
 var params;
 
-io = io.listen(serverHttps);
+io = io.listen(server);
 
 //usernames in room
 var localUser = {};
