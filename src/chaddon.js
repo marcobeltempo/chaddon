@@ -1,83 +1,64 @@
-/**
- * Module dependencies.
- */
+//Dependacies
+const express = require("express");
+const fs = require("fs");
+const http = require("http");
+const https = require("https");
+let io = require("socket.io");
 
-var express = require("express"),
-  routes = require("./routes"),
-  io = require("socket.io");
+//Middleware
+var bodyParser = require("body-parser");
 
-var app = (module.exports = express.createServer());
+//Modules
+const config = require("./config/index.js");
+const db = require("./config/db.js");
+const apiRouter = require("./routers/index.js");
+const app = express();
+const routes = require("./routers")(app);
 
-const { Client } = require("pg");
+//Configuration
+app.set("views", "views");
+app.set("view engine", "html");
+app.use(express.static("./src/public"));
+app.use(bodyParser);
+var keys_dir = "./sslcert/";
+//Set HTTPS/SSL options
 
-const client = new Client({
-  connectionString:
-  process.env.DATABASE_URL,
-  ssl: true
+var server;
+
+if (config.env === "production") {
+  //Create HTTP server
+  server = http.createServer(app);
+  app.use(config.forceSsl);
+} else {
+  //Create HTTPS server
+  const httpsOptions = {
+    key: fs.readFileSync("./ssl/server.key"),
+    cert: fs.readFileSync("./ssl/server.csr")
+  };
+  server = https.createServer(httpsOptions, app);
+}
+
+//Connect server
+server.listen(config.port, () => {
+  console.log("\n__________________________________________________________\n");
+  console.log(
+    `Chaddon Express Server Started\nMode: ` +
+      app.get("env") +
+      `\nPort: ${config.port}`
+  );
+  console.log(`Link: https://localhost:${config.port}`);
+  console.log("\n__________________________________________________________\n");
+
+  //monitor idle db clients
+  db.getClient(function(result) {
+    console.log("Checking for idle clients...");
+  });
 });
-
-client.connect();
 
 //global variable to store input parameter
 var params;
 
-// Configuration
-
-app.configure(function() {
-  app.set("views", "views");
-  app.set("view engine", "html");
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static("public"));
-});
-
-app.configure("development", function() {
-  app.use(
-    express.errorHandler({
-      dumpExceptions: true,
-      showStack: true
-    })
-  );
-});
-
-app.configure("production", function() {
-  app.use(express.errorHandler());
-});
-
-// Routes
-
-app.get("/", function(req, res) {
-  params = req.params.id;
-  res.sendfile("views/index.html", {
-    root: __dirname
-  });
-});
-
-app.get("/login", function(req, res) {
-  params = req.params.id;
-  res.sendfile("views/login.html", {
-    root: __dirname
-  });
-});
-
-app.get("/:id", function(req, res) {
-  params = req.params.id;
-  res.sendfile("views/chatroom.html", {
-    root: __dirname
-  });
-});
-
-io = io.listen(app);
-var port = process.env.PORT || 3000;
-
-app.listen(port, function() {
-  console.log(
-    "Express server listening on port %d in %s mode",
-    app.address().port,
-    app.settings.env
-  );
-});
+io = io.listen(server);
 
 //usernames in room
 var localUser = {};
@@ -108,10 +89,11 @@ io.sockets.on("connection", function(socket) {
   socket.on("adduser", function(message) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + message.token + "'";
-    client.query(sql, (err, result) => {
+
+    db.query(sql, function(err, result) {
       if (result.rowCount > 0) {
         if (result) {
-          console.log("User is verified");
+          console.log("User verification status: verified");
 
           var username = htmlEntities(message.username);
 
@@ -124,10 +106,8 @@ io.sockets.on("connection", function(socket) {
           rooms.push(params);
           //add client username to global list
           usernames[username] = username;
-		  
-		  logAction("Joined room",socket.room,socket.username);
 
-          //adding client to the room specific array
+          //adding client to the room speicify array
           if (localUser["" + params] === undefined) {
             localUser["" + params] = {};
             localUser["" + params][username] = username;
@@ -143,8 +123,8 @@ io.sockets.on("connection", function(socket) {
             room: socket.room,
             timestamp: new Date()
           });
-          var callId = "Second call to update users";
-          console.log("SECOND CALL TO UPDATE USERS " + socket.room);
+
+          console.log("Update users: 2nd call " + socket.room);
           io.sockets.in(socket.room).emit("updateUsers", {
             removeUser: socket.username,
             usernames: localUser["" + params]
@@ -173,11 +153,11 @@ io.sockets.on("connection", function(socket) {
       "','" +
       token +
       "')";
-    client.query(sql, (err, result) => {
+    db.query(sql, (err, result) => {
       if (err) {
         console.info(err);
       }
-      console.log("1 record inserted");
+      console.log("Database query: succesfully inserted 1 record");
     });
 
     console.log(generateUnid());
@@ -192,20 +172,23 @@ io.sockets.on("connection", function(socket) {
   });
 
   socket.on("verifyUserGoogle", function(data) {
-    console.log("Verifying Google User");
+    console.log("Verifying: Google User");
     var sql =
       "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
       data.username +
       "','" +
       data.token +
       "')";
-    client.query(sql, (err, result) => {
+
+    db.query(sql, (err, result) => {
       if (err) {
+        console.log("Database " + err);
+      } else {
+        console.log("Database query: succesfully inserted 1 record");
       }
-      console.log("1 record inserted");
     });
 
-    console.log(generateUnid());
+    console.log("Generated id: ", generateUnid());
     io.sockets.emit("verifySuccess", {
       username: data.username,
       token: data.token
@@ -215,7 +198,7 @@ io.sockets.on("connection", function(socket) {
   socket.on("verifySend", function(data) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + data.token + "'";
-    client.query(sql, (err, result) => {
+    db.query(sql, (err, result) => {
       if (result.rowCount > 0) {
         if (result) {
           io.sockets.emit("verifySendSuccess", true);
@@ -231,61 +214,53 @@ io.sockets.on("connection", function(socket) {
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
     message.timestamp = new Date();
-    console.log("message");
-	
+
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + msg.token + "'";
-    client.query(sql, (err, result) => {
+    db.query(sql, (err, result) => {
       if (result.rowCount > 0) {
         if (result) {
-          console.log("Sending message");
+          console.log("Message status: sending");
           if (history["" + params] === undefined) {
             history["" + params] = [];
             history["" + params].push(message);
           } else {
             history["" + params].push(message);
           }
-
           io.sockets.in(socket.room).emit("update", message);
         }
-      } else {
       }
     });
-	
-	logAction("Message sent",socket.room,msg.user);
   });
 
   socket.on("disconnect", function() {
-    console.log("disconnect called");
+    console.log("Disconnected: true");
+
     //remove username from the global username list
-	
-	logAction("Left room",socket.room,socket.username);
-	
-    console.info("Removing " + socket.username);
+    console.info("Removed user: " + socket.username);
     if (delete usernames[socket.username]) {
-      console.info("deleted true 1");
+      console.info("Removed user staus: success");
     }
 
-    //remove username fromm the localroom username list
-    console.log("Check params: " + params);
-    console.log("Size " + localUser[0]);
+    //remove username from the localroom username list
+    console.log("Parameters:    " + params);
+    console.log("Total users:    " + localUser[0]);
     if (localUser["" + params] != undefined) {
       console.log(
         "in this if where undefined " + localUser["" + params][socket.username]
       );
       if (delete localUser["" + params][socket.username]) {
-        console.info("DELETED TRUE");
+        console.info("Remove local user: true");
       }
     } else {
-      console.info("UNDEFINED ROOM");
+      console.info("Room: undefined");
     }
 
     // Has bug where it clears the entire user list on disconnect. Could be because of added security verification
     // CONFIRMED: bug was in demo code used in late 2017
     // Update userlist
-    console.log("FIRST CALL TO UPDATE USERS");
+    console.log("Update users: 1st call");
     var disconnectFlag = true;
-
     io.sockets.in(socket.room).emit("updateUsers", {
       disconnectFlag: disconnectFlag,
       removeUser: socket.username,
@@ -316,22 +291,4 @@ function generateUnid(
           generateUnid // random hex digits
         )
         .toUpperCase();
-}
-
-function logAction(action,room,user){
-	var sql =
-      "INSERT INTO logaction (action,roomname,username) VALUES ('" +
-	  action +
-      "','" +
-      room +
-      "','" +
-      user +
-      "')";
-	  console.log(sql);
-    client.query(sql, (err, result) => {
-      if (err) {
-		  console.log(err);
-      }
-      console.log("logged action");
-    });
 }

@@ -1,4 +1,5 @@
 var user = null;
+
 $(function() {
   var socket = io.connect(document.location.origin);
   socket.on("news", function(data) {
