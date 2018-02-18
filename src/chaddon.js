@@ -4,20 +4,23 @@ const fs = require("fs");
 const https = require("https");
 let io = require("socket.io");
 
+//Middleware
+var bodyParser = require("body-parser");
+
 //Modules
 const config = require("./config/index.js");
 const db = require("./config/db.js");
 const apiRouter = require("./routers/index.js");
 const app = express();
-app.use(express.bodyParser());
 const routes = require("./routers")(app);
 
 //Configuration
 app.set("views", "views");
 app.set("view engine", "html");
 app.use(express.static("./src/public"));
+app.use(bodyParser);
 
-//Set HTTPS SSL options
+//Set HTTPS/SSL options
 const httpsOptions = {
   key: fs.readFileSync("./ssl/server.key"),
   cert: fs.readFileSync("./ssl/server.csr")
@@ -39,6 +42,10 @@ const serverHttps = https
     console.log(
       "\n__________________________________________________________\n"
     );
+    //monitors idle db clients
+    db.getClient(function(result) {
+      console.log("Checking for idle clients...");
+    });
   });
 
 //global variable to store input parameter
@@ -168,13 +175,13 @@ io.sockets.on("connection", function(socket) {
 
     db.query(sql, (err, result) => {
       if (err) {
-        console.log("Database error: " + err);
+        console.log("Database " + err);
       } else {
         console.log("Database query: succesfully inserted 1 record");
       }
     });
 
-    console.log(generateUnid());
+    console.log("Generated id: ", generateUnid());
     io.sockets.emit("verifySuccess", {
       username: data.username,
       token: data.token
@@ -213,10 +220,8 @@ io.sockets.on("connection", function(socket) {
           } else {
             history["" + params].push(message);
           }
-
           io.sockets.in(socket.room).emit("update", message);
         }
-      } else {
       }
     });
   });
@@ -280,8 +285,3 @@ function generateUnid(
         )
         .toUpperCase();
 }
-
-//monitors idle db clients
-db.getClient(function(result) {
-  console.log("Checking for idle clients...");
-});
