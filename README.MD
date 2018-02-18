@@ -19,7 +19,7 @@ Setup chaddon on your local machine
 2. `git clone https://github.com/marcobeltempo/chaddon`
 3. `cd chaddon`
 4. `npm install`
-5. `npm run start:dev` //(optional)
+5. `npm run start:dev` //(uses nodemon to watch for changes)
 6.  Navigate to http://localhost:3000/ to view the results
 
 ## Running the Test Suite
