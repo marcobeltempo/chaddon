@@ -9,23 +9,6 @@ module.exports = function(app) {
     else next(); /* Continue to other routes if we're not redirecting */
   });
 
-  known: app.get(
-    "HaqicXPaSUmcMuxpwemfmLHfmHXh_9-tUz7T4XFQILU",
-    function(req, res) {
-      res.send(
-        "HaqicXPaSUmcMuxpwemfmLHfmHXh_9-tUz7T4XFQILU.6WZEFGXlH9BndsrHAT7QRIzr0c-VpII1XkTArqlc3qI"
-      );
-    }
-  );
-  well: app.get(
-    "rQtxYDE04sqN-hbbDclizOodMU28kf-Xi-l5t5gP864",
-    function(req, res) {
-      res.send(
-        "rQtxYDE04sqN-hbbDclizOodMU28kf-Xi-l5t5gP864.6WZEFGXlH9BndsrHAT7QRIzr0c-VpII1XkTArqlc3qI"
-      );
-    }
-  );
-
   home: app.get("/", function(req, res) {
     params = req.params.id;
     res.sendFile("./src/views/index.html", {
