@@ -1,4 +1,14 @@
 module.exports = function(app) {
+  /*  Redirect http to https */
+  ssl: app.get("*", function(req, res, next) {
+    if (
+      req.headers["x-forwarded-proto"] != "https" &&
+      process.env.NODE_ENV === "production"
+    )
+      res.redirect("https://" + req.hostname + req.url);
+    else next(); /* Continue to other routes if we're not redirecting */
+  });
+
   home: app.get("/", function(req, res) {
     params = req.params.id;
     res.sendFile("./src/views/index.html", {
