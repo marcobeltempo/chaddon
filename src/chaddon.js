@@ -42,10 +42,12 @@ const serverHttps = https
     console.log(
       "\n__________________________________________________________\n"
     );
-    //monitors idle db clients
+    /*
+    monitors idle db clients
     db.getClient(function(result) {
       console.log("Checking for idle clients...");
     });
+    */
   });
 
 //global variable to store input parameter
