@@ -3,7 +3,7 @@ const express = require("express");
 const fs = require("fs");
 const https = require("https");
 let io = require("socket.io");
-
+var sslRedirect = require('heroku-ssl-redirect');
 //Middleware
 var bodyParser = require("body-parser");
 
@@ -19,6 +19,7 @@ app.set("views", "views");
 app.set("view engine", "html");
 app.use(express.static("./src/public"));
 app.use(bodyParser);
+app.use(sslRedirect());
 
 //Set HTTPS/SSL options
 const httpsOptions = {
@@ -42,12 +43,12 @@ const serverHttps = https
     console.log(
       "\n__________________________________________________________\n"
     );
-    /*
-    monitors idle db clients
+    
+    //monitor idle db clients
     db.getClient(function(result) {
       console.log("Checking for idle clients...");
     });
-    */
+    
   });
 
 //global variable to store input parameter
