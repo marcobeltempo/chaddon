@@ -19,13 +19,16 @@ app.set("views", "views");
 app.set("view engine", "html");
 app.use(express.static("./src/public"));
 app.use(bodyParser);
-
+var keys_dir = "./sslcert/";
 //Set HTTPS/SSL options
 const httpsOptions = {
   key: fs.readFileSync("./ssl/server.key"),
   cert: fs.readFileSync("./ssl/server.csr")
 };
 
+if (config.env === "production") {
+  app.use(config.forceSsl);
+}
 //Create HTTPS server
 const serverHttps = https
   .createServer(httpsOptions, app)
