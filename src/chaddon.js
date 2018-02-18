@@ -9,7 +9,7 @@ const config = require("./config/index.js");
 const db = require("./config/db.js");
 const apiRouter = require("./routers/index.js");
 const app = express();
-const bodyParser = require("body-parser");
+app.use(express.bodyParser());
 const routes = require("./routers")(app);
 
 //Configuration
@@ -32,8 +32,8 @@ const serverHttps = https
     );
     console.log(
       `Chaddon Express Server Started\nMode: ` +
-      app.get("env") +
-      `\nPort: ${config.port}\nProtocol: HTTPS`
+        app.get("env") +
+        `\nPort: ${config.port}\nProtocol: HTTPS`
     );
     console.log(`Link: https://localhost:${config.port}`);
     console.log(
@@ -69,14 +69,14 @@ function htmlEntities(str) {
     .replace(/"/g, "&quot;");
 }
 
-io.sockets.on("connection", function (socket) {
+io.sockets.on("connection", function(socket) {
   socket.emit("news", "testdata");
 
-  socket.on("adduser", function (message) {
+  socket.on("adduser", function(message) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + message.token + "'";
 
-    db.query(sql, function (err, result) {
+    db.query(sql, function(err, result) {
       if (result.rowCount > 0) {
         if (result) {
           console.log("User verification status: verified");
@@ -123,7 +123,7 @@ io.sockets.on("connection", function (socket) {
     });
   });
 
-  socket.on("getOnlineUsers", function () {
+  socket.on("getOnlineUsers", function() {
     io.sockets.in(socket.room).emit("updateUsersLogin", {
       removeUser: socket.username,
       usernames: localUser["" + params]
@@ -131,7 +131,7 @@ io.sockets.on("connection", function (socket) {
   });
 
   //pierre
-  socket.on("verifyUser", function (data) {
+  socket.on("verifyUser", function(data) {
     var token = generateUnid();
     var sql =
       "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
@@ -153,11 +153,11 @@ io.sockets.on("connection", function (socket) {
     });
   });
 
-  socket.on("sendChatName", function () {
+  socket.on("sendChatName", function() {
     io.sockets.emit("chatName", socket.room);
   });
 
-  socket.on("verifyUserGoogle", function (data) {
+  socket.on("verifyUserGoogle", function(data) {
     console.log("Verifying: Google User");
     var sql =
       "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
@@ -181,7 +181,7 @@ io.sockets.on("connection", function (socket) {
     });
   });
 
-  socket.on("verifySend", function (data) {
+  socket.on("verifySend", function(data) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + data.token + "'";
     db.query(sql, (err, result) => {
@@ -195,7 +195,7 @@ io.sockets.on("connection", function (socket) {
     });
   });
 
-  socket.on("message", function (msg) {
+  socket.on("message", function(msg) {
     var message = {};
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
@@ -221,9 +221,9 @@ io.sockets.on("connection", function (socket) {
     });
   });
 
-  socket.on("disconnect", function () {
+  socket.on("disconnect", function() {
     console.log("Disconnected: true");
-    
+
     //remove username from the global username list
     console.info("Removed user: " + socket.username);
     if (delete usernames[socket.username]) {
@@ -264,24 +264,24 @@ function generateUnid(
 ) {
   return a // if the placeholder was passed, return
     ? // a random number from 0 to 15
-    (
-      a ^ // unless b is 8,
-      ((Math.random() * // in which case
-        16) >> // a random number from
-        (a / 4))
-    ) // 8 to 11
-      .toString(16) // in hexadecimal
+      (
+        a ^ // unless b is 8,
+        ((Math.random() * // in which case
+          16) >> // a random number from
+          (a / 4))
+      ) // 8 to 11
+        .toString(16) // in hexadecimal
     : // or otherwise a concatenated string:
-    ([1e10] + 1e10 + 1e9)
-      .replace(
-        // replacing
-        /[01]/g, // zeroes and ones with
-        generateUnid // random hex digits
-      )
-      .toUpperCase();
+      ([1e10] + 1e10 + 1e9)
+        .replace(
+          // replacing
+          /[01]/g, // zeroes and ones with
+          generateUnid // random hex digits
+        )
+        .toUpperCase();
 }
 
 //monitors idle db clients
-db.getClient(function (result) {
+db.getClient(function(result) {
   console.log("Checking for idle clients...");
 });
