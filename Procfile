@@ -1,1 +1,1 @@
-web: node chaddon.js
+web: node src/chaddon.js
