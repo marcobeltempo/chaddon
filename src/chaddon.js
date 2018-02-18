@@ -6,6 +6,7 @@ let io = require("socket.io");
 
 //Modules
 const config = require("./config/index.js");
+const db = require("./config/db.js");
 const apiRouter = require("./routers/index.js");
 const app = express();
 const bodyParser = require("body-parser");
@@ -26,15 +27,19 @@ const httpsOptions = {
 const serverHttps = https
   .createServer(httpsOptions, app)
   .listen(config.port, () => {
-    console.log("\n__________________________________________________________\n");
     console.log(
-      `Chaddon Express Server Started\nMode: ` + app.get("env") + `\nPort: ${config.port}\nProtocol: HTTPS`);
+      "\n__________________________________________________________\n"
+    );
+    console.log(
+      `Chaddon Express Server Started\nMode: ` +
+      app.get("env") +
+      `\nPort: ${config.port}\nProtocol: HTTPS`
+    );
     console.log(`Link: https://localhost:${config.port}`);
-    console.log("\n__________________________________________________________\n");
+    console.log(
+      "\n__________________________________________________________\n"
+    );
   });
-
-//establish db connection
-config.db.connect();
 
 //global variable to store input parameter
 var params;
@@ -70,10 +75,11 @@ io.sockets.on("connection", function (socket) {
   socket.on("adduser", function (message) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + message.token + "'";
-    config.db.query(sql, (err, result) => {
+
+    db.query(sql, function (err, result) {
       if (result.rowCount > 0) {
         if (result) {
-          console.log("User is verified");
+          console.log("User verification status: verified");
 
           var username = htmlEntities(message.username);
 
@@ -103,8 +109,8 @@ io.sockets.on("connection", function (socket) {
             room: socket.room,
             timestamp: new Date()
           });
-          var callId = "Second call to update users";
-          console.log("SECOND CALL TO UPDATE USERS " + socket.room);
+
+          console.log("Update users: 2nd call " + socket.room);
           io.sockets.in(socket.room).emit("updateUsers", {
             removeUser: socket.username,
             usernames: localUser["" + params]
@@ -133,11 +139,11 @@ io.sockets.on("connection", function (socket) {
       "','" +
       token +
       "')";
-    config.db.query(sql, (err, result) => {
+    db.query(sql, (err, result) => {
       if (err) {
         console.info(err);
       }
-      console.log("1 record inserted");
+      console.log("Database query: succesfully inserted 1 record");
     });
 
     console.log(generateUnid());
@@ -152,17 +158,20 @@ io.sockets.on("connection", function (socket) {
   });
 
   socket.on("verifyUserGoogle", function (data) {
-    console.log("Verifying Google User");
+    console.log("Verifying: Google User");
     var sql =
       "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
       data.username +
       "','" +
       data.token +
       "')";
-    config.db.query(sql, (err, result) => {
+
+    db.query(sql, (err, result) => {
       if (err) {
+        console.log("Database error: " + err);
+      } else {
+        console.log("Database query: succesfully inserted 1 record");
       }
-      console.log("1 record inserted");
     });
 
     console.log(generateUnid());
@@ -175,7 +184,7 @@ io.sockets.on("connection", function (socket) {
   socket.on("verifySend", function (data) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + data.token + "'";
-    config.db.query(sql, (err, result) => {
+    db.query(sql, (err, result) => {
       if (result.rowCount > 0) {
         if (result) {
           io.sockets.emit("verifySendSuccess", true);
@@ -191,13 +200,13 @@ io.sockets.on("connection", function (socket) {
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
     message.timestamp = new Date();
-    console.log("message");
+
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + msg.token + "'";
-    config.db.query(sql, (err, result) => {
+    db.query(sql, (err, result) => {
       if (result.rowCount > 0) {
         if (result) {
-          console.log("Sending message");
+          console.log("Message status: sending");
           if (history["" + params] === undefined) {
             history["" + params] = [];
             history["" + params].push(message);
@@ -213,31 +222,32 @@ io.sockets.on("connection", function (socket) {
   });
 
   socket.on("disconnect", function () {
-    console.log("disconnect called");
+    console.log("Disconnected: true");
+    
     //remove username from the global username list
-    console.info("Removing " + socket.username);
+    console.info("Removed user: " + socket.username);
     if (delete usernames[socket.username]) {
-      console.info("deleted true 1");
+      console.info("Removed user staus: success");
     }
 
-    //remove username fromm the localroom username list
-    console.log("Check params: " + params);
-    console.log("Size " + localUser[0]);
+    //remove username from the localroom username list
+    console.log("Parameters:    " + params);
+    console.log("Total users:    " + localUser[0]);
     if (localUser["" + params] != undefined) {
       console.log(
         "in this if where undefined " + localUser["" + params][socket.username]
       );
       if (delete localUser["" + params][socket.username]) {
-        console.info("DELETED TRUE");
+        console.info("Remove local user: true");
       }
     } else {
-      console.info("UNDEFINED ROOM");
+      console.info("Room: undefined");
     }
 
     // Has bug where it clears the entire user list on disconnect. Could be because of added security verification
     // CONFIRMED: bug was in demo code used in late 2017
     // Update userlist
-    console.log("FIRST CALL TO UPDATE USERS");
+    console.log("Update users: 1st call");
     var disconnectFlag = true;
     io.sockets.in(socket.room).emit("updateUsers", {
       disconnectFlag: disconnectFlag,
@@ -270,3 +280,8 @@ function generateUnid(
       )
       .toUpperCase();
 }
+
+//monitors idle db clients
+db.getClient(function (result) {
+  console.log("Checking for idle clients...");
+});

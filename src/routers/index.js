@@ -1,5 +1,4 @@
 module.exports = function(app) {
-  
   home: app.get("/", function(req, res) {
     params = req.params.id;
     res.sendFile("./src/views/index.html", {
