@@ -5,7 +5,7 @@ module.exports = function(app) {
       req.headers["x-forwarded-proto"] != "https" &&
       process.env.NODE_ENV === "production"
     )
-      res.redirect("https://" + req.headers.host + req.url);
+      res.redirect(['https://', req.get('Host'), req.url].join(''));
     else next(); /* Continue to other routes if we're not redirecting */
   });
 
