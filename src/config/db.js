@@ -1,5 +1,5 @@
 const { Pool } = require("pg");
-require("dotenv").load();
+const dotEnv = require("dotenv").load();
 var conString = process.env.DATABASE_URL;
 
 const pool = new Pool({
