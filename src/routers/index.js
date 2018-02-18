@@ -10,18 +10,18 @@ module.exports = function(app) {
   });
 
   known: app.get(
-    "/.well-known/acme-challenge/2ZWiZp3j9gPorK2RclSyI3uHGvbAThHhFvxaUsb4iNs",
+    "/.well-known/acme-challenge/NMIRSLS3zXAgBIjZPifzhUWzchQpmTs9x8zbQGurMBU",
     function(req, res) {
       res.send(
-        "2ZWiZp3j9gPorK2RclSyI3uHGvbAThHhFvxaUsb4iNs.6WZEFGXlH9BndsrHAT7QRIzr0c-VpII1XkTArqlc3qI"
+        "NMIRSLS3zXAgBIjZPifzhUWzchQpmTs9x8zbQGurMBU.6WZEFGXlH9BndsrHAT7QRIzr0c-VpII1XkTArqlc3qI"
       );
     }
   );
   well: known: app.get(
-    ".well-known/acme-challenge/r0_KfdXZCXixTWeRL23dAiw0lsInTUC2fxoQ2B8nRfw",
+    ".well-known/acme-challenge/zbiN2m9GSzvGndLYMXtmpyCBOrSAbLSk4O0VuIuyR6k",
     function(req, res) {
       res.send(
-        "r0_KfdXZCXixTWeRL23dAiw0lsInTUC2fxoQ2B8nRfw.6WZEFGXlH9BndsrHAT7QRIzr0c-VpII1XkTArqlc3qI"
+        "zbiN2m9GSzvGndLYMXtmpyCBOrSAbLSk4O0VuIuyR6k.6WZEFGXlH9BndsrHAT7QRIzr0c-VpII1XkTArqlc3qI"
       );
     }
   );
