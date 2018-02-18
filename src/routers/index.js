@@ -9,6 +9,23 @@ module.exports = function(app) {
     else next(); /* Continue to other routes if we're not redirecting */
   });
 
+  known: app.get(
+    "/.well-known/acme-challenge/Lm91MuZcFiWoYI-5dKO4eipqujiy0ujlDfjGmYtUpzg",
+    function(req, res) {
+      res.send(
+        "Lm91MuZcFiWoYI-5dKO4eipqujiy0ujlDfjGmYtUpzg.6WZEFGXlH9BndsrHAT7QRIzr0c-VpII1XkTArqlc3qI"
+      );
+    }
+  );
+  well: known: app.get(
+    ".well-known/acme-challenge/Xa8bdlsp_iinMglxz-oHchKIwpoOqoHMl10bzUoXTos",
+    function(req, res) {
+      res.send(
+        "Xa8bdlsp_iinMglxz-oHchKIwpoOqoHMl10bzUoXTos.6WZEFGXlH9BndsrHAT7QRIzr0c-VpII1XkTArqlc3qI"
+      );
+    }
+  );
+
   home: app.get("/", function(req, res) {
     params = req.params.id;
     res.sendFile("./src/views/index.html", {
