@@ -96,7 +96,7 @@ io.sockets.on("connection", function(socket) {
           console.log("User verification status: verified");
 
           var username = htmlEntities(message.username);
-
+		  params = message.room;
           //store the username in the socket session for this client
           socket.username = username;
 
@@ -114,6 +114,8 @@ io.sockets.on("connection", function(socket) {
           } else {
             localUser["" + params][username] = username;
           }
+		  
+		 // logAction("Joined room",socket.room,socket.username);
 
           //send client the room
           socket.join(params);
@@ -167,26 +169,42 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("sendChatName", function() {
+  socket.on("sendChatName", function(data) {
+	  params = data;
+	  socket.room = data;
+	  rooms.push(data);
+	  socket.join(data);
     io.sockets.emit("chatName", socket.room);
   });
 
   socket.on("verifyUserGoogle", function(data) {
     console.log("Verifying: Google User");
-    var sql =
-      "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
-      data.username +
-      "','" +
-      data.token +
-      "')";
+    var sql = "SELECT token FROM tbl_verified_user WHERE token ='" + data.token +"'";
 
     db.query(sql, (err, result) => {
       if (err) {
         console.log("Database " + err);
-      } else {
-        console.log("Database query: succesfully inserted 1 record");
+      } else if (result.rowCount > 0){
+		  console.log("Database query: google user verified");
       }
+	  else {
+		  sql =
+		  "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
+		  data.username +
+		  "','" +
+		  data.token +
+		  "')";
+
+		  db.query(sql, (err, result) => {
+			  if (err) {
+				console.log("Database " + err);
+			  } else {
+				console.log("Database query: succesfully inserted 1 record");
+			  }
+		  });
+	  }
     });
+    
 
     console.log("Generated id: ", generateUnid());
     io.sockets.emit("verifySuccess", {
@@ -214,6 +232,8 @@ io.sockets.on("connection", function(socket) {
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
     message.timestamp = new Date();
+	params = msg.room;
+	socket.room=msg.room;
 
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + msg.token + "'";
@@ -231,11 +251,12 @@ io.sockets.on("connection", function(socket) {
         }
       }
     });
+	//logAction("Message sent",socket.room,socket.username);
   });
 
   socket.on("disconnect", function() {
     console.log("Disconnected: true");
-
+	//logAction("Left room",socket.room,socket.username);
     //remove username from the global username list
     console.info("Removed user: " + socket.username);
     if (delete usernames[socket.username]) {
@@ -291,4 +312,11 @@ function generateUnid(
           generateUnid // random hex digits
         )
         .toUpperCase();
+}
+
+function logAction(action,room,user){
+	var fs = require('fs');
+	var log = fs.createWriteStream("chatroom-log.txt", {flags:'a'});
+	log.write(new Date() + " - \t" + action + " - \t user: " + user + " - \t room: " + room + "\n");
+	log.end();
 }

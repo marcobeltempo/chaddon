@@ -2,6 +2,7 @@
 var user = null;
 var socket = io.connect(document.location.origin);
 var loginState;
+var room = document.URL.split('/')[3];
 
 // sends message only
 function sendMessage() {
@@ -18,6 +19,7 @@ function sendMessage() {
       token: sessionStorage.token,
       message: safe,
       user: sessionStorage.username,
+	  room: room,
       timestamp: new Date()
     }); // this is insecure user can delete all validation on client side and send messages
 
@@ -57,6 +59,7 @@ function userLogin() {
     sessionStorage.username = safe;
     socket.emit("adduser", {
       username: sessionStorage.username,
+	  room: room,
       token: sessionStorage.token
     });
     $("#onlineUserList").append("<li class='userOnline'>" + userName + "</li>");
@@ -70,6 +73,7 @@ function updateUsersLogin() {
   socket.on("updateUsersLogin", function(data) {
     console.info("updating users. Disconnect Flag: " + data.disconnectFlag);
     console.info("This user left: " + data.removeUser);
+	
     if (data != null && data.disconnectFlag == undefined) {
       //$('#onlineUserList').html(""); //This is being called and clearing the list because data is not null
       // Were clearing the list however sometimes data.usernames has no data which is causing this error
@@ -97,10 +101,10 @@ document.getElementById("usrName").addEventListener("keyup", function(event) {
 // Important! For form tag add onSubmit="return false;" to stop page refresh
 function checkUsername() {
   //current-channel
-  socket.emit("sendChatName");
-  socket.on("chatName", function(data) {
-    if (data != null) $("#current-channel").text(data + " Chat");
-  });
+  //socket.emit("sendChatName",room);
+  //socket.on("chatName", function(data) {
+   /* if (data != null)*/ $("#current-channel").text(room + " Chat");
+  //});
 
   var userName = document.getElementById("usrName").value;
   var sendMessage = document.getElementById("sendMessageBar");
@@ -150,6 +154,7 @@ $(function() {
 
     socket.emit("adduser", {
       username: sessionStorage.username,
+	  room: room,
       token: sessionStorage.token
     });
   } else {
@@ -174,6 +179,7 @@ $(function() {
       socket.emit("message", {
         message: safe,
         user: sessionStorage.username,
+		room: room,
         timestamp: new Date()
       });
     }
@@ -197,6 +203,7 @@ $(function() {
         socket.emit("message", {
           message: safe,
           user: user,
+		  room: room,
           timestamp: new Date()
         });
       }
