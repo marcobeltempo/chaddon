@@ -39,32 +39,46 @@ function userLogin() {
     var socket = io.connect(document.location.origin);
 
     socket.emit("verifyUser", userName);
+    // User if verified successfully
     socket.on("verifySuccess", function(data) {
       console.info("Username: " + data.username + " Token: " + data.token);
       sessionStorage.token = data.token;
+
+      document.getElementById("overlay").style.display = "none";
+      sendMessage.innerHTML = messageBar;
+      $("#usernameLabel").text("Welcome, " + userName);
+
+      sendMessage.classList.remove("hide");
+
+      var usr = userName;
+      var safe = usr
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+      sessionStorage.username = safe;
+      socket.emit("adduser", {
+        username: sessionStorage.username,
+        token: sessionStorage.token
+      });
+      $("#onlineUserList").append(
+        "<li class='userOnline'>" + userName + "</li>"
+      );
+
+      updateUsersLogin();
     });
 
-    document.getElementById("overlay").style.display = "none";
-    sendMessage.innerHTML = messageBar;
-    $("#usernameLabel").text("Welcome, " + userName);
+    //Username is taken
+    socket.on("usernameTaken", function(data) {
+      $("#usrName").val("");
+      // Multiple userErrors because Chrome, Firefox, and Safari handle placeholder differently
+      $("#usrName").addClass("userError");
+      $("#usrName").addClass("userError1");
+      $("#usrName").addClass("userError2");
 
-    sendMessage.classList.remove("hide");
-
-    var usr = userName;
-    var safe = usr
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-    sessionStorage.username = safe;
-    socket.emit("adduser", {
-      username: sessionStorage.username,
-	  room: room,
-      token: sessionStorage.token
+      $("#usrName").attr("placeholder", "Username is taken!");
+      console.log("username taken");
     });
-    $("#onlineUserList").append("<li class='userOnline'>" + userName + "</li>");
-
-    updateUsersLogin();
   }
 }
 

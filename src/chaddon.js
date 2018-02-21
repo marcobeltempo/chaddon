@@ -146,28 +146,42 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  //pierre
-  socket.on("verifyUser", function(data) {
-    var token = generateUnid();
-    var sql =
-      "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
-      data +
-      "','" +
-      token +
-      "')";
-    db.query(sql, (err, result) => {
-      if (err) {
-        console.info(err);
-      }
-      console.log("Database query: succesfully inserted 1 record");
-    });
-
-    console.log(generateUnid());
-    io.sockets.emit("verifySuccess", {
-      username: data,
-      token: token
-    });
+//pierre
+socket.on("verifyUser", function(data) {
+  var token = generateUnid();
+  var insert;
+  var usernameCheck =
+    "SELECT name FROM tbl_verified_user WHERE name=" + "'" + data + "'";
+  db.query(usernameCheck, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else if (result.rowCount > 0) {
+      console.log("Record found");
+      io.sockets.emit("usernameTaken", insert);
+    } else {
+      var sql =
+        "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
+        data +
+        "','" +
+        token +
+        "')";
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.info(err);
+        }
+        console.log("Database query: succesfully inserted 1 record");
+      });
+      io.sockets.emit("verifySuccess", {
+        username: data,
+        token: token
+      });
+    }
   });
+
+  console.log(generateUnid());
+});
+
+
 
   socket.on("sendChatName", function(data) {
 	  params = data;
