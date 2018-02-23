@@ -1,4 +1,5 @@
 module.exports = Object.freeze({
+  host: 'https://localhost:',
   port: parseInt(process.env.PORT || 3000, 10),
   env: process.env.NODE_ENV || "development",
 
@@ -9,3 +10,4 @@ module.exports = Object.freeze({
     return next();
   }
 });
+  
