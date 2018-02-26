@@ -63,7 +63,7 @@ io = io.listen(server);
 //usernames in room
 var localUser = {};
 
-//usernames that are currently connected to char
+//usernames that are currently connected to chat
 var usernames = {};
 
 // deleted users list
@@ -265,6 +265,7 @@ socket.on("verifyUser", function(data) {
         }
       }
     });
+	console.log(localUser);
 	//logAction("Message sent",socket.room,socket.username);
   });
 
@@ -272,19 +273,20 @@ socket.on("verifyUser", function(data) {
     console.log("Disconnected: true");
 	//logAction("Left room",socket.room,socket.username);
     //remove username from the global username list
-    console.info("Removed user: " + socket.username);
+    console.info("*****************Removed user: " + socket.username);
     if (delete usernames[socket.username]) {
       console.info("Removed user staus: success");
     }
 
     //remove username from the localroom username list
-    console.log("Parameters:    " + params);
+    console.log("Parameters:    " + socket.room);
     console.log("Total users:    " + localUser[0]);
-    if (localUser["" + params] != undefined) {
+    if (localUser["" + socket.room] != undefined) {
       console.log(
-        "in this if where undefined " + localUser["" + params][socket.username]
+        "in this if where undefined " + localUser["" + socket.room][socket.username]
       );
-      if (delete localUser["" + params][socket.username]) {
+     if (delete localUser["" + socket.room][socket.username]) {
+      //if (localUser.splice["" + params][socket.username]) {
         console.info("Remove local user: true");
       }
     } else {
