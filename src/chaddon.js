@@ -63,7 +63,7 @@ io = io.listen(server);
 //usernames in room
 var localUser = {};
 
-//usernames that are currently connected to char
+//usernames that are currently connected to chat
 var usernames = {};
 
 // deleted users list
@@ -125,12 +125,25 @@ io.sockets.on("connection", function(socket) {
             room: socket.room,
             timestamp: new Date()
           });
-
+		  console.log(io.sockets.adapter.rooms);
           console.log("Update users: 2nd call " + socket.room);
           io.sockets.in(socket.room).emit("updateUsers", {
             removeUser: socket.username,
             usernames: localUser["" + params]
           });
+		  //update your other tabs with new channel
+		  io.sockets.in(socket.username).emit("updateRooms", {
+            room: socket.room
+		  });
+		  //update current tab with other channels
+		  socket.join(username);
+		  for (var i in localUser){
+			if (localUser[i][username] != undefined){
+			  socket.emit("updateRooms", {
+				room: i
+			  });
+			}
+		  }
           if (history["" + params] !== undefined) {
             socket.emit("loadHistory", history["" + params]);
           }
@@ -181,15 +194,6 @@ socket.on("verifyUser", function(data) {
   console.log(generateUnid());
 });
 
-
-
-  socket.on("sendChatName", function(data) {
-	  params = data;
-	  socket.room = data;
-	  rooms.push(data);
-	  socket.join(data);
-    io.sockets.emit("chatName", socket.room);
-  });
 
   socket.on("verifyUserGoogle", function(data) {
     console.log("Verifying: Google User");
@@ -245,6 +249,7 @@ socket.on("verifyUser", function(data) {
     var message = {};
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
+    message.room = htmlEntities(msg.room);
     message.timestamp = new Date();
 	params = msg.room;
 	socket.room=msg.room;
@@ -267,6 +272,16 @@ socket.on("verifyUser", function(data) {
     });
 	//logAction("Message sent",socket.room,socket.username);
   });
+  
+  socket.on("viewchannel", function(data) {
+	if (data.oldchannel != undefined){
+		socket.leave(data.oldchannel);
+	}
+	socket.join(data.room);
+	if (history["" + data.room] !== undefined) {
+      socket.emit("loadHistory", history["" + data.room]);
+    }
+  });
 
   socket.on("disconnect", function() {
     console.log("Disconnected: true");
@@ -278,13 +293,14 @@ socket.on("verifyUser", function(data) {
     }
 
     //remove username from the localroom username list
-    console.log("Parameters:    " + params);
+    console.log("Parameters:    " + socket.room);
     console.log("Total users:    " + localUser[0]);
-    if (localUser["" + params] != undefined) {
+    if (localUser["" + socket.room] != undefined) {
       console.log(
-        "in this if where undefined " + localUser["" + params][socket.username]
+        "in this if where undefined " + localUser["" + socket.room][socket.username]
       );
-      if (delete localUser["" + params][socket.username]) {
+     if (delete localUser["" + socket.room][socket.username]) {
+     //if (localUser.splice["" + socket.room][socket.username]) {
         console.info("Remove local user: true");
       }
     } else {
@@ -301,6 +317,11 @@ socket.on("verifyUser", function(data) {
       removeUser: socket.username,
       usernames: localUser["" + params]
     });
+	io.sockets.in(socket.username).emit("updateRooms", {
+      disconnectFlag: disconnectFlag,
+      room: socket.room
+	});
+	socket.leave(socket.username);
     delete socket.username;
     socket.leave(socket.room);
   });
