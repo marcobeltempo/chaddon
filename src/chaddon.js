@@ -75,6 +75,8 @@ var rooms = [];
 //storing room specific history
 var history = {};
 
+
+
 function htmlEntities(str) {
   return String(str)
     .replace(/&/g, "&amp;")
@@ -241,6 +243,24 @@ socket.on("verifyUser", function(data) {
     });
   });
 
+  socket.on("removeUser", function(data) { 
+    var sql2 = "DELETE FROM tbl_verified_user WHERE TOKEN ='" + data  + "'";
+    var sql = "SELECT name FROM tbl_verified_user WHERE TOKEN ='" + data  + "'";
+    db.query(sql, (err, result) => {
+      if(result) {
+        console.info("Removing User");
+      } else {
+        console.info("User removal Failed");
+      }
+    });
+
+    db.query(sql2, (err, result) => {
+        if (result) {
+          console.info("Deleted user from database");
+        }     
+    });  
+  });
+
   socket.on("message", function(msg) {
     var message = {};
     message.message = htmlEntities(msg.message);
@@ -286,6 +306,9 @@ socket.on("verifyUser", function(data) {
       );
       if (delete localUser["" + params][socket.username]) {
         console.info("Remove local user: true");
+      }
+
+      if (localUser["" + params] != undefined) { 
       }
     } else {
       console.info("Room: undefined");

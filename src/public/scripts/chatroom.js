@@ -3,6 +3,9 @@ var user = null;
 var socket = io.connect(document.location.origin);
 var loginState;
 var room = document.URL.split('/')[3];
+var messageBar =
+    '<form id="msgBar" class="navbar-form" onSubmit="return false;"><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
+
 
 // sends message only
 function sendMessage() {
@@ -33,8 +36,7 @@ function userLogin() {
   console.info("user login called");
   var userName = document.getElementById("usrName").value;
   var sendMessage = document.getElementById("sendMessageBar");
-  var messageBar =
-    '<form class="navbar-form" onSubmit="return false;"><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
+
   if (userName.length != 0) {
     var socket = io.connect(document.location.origin);
 
@@ -64,7 +66,7 @@ function userLogin() {
       $("#onlineUserList").append(
         "<li class='userOnline'>" + userName + "</li>"
       );
-
+      location.reload();
       updateUsersLogin();
     });
 
@@ -122,8 +124,7 @@ function checkUsername() {
 
   var userName = document.getElementById("usrName").value;
   var sendMessage = document.getElementById("sendMessageBar");
-  var messageBar =
-    '<form class="navbar-form" onSubmit="return false;" ><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
+
   if (sessionStorage.username) {
     document.getElementById("overlay").style.display = "none";
     sendMessage.innerHTML = messageBar;
@@ -316,4 +317,32 @@ function channelSearch() {
   var url = "/" + document.getElementById("channel-search").value;
   location.href = url;
   return false;
+}
+
+
+var idleTime = 0;
+  console.info("Timeout");
+    //Increment the idle time counter every minute.
+    var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+
+    //Zero the idle timer on mouse movement.
+    $(this).mousemove(function (e) {
+        idleTime = 0;
+    });
+    $(this).keypress(function (e) {
+        idleTime = 0;
+    });
+
+
+function timerIncrement() {
+    idleTime = idleTime + 1;
+    if (idleTime > 2) { // 2 minutes for development purposes
+      $("#overlay").show();
+      $("#msgBar").hide();
+      socket.emit("removeUser",sessionStorage.token);
+      sessionStorage.username = "";
+      sessionStorage.token = "";
+      location.reload();
+      
+    }
 }
