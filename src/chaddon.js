@@ -75,8 +75,6 @@ var rooms = [];
 //storing room specific history
 var history = {};
 
-
-
 function htmlEntities(str) {
   return String(str)
     .replace(/&/g, "&amp;")
@@ -98,7 +96,7 @@ io.sockets.on("connection", function(socket) {
           console.log("User verification status: verified");
 
           var username = htmlEntities(message.username);
-		  params = message.room;
+          params = message.room;
           //store the username in the socket session for this client
           socket.username = username;
 
@@ -116,8 +114,8 @@ io.sockets.on("connection", function(socket) {
           } else {
             localUser["" + params][username] = username;
           }
-		  
-		 // logAction("Joined room",socket.room,socket.username);
+
+          // logAction("Joined room",socket.room,socket.username);
 
           //send client the room
           socket.join(params);
@@ -148,79 +146,76 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-//pierre
-socket.on("verifyUser", function(data) {
-  var token = generateUnid();
-  var insert;
-  var usernameCheck =
-    "SELECT name FROM tbl_verified_user WHERE name=" + "'" + data + "'";
-  db.query(usernameCheck, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else if (result.rowCount > 0) {
-      console.log("Record found");
-      io.sockets.emit("usernameTaken", insert);
-    } else {
-      var sql =
-        "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
-        data +
-        "','" +
-        token +
-        "')";
-      db.query(sql, (err, result) => {
-        if (err) {
-          console.info(err);
-        }
-        console.log("Database query: succesfully inserted 1 record");
-      });
-      io.sockets.emit("verifySuccess", {
-        username: data,
-        token: token
-      });
-    }
+  //pierre
+  socket.on("verifyUser", function(data) {
+    var token = generateUnid();
+    var insert;
+    var usernameCheck =
+      "SELECT name FROM tbl_verified_user WHERE name=" + "'" + data + "'";
+    db.query(usernameCheck, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else if (result.rowCount > 0) {
+        console.log("Record found");
+        io.sockets.emit("usernameTaken", insert);
+      } else {
+        var sql =
+          "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
+          data +
+          "','" +
+          token +
+          "')";
+        db.query(sql, (err, result) => {
+          if (err) {
+            console.info(err);
+          }
+          console.log("Database query: succesfully inserted 1 record");
+        });
+        io.sockets.emit("verifySuccess", {
+          username: data,
+          token: token
+        });
+      }
+    });
+
+    console.log(generateUnid());
   });
 
-  console.log(generateUnid());
-});
-
-
-
   socket.on("sendChatName", function(data) {
-	  params = data;
-	  socket.room = data;
-	  rooms.push(data);
-	  socket.join(data);
+    params = data;
+    socket.room = data;
+    rooms.push(data);
+    socket.join(data);
     io.sockets.emit("chatName", socket.room);
   });
 
   socket.on("verifyUserGoogle", function(data) {
     console.log("Verifying: Google User");
-    var sql = "SELECT token FROM tbl_verified_user WHERE token ='" + data.token +"'";
+    var sql =
+      "SELECT token FROM tbl_verified_user WHERE token ='" + data.token + "'";
 
     db.query(sql, (err, result) => {
       if (err) {
         console.log("Database " + err);
-      } else if (result.rowCount > 0){
-		  console.log("Database query: google user verified");
-      }
-	  else {
-		  sql =
-		  "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
-		  data.username +
-		  "','" +
-		  data.token +
-		  "')";
+      } else if (result.rowCount > 0) {
+        console.log("Database query: google user verified");
+      } else {
+        sql =
+          "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
+          data.username +
+          "','" +
+          data.token +
+          "')";
 
-		  db.query(sql, (err, result) => {
-			  if (err) {
-				console.log("Database " + err);
-			  } else {
-				console.log("Database query: succesfully inserted 1 record");
-			  }
-		  });
-	  }
+        db.query(sql, (err, result) => {
+          if (err) {
+            console.log("Database " + err);
+          } else {
+            console.log("Database query: succesfully inserted 1 record");
+          }
+        });
+      }
     });
-    
 
     console.log("Generated id: ", generateUnid());
     io.sockets.emit("verifySuccess", {
@@ -243,11 +238,11 @@ socket.on("verifyUser", function(data) {
     });
   });
 
-  socket.on("removeUser", function(data) { 
-    var sql2 = "DELETE FROM tbl_verified_user WHERE TOKEN ='" + data  + "'";
-    var sql = "SELECT name FROM tbl_verified_user WHERE TOKEN ='" + data  + "'";
+  socket.on("removeUser", function(data) {
+    var sql2 = "DELETE FROM tbl_verified_user WHERE TOKEN ='" + data + "'";
+    var sql = "SELECT name FROM tbl_verified_user WHERE TOKEN ='" + data + "'";
     db.query(sql, (err, result) => {
-      if(result) {
+      if (result) {
         console.info("Removing User");
       } else {
         console.info("User removal Failed");
@@ -255,10 +250,10 @@ socket.on("verifyUser", function(data) {
     });
 
     db.query(sql2, (err, result) => {
-        if (result) {
-          console.info("Deleted user from database");
-        }     
-    });  
+      if (result) {
+        console.info("Deleted user from database");
+      }
+    });
   });
 
   socket.on("message", function(msg) {
@@ -266,8 +261,8 @@ socket.on("verifyUser", function(data) {
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
     message.timestamp = new Date();
-	params = msg.room;
-	socket.room=msg.room;
+    params = msg.room;
+    socket.room = msg.room;
 
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + msg.token + "'";
@@ -285,12 +280,12 @@ socket.on("verifyUser", function(data) {
         }
       }
     });
-	//logAction("Message sent",socket.room,socket.username);
+    //logAction("Message sent",socket.room,socket.username);
   });
 
   socket.on("disconnect", function() {
     console.log("Disconnected: true");
-	//logAction("Left room",socket.room,socket.username);
+    //logAction("Left room",socket.room,socket.username);
     //remove username from the global username list
     console.info("Removed user: " + socket.username);
     if (delete usernames[socket.username]) {
@@ -308,7 +303,7 @@ socket.on("verifyUser", function(data) {
         console.info("Remove local user: true");
       }
 
-      if (localUser["" + params] != undefined) { 
+      if (localUser["" + params] != undefined) {
       }
     } else {
       console.info("Room: undefined");
@@ -351,9 +346,18 @@ function generateUnid(
         .toUpperCase();
 }
 
-function logAction(action,room,user){
-	var fs = require('fs');
-	var log = fs.createWriteStream("chatroom-log.txt", {flags:'a'});
-	log.write(new Date() + " - \t" + action + " - \t user: " + user + " - \t room: " + room + "\n");
-	log.end();
+function logAction(action, room, user) {
+  var fs = require("fs");
+  var log = fs.createWriteStream("chatroom-log.txt", { flags: "a" });
+  log.write(
+    new Date() +
+      " - \t" +
+      action +
+      " - \t user: " +
+      user +
+      " - \t room: " +
+      room +
+      "\n"
+  );
+  log.end();
 }
