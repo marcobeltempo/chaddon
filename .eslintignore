@@ -1,5 +1,6 @@
 **/*.min.js
-node_modules
 LICENSE
+node_modules
 package-lock.json
+PRIVACY_POLICY.md
 README.MD
