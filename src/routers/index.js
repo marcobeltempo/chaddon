@@ -13,6 +13,13 @@ module.exports = function(app) {
     });
   });
 
+  privacyPolicy: app.get("/privacy", function(req, res) {
+    params = req.params.id;
+    res.sendFile("./src/views/privacy_policy.html", {
+      root: "./"
+    });
+  });
+
   channel: app.get("/:id", function(req, res) {
     params = req.params.id;
     res.sendFile("./src/views/chatroom.html", {

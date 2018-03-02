@@ -20,13 +20,12 @@ app.set("views", "views");
 app.set("view engine", "html");
 app.use(express.static("./src/public"));
 app.use(bodyParser);
-var keys_dir = "./sslcert/";
-//Set HTTPS/SSL options
 
+//Set HTTPS/SSL options
 var server;
 
 if (config.env === "production") {
-  //Create HTTP server
+  //Create HTTP server 
   server = http.createServer(app);
   app.use(config.forceSsl);
 } else {
@@ -46,7 +45,7 @@ server.listen(config.port, () => {
       app.get("env") +
       `\nPort: ${config.port}`
   );
-  console.log(`Link: https://localhost:${config.port}`);
+  console.log(`Link: ${config.host}${config.port}`);
   console.log("\n__________________________________________________________\n");
 
   //monitor idle db clients
@@ -216,7 +215,7 @@ io.sockets.on("connection", function(socket) {
         });
       }
     });
-
+    
     console.log("Generated id: ", generateUnid());
     io.sockets.emit("verifySuccess", {
       username: data.username,
