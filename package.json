@@ -1,6 +1,7 @@
 {
     "name": "chaddon",
     "version": "0.0.2",
+    "license": "LICENSE",
     "description": "A Chrome browser extension connecting visitors of a specific url.",
     "keywords": [
         "chaddon, chrome, bowser, addon"
