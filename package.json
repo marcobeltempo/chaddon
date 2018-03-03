@@ -15,10 +15,9 @@
         "socket.io": "^2.0.3"
     },
     "devDependencies": {
-        "babel-eslint": "^8.2.1",
         "eslint": "^4.13.1",
+        "eslint-config-prettier": "^2.9.0",
         "eslint-plugin-prettier": "^2.3.1",
-        "eslint-plugin-react": "^7.6.1",
         "nodemon": "^1.14.12",
         "npm-run-all": "^4.1.2",
         "prettier": "^1.9.2"
@@ -30,6 +29,7 @@
         "start": "node ./src/chaddon.js",
         "start:dev": "nodemon ./src/chaddon.js",
         "test:lint": "eslint .",
-        "test:lint:fix": "eslint . --fix"
+        "test:lint:fix": "eslint . --fix",
+        "test": "npm run-s test:lint"
     }
 }
