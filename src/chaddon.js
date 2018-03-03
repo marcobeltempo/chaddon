@@ -62,7 +62,7 @@ io = io.listen(server);
 //usernames in room
 var localUser = {};
 
-//usernames that are currently connected to char
+//usernames that are currently connected to chat
 var usernames = {};
 
 // deleted users list
@@ -130,6 +130,19 @@ io.sockets.on("connection", function(socket) {
             removeUser: socket.username,
             usernames: localUser["" + params]
           });
+		  //update your other tabs with new channel
+		  io.sockets.in(socket.username).emit("updateRooms", {
+            room: socket.room
+		  });
+		  //update current tab with other channels
+		  socket.join(username);
+		  for (var i in localUser){
+			if (localUser[i][username] != undefined){
+			  socket.emit("updateRooms", {
+				room: i
+			  });
+			}
+		  }
           if (history["" + params] !== undefined) {
             socket.emit("loadHistory", history["" + params]);
           }
@@ -180,19 +193,11 @@ io.sockets.on("connection", function(socket) {
     console.log(generateUnid());
   });
 
-  socket.on("sendChatName", function(data) {
-    params = data;
-    socket.room = data;
-    rooms.push(data);
-    socket.join(data);
-    io.sockets.emit("chatName", socket.room);
-  });
 
   socket.on("verifyUserGoogle", function(data) {
     console.log("Verifying: Google User");
     var sql =
       "SELECT token FROM tbl_verified_user WHERE token ='" + data.token + "'";
-
     db.query(sql, (err, result) => {
       if (err) {
         console.log("Database " + err);
@@ -259,6 +264,7 @@ io.sockets.on("connection", function(socket) {
     var message = {};
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
+    message.room = htmlEntities(msg.room);
     message.timestamp = new Date();
     params = msg.room;
     socket.room = msg.room;
@@ -282,6 +288,16 @@ io.sockets.on("connection", function(socket) {
     //logAction("Message sent",socket.room,socket.username);
   });
 
+  socket.on("viewchannel", function(data) {
+	if (data.oldchannel != undefined){
+		socket.leave(data.oldchannel);
+	}
+	socket.join(data.room);
+	if (history["" + data.room] !== undefined) {
+      socket.emit("loadHistory", history["" + data.room]);
+    }
+  });
+
   socket.on("disconnect", function() {
     console.log("Disconnected: true");
     //logAction("Left room",socket.room,socket.username);
@@ -292,17 +308,15 @@ io.sockets.on("connection", function(socket) {
     }
 
     //remove username from the localroom username list
-    console.log("Parameters:    " + params);
+    console.log("Parameters:    " + socket.room);
     console.log("Total users:    " + localUser[0]);
-    if (localUser["" + params] != undefined) {
+    if (localUser["" + socket.room] != undefined) {
       console.log(
-        "in this if where undefined " + localUser["" + params][socket.username]
+        "in this if where undefined " + localUser["" + socket.room][socket.username]
       );
-      if (delete localUser["" + params][socket.username]) {
+     if (delete localUser["" + socket.room][socket.username]) {
+     //if (localUser.splice["" + socket.room][socket.username]) {
         console.info("Remove local user: true");
-      }
-
-      if (localUser["" + params] != undefined) {
       }
     } else {
       console.info("Room: undefined");
@@ -318,6 +332,11 @@ io.sockets.on("connection", function(socket) {
       removeUser: socket.username,
       usernames: localUser["" + params]
     });
+	io.sockets.in(socket.username).emit("updateRooms", {
+      disconnectFlag: disconnectFlag,
+      room: socket.room
+	});
+	socket.leave(socket.username);
     delete socket.username;
     socket.leave(socket.room);
   });
