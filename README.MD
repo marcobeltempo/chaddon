@@ -1,3 +1,5 @@
+![alt text](https://travis-ci.com/marcobeltempo/chaddon.svg?token=M3Dz3y61ixyrS7SXSzMF&branch=dev
+ "Travis CI Build Status:Dev Branch")
 ### Prerequisites
 
 * node v8.9 and up
@@ -24,10 +26,10 @@ Setup chaddon on your local machine
 
 ## Contributing
 
-###Submitting a Pull Request
+### Submitting a Pull Request
 Make sure to go through the following checklist before submitting and merging a pull request.
 
-- Create a feature branch for big changes to ensure all Travis CI tests are passing. Avoid contributing diretly to the `dev` branch`
+- Create a feature branch for big changes to ensure all Travis CI tests are passing. (Avoid contributing diretly to the `dev` branch)
 - execute `npm test` before pushing changes upstream
   - linting errors will cause Travis CI to fail
   - if there are errors, execute `npm run test:lint:fix`to automatically fix them
@@ -43,4 +45,7 @@ Make sure to go through the following checklist before submitting and merging a 
 * **Geoff McCollam**
 * **Marco Beltempo**
 
-## License
+***
+
+**[License](https://github.com/marcobeltempo/chaddon/blob/dev/LICENSE) |** 
+**[Privacy Policy](https://github.com/marcobeltempo/chaddon/blob/dev/PRIVACY_POLICY.md)**
