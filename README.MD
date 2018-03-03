@@ -24,6 +24,17 @@ Setup chaddon on your local machine
 
 ## Contributing
 
+###Submitting a Pull Request
+Make sure to go through the following checklist before submitting and merging a pull request.
+
+- execute `npm test` before pushing changes upstream
+  - Travis CI will fail if there are linting errors
+  - if there are errors, execute `npm run test:lint:fix`to automatically fix them
+- when submitting a pull request, make sure to detail:
+  - the newly added feature or bug fix
+  - known bugs
+  - any additional steps 
+
 ## Authors
 
 * **Michael Pierre**
