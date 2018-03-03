@@ -125,7 +125,7 @@ io.sockets.on("connection", function(socket) {
             room: socket.room,
             timestamp: new Date()
           });
-		  console.log(io.sockets.adapter.rooms);
+		  
           console.log("Update users: 2nd call " + socket.room);
           io.sockets.in(socket.room).emit("updateUsers", {
             removeUser: socket.username,
