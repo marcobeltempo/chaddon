@@ -2,8 +2,9 @@
 var user = null;
 var socket = io.connect(document.location.origin);
 var loginState;
-var room = document.URL.split('/')[3];
-var currentchannel = room;
+var room = document.URL.split("/")[3];
+var messageBar =
+  '<form id="msgBar" class="navbar-form" onSubmit="return false;"><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
 
 // sends message only
 function sendMessage() {
@@ -20,7 +21,7 @@ function sendMessage() {
       token: sessionStorage.token,
       message: safe,
       user: sessionStorage.username,
-	  room: currentchannel,
+      room: room,
       timestamp: new Date()
     }); // this is insecure user can delete all validation on client side and send messages
 
@@ -34,8 +35,7 @@ function userLogin() {
   console.info("user login called");
   var userName = document.getElementById("usrName").value;
   var sendMessage = document.getElementById("sendMessageBar");
-  var messageBar =
-    '<form class="navbar-form" onSubmit="return false;"><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
+
   if (userName.length != 0) {
     var socket = io.connect(document.location.origin);
 
@@ -60,13 +60,12 @@ function userLogin() {
       sessionStorage.username = safe;
       socket.emit("adduser", {
         username: sessionStorage.username,
-		room: room,
         token: sessionStorage.token
       });
       $("#onlineUserList").append(
         "<li class='userOnline'>" + userName + "</li>"
       );
-
+      location.reload();
       updateUsersLogin();
     });
 
@@ -89,7 +88,7 @@ function updateUsersLogin() {
   socket.on("updateUsersLogin", function(data) {
     console.info("updating users. Disconnect Flag: " + data.disconnectFlag);
     console.info("This user left: " + data.removeUser);
-	
+
     if (data != null && data.disconnectFlag == undefined) {
       //$('#onlineUserList').html(""); //This is being called and clearing the list because data is not null
       // Were clearing the list however sometimes data.usernames has no data which is causing this error
@@ -117,12 +116,14 @@ document.getElementById("usrName").addEventListener("keyup", function(event) {
 // Important! For form tag add onSubmit="return false;" to stop page refresh
 function checkUsername() {
   //current-channel
-  $("#current-channel").text(room + " Chat");
+  //socket.emit("sendChatName",room);
+  //socket.on("chatName", function(data) {
+  /* if (data != null)*/ $("#current-channel").text(room + " Chat");
+  //});
 
   var userName = document.getElementById("usrName").value;
   var sendMessage = document.getElementById("sendMessageBar");
-  var messageBar =
-    '<form class="navbar-form" onSubmit="return false;" ><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
+
   if (sessionStorage.username) {
     document.getElementById("overlay").style.display = "none";
     sendMessage.innerHTML = messageBar;
@@ -167,7 +168,7 @@ $(function() {
 
     socket.emit("adduser", {
       username: sessionStorage.username,
-	  room: room,
+      room: room,
       token: sessionStorage.token
     });
   } else {
@@ -192,7 +193,7 @@ $(function() {
       socket.emit("message", {
         message: safe,
         user: sessionStorage.username,
-		room: currentchannel,
+        room: room,
         timestamp: new Date()
       });
     }
@@ -216,7 +217,7 @@ $(function() {
         socket.emit("message", {
           message: safe,
           user: user,
-		  room: currentchannel,
+          room: room,
           timestamp: new Date()
         });
       }
@@ -224,23 +225,6 @@ $(function() {
       e.preventDefault();
       return false;
     }
-  });
-  
-  //handle clicking channels in the channel box
-  $("div").on("click", ".changechannel", function(e){
-	e.preventDefault();
-	if (currentchannel != e.currentTarget.innerHTML){
-		var oldchannel;
-		if (currentchannel != room){ //you will leave old channel unless old channel is your current room since that affects other tabs
-			oldchannel = currentchannel;
-		}
-		currentchannel = e.currentTarget.innerHTML;
-		$("#current-channel").text(currentchannel + " Chat");
-		socket.emit("viewchannel", {
-			old: oldchannel,
-			room: currentchannel
-		});
-	}
   });
 
   socket.on("userAdded", function(data) {
@@ -286,27 +270,10 @@ $(function() {
       }
     }
   });
-  
-  socket.on("updateRooms",function(data){
-	  console.log("updateRooms called");
-	  if (data != null && data.disconnectFlag == undefined){
-		$("#userOpenChats").append("<li class='userOnline'><a href='' class='changechannel' value='"+data.room+"'>"+data.room+"</div></li>");
-	  }
-	  else if (data.disconnectFlag == true){
-		var liRooms = document.getElementsByClassName("userOnline");
-		for (var i = 0; i < liRooms.length; i++) {
-			var liRoom = liRooms[i].textContent;
-			if (liRoom == data.room) {
-			  document.getElementsByClassName("userOnline")[i].remove();
-			}
-		}
-	  }
-  });
 
   //load history
   socket.on("loadHistory", function(data) {
     console.info("loading history");
-	$("#liveChat").empty();
     for (var i = 0; i < data.length; i++) {
       var html =
         "<div class='post-other'> <div class='post-inner'><b>" +
@@ -320,37 +287,59 @@ $(function() {
 
   socket.on("update", function(data) {
     console.log("updatechat called");
-	
-	if (data.room == currentchannel){
-		var postClass;
-		if (data.user === user) {
-		  postClass = "post-current";
-		} else {
-		  postClass = "post-other";
-		}
-		var html =
-		  "<div class='" +
-		  postClass +
-		  "'> <div class='post-inner'><b>" +
-		  data.user +
-		  "</b> " +
-		  data.message +
-		  "</div></div>";
-		console.log("Message " + html);
-		$("#liveChat").append(html);
-		$("html, body").animate(
-		  {
-			scrollTop: $(document).height()
-		  },
-		  "slow"
-		);
-	}
+    var postClass;
+    if (data.user === user) {
+      postClass = "post-current";
+    } else {
+      postClass = "post-other";
+    }
+    var html =
+      "<div class='" +
+      postClass +
+      "'> <div class='post-inner'><b>" +
+      data.user +
+      "</b> " +
+      data.message +
+      "</div></div>";
+    console.log("Message " + html);
+    $("#liveChat").append(html);
+    $("html, body").animate(
+      {
+        scrollTop: $(document).height()
+      },
+      "slow"
+    );
   });
 });
-
 
 function channelSearch() {
   var url = "/" + document.getElementById("channel-search").value;
   location.href = url;
   return false;
+}
+
+var idleTime = 0;
+console.info("Timeout");
+//Increment the idle time counter every minute.
+var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+
+//Zero the idle timer on mouse movement.
+$(this).mousemove(function(e) {
+  idleTime = 0;
+});
+$(this).keypress(function(e) {
+  idleTime = 0;
+});
+
+function timerIncrement() {
+  idleTime = idleTime + 1;
+  if (idleTime > 2) {
+    // 2 minutes for development purposes
+    $("#overlay").show();
+    $("#msgBar").hide();
+    socket.emit("removeUser", sessionStorage.token);
+    sessionStorage.username = "";
+    sessionStorage.token = "";
+    location.reload();
+  }
 }
