@@ -2,7 +2,8 @@
 var user = null;
 var socket = io.connect(document.location.origin);
 var loginState;
-var room = document.URL.split("/")[3];
+var room = document.URL.split("/")[3];		  
+var currentchannel = room;
 var messageBar =
   '<form id="msgBar" class="navbar-form" onSubmit="return false;"><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
 
@@ -21,7 +22,7 @@ function sendMessage() {
       token: sessionStorage.token,
       message: safe,
       user: sessionStorage.username,
-      room: room,
+	  room: currentchannel,
       timestamp: new Date()
     }); // this is insecure user can delete all validation on client side and send messages
 
@@ -60,6 +61,7 @@ function userLogin() {
       sessionStorage.username = safe;
       socket.emit("adduser", {
         username: sessionStorage.username,
+		room: room,
         token: sessionStorage.token
       });
       $("#onlineUserList").append(
@@ -116,10 +118,7 @@ document.getElementById("usrName").addEventListener("keyup", function(event) {
 // Important! For form tag add onSubmit="return false;" to stop page refresh
 function checkUsername() {
   //current-channel
-  //socket.emit("sendChatName",room);
-  //socket.on("chatName", function(data) {
-  /* if (data != null)*/ $("#current-channel").text(room + " Chat");
-  //});
+  $("#current-channel").text(room + " Chat");
 
   var userName = document.getElementById("usrName").value;
   var sendMessage = document.getElementById("sendMessageBar");
@@ -193,7 +192,7 @@ $(function() {
       socket.emit("message", {
         message: safe,
         user: sessionStorage.username,
-        room: room,
+		room: currentchannel,
         timestamp: new Date()
       });
     }
@@ -217,13 +216,30 @@ $(function() {
         socket.emit("message", {
           message: safe,
           user: user,
-          room: room,
+		  room: currentchannel,
           timestamp: new Date()
         });
       }
       document.getElementById("message").value = "";
       e.preventDefault();
       return false;
+    }
+  });
+  
+  //handle clicking channels in the channel box
+  $("div").on("click", ".changechannel", function(e){
+	e.preventDefault();
+	if (currentchannel != e.currentTarget.innerHTML){
+		var oldchannel;
+		if (currentchannel != room){ //you will leave old channel unless old channel is your current room since that affects other tabs
+			oldchannel = currentchannel;
+		}
+		currentchannel = e.currentTarget.innerHTML;
+		$("#current-channel").text(currentchannel + " Chat");
+		socket.emit("viewchannel", {
+			old: oldchannel,
+			room: currentchannel
+		});
     }
   });
 
@@ -271,9 +287,26 @@ $(function() {
     }
   });
 
+  socket.on("updateRooms",function(data){
+	  console.log("updateRooms called");
+	  if (data != null && data.disconnectFlag == undefined){
+		$("#userOpenChats").append("<li class='userOnline'><a href='' class='changechannel' value='"+data.room+"'>"+data.room+"</div></li>");
+	  }
+	  else if (data.disconnectFlag == true){
+		var liRooms = document.getElementsByClassName("userOnline");
+		for (var i = 0; i < liRooms.length; i++) {
+			var liRoom = liRooms[i].textContent;
+			if (liRoom == data.room) {
+			  document.getElementsByClassName("userOnline")[i].remove();
+			}
+		}
+	  }
+  });
+
   //load history
   socket.on("loadHistory", function(data) {
     console.info("loading history");
+	$("#liveChat").empty();
     for (var i = 0; i < data.length; i++) {
       var html =
         "<div class='post-other'> <div class='post-inner'><b>" +
@@ -287,6 +320,8 @@ $(function() {
 
   socket.on("update", function(data) {
     console.log("updatechat called");
+	
+	if (data.room == currentchannel){
     var postClass;
     if (data.user === user) {
       postClass = "post-current";
@@ -309,6 +344,7 @@ $(function() {
       },
       "slow"
     );
+	}
   });
 });
 
