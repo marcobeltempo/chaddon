@@ -16,11 +16,9 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
-      <script src='https://www.google.com/recaptcha/api.js'></script>
-	  <link rel="stylesheet" href="../stylesheets/style.css">
+      <link rel="stylesheet" href="../stylesheets/style.css">
    </head>
    <body onload="checkUsername()">
-   
       <nav class="navbar navbar-inverse">
          <div class="container-fluid">
             <div class="navbar-header">
@@ -61,25 +59,16 @@
          <h3 class="overlayLogo1">Temporary User</h3>
          <div class="form-group usernameOverlay">
             <label for="usr">Name:</label>
-			<br>
-			<span class="msg-error2 error"></span>
             <input id="usrName" type="text" class="form-control" id="usr" maxlength="10" placeholder="Enter username">
-            
-			<h3>Or Sign In with Google</h3>
+            <h3>Or Sign In with Google</h3>
             <div class="signIn">
                <div id="googleSignIn" class="g-signin2 signIn" data-onsuccess="onSignIn" data-theme="dark"></div>
             </div>
-			<div class="chatPad">
-           <span class="msg-error error"></span>
-			  <div class="g-recaptcha" id="MyCaptcha" data-sitekey="6LehiEQUAAAAABrcFG9kXBWe6_tC1BW8Fmz3UG9b"></div>
-			  <button id="enterChat" onclick="userLogin()" type="submit" class="btn btn-primary" >Let's Chat!</button>
-            
-			</div>
-			
+            <div class="chatPad">
+               <button id="enterChat" onclick="userLogin()" type="submit" class="btn btn-primary">Let's Chat!</button>
+            </div>
          </div>
-
       </div>
-	  
       <div class="container-fluid">
          <div class="row">
             <div class="col-sm-2">
@@ -120,6 +109,5 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
       <script src="../scripts/chatroom.js"></script>
       <script src="../scripts/googleAuthentication.js"></script>
-    
    </body>
 </html>
