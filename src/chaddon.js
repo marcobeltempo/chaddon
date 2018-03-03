@@ -41,8 +41,8 @@ server.listen(config.port, () => {
   console.log("\n__________________________________________________________\n");
   console.log(
     `Chaddon Express Server Started\nMode: ` +
-      app.get("env") +
-      `\nPort: ${config.port}`
+    app.get("env") +
+    `\nPort: ${config.port}`
   );
   console.log(`Link: ${config.host}${config.port}`);
   console.log("\n__________________________________________________________\n");
@@ -83,14 +83,14 @@ function htmlEntities(str) {
     .replace(/"/g, "&quot;");
 }
 
-io.sockets.on("connection", function(socket) {
+io.sockets.on("connection", function (socket) {
   socket.emit("news", "testdata");
 
-  socket.on("adduser", function(message) {
+  socket.on("adduser", function (message) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + message.token + "'";
 
-    db.query(sql, function(err, result) {
+    db.query(sql, function (err, result) {
       if (result.rowCount > 0) {
         if (result) {
           console.log("User verification status: verified");
@@ -131,19 +131,19 @@ io.sockets.on("connection", function(socket) {
             removeUser: socket.username,
             usernames: localUser["" + params]
           });
-		  //update your other tabs with new channel
-		  io.sockets.in(socket.username).emit("updateRooms", {
+          //update your other tabs with new channel
+          io.sockets.in(socket.username).emit("updateRooms", {
             room: socket.room
-		  });
-		  //update current tab with other channels
-		  socket.join(username);
-		  for (var i in localUser){
-			if (localUser[i][username] != undefined){
-			  socket.emit("updateRooms", {
-				room: i
-			  });
-			}
-		  }
+          });
+          //update current tab with other channels
+          socket.join(username);
+          for (var i in localUser) {
+            if (localUser[i][username] != undefined) {
+              socket.emit("updateRooms", {
+                room: i
+              });
+            }
+          }
           if (history["" + params] !== undefined) {
             socket.emit("loadHistory", history["" + params]);
           }
@@ -152,7 +152,7 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("getOnlineUsers", function() {
+  socket.on("getOnlineUsers", function () {
     io.sockets.in(socket.room).emit("updateUsersLogin", {
       removeUser: socket.username,
       usernames: localUser["" + params]
@@ -160,7 +160,7 @@ io.sockets.on("connection", function(socket) {
   });
 
   //pierre
-  socket.on("verifyUser", function(data) {
+  socket.on("verifyUser", function (data) {
     var token = generateUnid();
     var insert;
     var usernameCheck =
@@ -195,7 +195,7 @@ io.sockets.on("connection", function(socket) {
   });
 
 
-  socket.on("verifyUserGoogle", function(data) {
+  socket.on("verifyUserGoogle", function (data) {
     console.log("Verifying: Google User");
     var sql =
       "SELECT token FROM tbl_verified_user WHERE token ='" + data.token + "'";
@@ -229,7 +229,7 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("verifySend", function(data) {
+  socket.on("verifySend", function (data) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + data.token + "'";
     db.query(sql, (err, result) => {
@@ -243,7 +243,7 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("removeUser", function(data) {
+  socket.on("removeUser", function (data) {
     var sql2 = "DELETE FROM tbl_verified_user WHERE TOKEN ='" + data + "'";
     var sql = "SELECT name FROM tbl_verified_user WHERE TOKEN ='" + data + "'";
     db.query(sql, (err, result) => {
@@ -261,7 +261,7 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("message", function(msg) {
+  socket.on("message", function (msg) {
     var message = {};
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
@@ -289,17 +289,17 @@ io.sockets.on("connection", function(socket) {
     //logAction("Message sent",socket.room,socket.username);
   });
 
-  socket.on("viewchannel", function(data) {
-	if (data.oldchannel != undefined){
-		socket.leave(data.oldchannel);
-	}
-	socket.join(data.room);
-	if (history["" + data.room] !== undefined) {
+  socket.on("viewchannel", function (data) {
+    if (data.oldchannel != undefined) {
+      socket.leave(data.oldchannel);
+    }
+    socket.join(data.room);
+    if (history["" + data.room] !== undefined) {
       socket.emit("loadHistory", history["" + data.room]);
     }
   });
 
-  socket.on("disconnect", function() {
+  socket.on("disconnect", function () {
     console.log("Disconnected: true");
     //logAction("Left room",socket.room,socket.username);
     //remove username from the global username list
@@ -315,8 +315,8 @@ io.sockets.on("connection", function(socket) {
       console.log(
         "in this if where undefined " + localUser["" + socket.room][socket.username]
       );
-     if (delete localUser["" + socket.room][socket.username]) {
-     //if (localUser.splice["" + socket.room][socket.username]) {
+      if (delete localUser["" + socket.room][socket.username]) {
+        //if (localUser.splice["" + socket.room][socket.username]) {
         console.info("Remove local user: true");
       }
 
@@ -337,11 +337,11 @@ io.sockets.on("connection", function(socket) {
       removeUser: socket.username,
       usernames: localUser["" + params]
     });
-	io.sockets.in(socket.username).emit("updateRooms", {
+    io.sockets.in(socket.username).emit("updateRooms", {
       disconnectFlag: disconnectFlag,
       room: socket.room
-	});
-	socket.leave(socket.username);
+    });
+    socket.leave(socket.username);
     delete socket.username;
     socket.leave(socket.room);
   });
@@ -350,21 +350,21 @@ io.sockets.on("connection", function(socket) {
 function generateUnid(a) {
   return a // if the placeholder was passed, return
     ? // a random number from 0 to 15
-      (
-        a ^ // unless b is 8,
-        ((Math.random() * // in which case
-          16) >> // a random number from
-          (a / 4))
-      ) // 8 to 11
-        .toString(16) // in hexadecimal
+    (
+      a ^ // unless b is 8,
+      ((Math.random() * // in which case
+        16) >> // a random number from
+        (a / 4))
+    ) // 8 to 11
+      .toString(16) // in hexadecimal
     : // or otherwise a concatenated string:
-      ([1e10] + 1e10 + 1e9)
-        .replace(
-          // replacing
-          /[01]/g, // zeroes and ones with
-          generateUnid // random hex digits
-        )
-        .toUpperCase();
+    ([1e10] + 1e10 + 1e9)
+      .replace(
+        // replacing
+        /[01]/g, // zeroes and ones with
+        generateUnid // random hex digits
+      )
+      .toUpperCase();
 }
 
 // Uncomment for debugging
