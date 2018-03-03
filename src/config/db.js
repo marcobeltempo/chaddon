@@ -1,6 +1,6 @@
 const { Pool } = require("pg");
-const dotEnv = require("dotenv").load();
-var conString = process.env.DATABASE_URL;
+require("dotenv").load();
+const conString = process.env.DATABASE_URL;
 
 const pool = new Pool({
   connectionString: conString,
@@ -8,15 +8,15 @@ const pool = new Pool({
 });
 
 module.exports = {
-  query: (text, callback) => {
-    const start = Date.now();
-    return pool.query(text, (err, res) => {
-      const duration = Date.now() - start;
-      //uncomment for debugging
-      //console.log('executed query', { text, duration, rows: res.rowCount })
+  query: (text, callback) => pool.query(text, (err, res) => {
+
+      // uncomment for debugging
+      // const start = Date.now();
+      // const duration = Date.now() - start;
+      // console.log('executed query', { text, duration, rows: res.rowCount })
+
       callback(err, res);
-    });
-  },
+    }),
   getClient: callback => {
     pool.connect((err, client, done) => {
       const query = client.query.bind(client);
@@ -24,7 +24,7 @@ module.exports = {
       // monkey patch the query method to keep track of the last query executed
       client.query = () => {
         client.lastQuery = arguments;
-        client.query.apply(client, arguments);
+        client.query(...arguments);
       };
 
       // set a timeout of 5 seconds, after which we will log this client's last query

@@ -11,9 +11,8 @@ var bodyParser = require("body-parser");
 //Modules
 const config = require("./config/index.js");
 const db = require("./config/db.js");
-const apiRouter = require("./routers/index.js");
 const app = express();
-const routes = require("./routers")(app);
+require("./routers")(app);
 
 //Configuration
 app.set("views", "views");
@@ -25,7 +24,7 @@ app.use(bodyParser);
 var server;
 
 if (config.env === "production") {
-  //Create HTTP server 
+  //Create HTTP server
   server = http.createServer(app);
   app.use(config.forceSsl);
 } else {
@@ -48,11 +47,16 @@ server.listen(config.port, () => {
   console.log(`Link: ${config.host}${config.port}`);
   console.log("\n__________________________________________________________\n");
 
-  //monitor idle db clients
-  db.getClient(function(result) {
-    console.log("Checking for idle clients...");
+  // monitor idle db clients
+  db.getClient(err => {
+    if (err) {
+      console.info("Datbase client error: ", err);
+    }
+    console.info("Checking for idle clients...");
+
   });
 });
+
 
 //global variable to store input parameter
 var params;
@@ -64,9 +68,6 @@ var localUser = {};
 
 //usernames that are currently connected to chat
 var usernames = {};
-
-// deleted users list
-var delUsernames = [];
 
 //rooms that are currently active
 var rooms = [];
@@ -163,7 +164,7 @@ io.sockets.on("connection", function(socket) {
     var token = generateUnid();
     var insert;
     var usernameCheck =
-      "SELECT name FROM tbl_verified_user WHERE name=" + "'" + data + "'";
+      "SELECT name FROM tbl_verified_user WHERE name='" + data + "'";
     db.query(usernameCheck, (err, result) => {
       if (err) {
         console.log(err);
@@ -177,7 +178,7 @@ io.sockets.on("connection", function(socket) {
           "','" +
           token +
           "')";
-        db.query(sql, (err, result) => {
+        db.query(sql, err => {
           if (err) {
             console.info(err);
           }
@@ -211,16 +212,16 @@ io.sockets.on("connection", function(socket) {
           data.token +
           "')";
 
-        db.query(sql, (err, result) => {
+        db.query(sql, err => {
           if (err) {
-            console.log("Database " + err);
+            console.log("Database error: " + err);
           } else {
             console.log("Database query: succesfully inserted 1 record");
           }
         });
       }
     });
-    
+
     console.log("Generated id: ", generateUnid());
     io.sockets.emit("verifySuccess", {
       username: data.username,
@@ -318,6 +319,10 @@ io.sockets.on("connection", function(socket) {
      //if (localUser.splice["" + socket.room][socket.username]) {
         console.info("Remove local user: true");
       }
+
+      if (localUser["" + params] != undefined) {
+        //empty
+      }
     } else {
       console.info("Room: undefined");
     }
@@ -342,9 +347,7 @@ io.sockets.on("connection", function(socket) {
   });
 });
 
-function generateUnid(
-  a // placeholder
-) {
+function generateUnid(a) {
   return a // if the placeholder was passed, return
     ? // a random number from 0 to 15
       (
@@ -364,18 +367,19 @@ function generateUnid(
         .toUpperCase();
 }
 
-function logAction(action, room, user) {
-  var fs = require("fs");
-  var log = fs.createWriteStream("chatroom-log.txt", { flags: "a" });
-  log.write(
-    new Date() +
-      " - \t" +
-      action +
-      " - \t user: " +
-      user +
-      " - \t room: " +
-      room +
-      "\n"
-  );
-  log.end();
-}
+// Uncomment for debugging
+// function logAction(action, room, user) {
+// var fs = require("fs");
+// var log = fs.createWriteStream("chatroom-log.txt", { flags: "a" });
+// log.write(
+// new Date() +
+// " - \t" +
+// action +
+// " - \t user: " +
+// user +
+// " - \t room: " +
+// room +
+// "\n"
+// );
+// log.end();
+// }
