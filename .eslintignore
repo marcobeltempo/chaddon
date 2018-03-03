@@ -1,6 +1,9 @@
 **/*.min.js
+chrome_extension
 LICENSE
 node_modules
 package-lock.json
 PRIVACY_POLICY.md
 README.MD
+src/config/db.js
+src/public/scripts/
