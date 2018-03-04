@@ -1,8 +1,4 @@
----
-title: Chaddon Wiki
----
-
-# ![Chaddon Logo](http://i64.tinypic.com/nd7mop.jpg) {{ page.title }}
+ # ![Chaddon Logo](http://i64.tinypic.com/nd7mop.jpg) Chaddon Wiki
 
 Welcome to the Chaddon Wiki. These pages are primarily intended for Chaddon developers. 
 
