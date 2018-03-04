@@ -14,7 +14,29 @@ Please refer to the sidebar (on the left) for details on Project Structure, Cont
  "Travis CI Build Status:Dev Branch")
 
 ## [](#chromeextensioninstall) Chrome Extension Dev-Install
-1. 
+
+### Requirments
+- Google Chrome Browser 
+
+### Installation
+1. Download the `.zip` or `.tar.` from the top right
+2. Save the file to your machine
+3. Extract the folder to the current directory
+4. Open a Google Chrome Browser
+5. Enter `chrome://extensions/` in the address bar
+6. Make sure `Developer Mode` is checked
+7. Click `Load unpacked extension...`
+8. Navigate to the downloaded package and select the `chrome_extension` folder
+9. Chaddon 0.1 will display in your list of extensions
+
+## [](#usingchaddon) Using Chaddon
+
+1. Navigate to a url ex. `https://google.ca`
+2. A Chaddon hover box will appear at the top right of your screen
+3. Click the hover box to load the chat for your current URL
+4. On first launch, you will be prompted to login
+  - Create a temporary username
+  - Sig-in with a valid Google account
 
 ## [](#buildsource) Build Source
 1.  Fork the chaddon repository to your profile
