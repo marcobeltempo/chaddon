@@ -1,6 +1,5 @@
 ---
 title: Chaddon Wiki
-layout: default
 ---
 
 # ![Chaddon Logo](http://i64.tinypic.com/nd7mop.jpg) {{ page.title }}
