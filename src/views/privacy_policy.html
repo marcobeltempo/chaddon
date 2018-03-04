@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chaddon</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Including Bootstrap JS (with its jQuery dependency) so that dynamic components work -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- Leave those next 4 lines if you care about users using IE8 -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+     <![endif]-->
+    <style>
+        #policy {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding: 0 5em;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    <img src="../images/chaddon_logo.jpeg" alt="Chaddon Logo" height="28" width="28">
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/lobby">Lobby</a>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right" id="search-form" onSubmit="return channelSearch();">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input id="channel-search" type="text" class="form-control" name="search" placeholder="Find a channel..">
+                        <span class="search-btn input-group-addon">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+    <div id="policy">
+        <h1>Chaddon Privacy Policy</h1>
+        <p> Chaddon Dev. built the Chaddon app as a Free app. This SERVICE is provided by Chaddon Dev. at no cost and is intended
+            for use as is.
+        </p>
+        <p>This page is used to inform website visitors regarding our policies with the collection, use, and disclosure of Personal
+            Information if anyone decided to use our Service.
+        </p>
+        <p>If you choose to use our Service, then you agree to the collection and use of information in relation to this policy.
+            The Personal Information that we collect is used for providing and improving the Service. We will not use or
+            share your information with anyone except as described in this Privacy Policy.
+        </p>
+        <p>The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible
+            at Chaddon unless otherwise defined in this Privacy Policy.
+        </p>
+        <p>
+            <strong>Information Collection and Use</strong>
+        </p>
+        <p>For a better experience, while using our Service, we may require you to provide us with certain personally identifiable
+            information, including but not limited to Google Account Personally identifiable information (Name, Email, Pofile
+            Picture), Web browsing activity. The information that we request is will be retained by us and used as described
+            in this privacy policy.
+        </p>
+        <p>The app does use third party services that may collect information used to identify you.</p>
+        <!---->
+        <p>
+            <strong>Log Data</strong>
+        </p>
+        <p> We want to inform you that whenever you use our Service, in a case of an error in the app we collect data and information
+            (through third party products) on your phone called Log Data. This Log Data may include information such as your
+            device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app
+            when utilizing our Service, the time and date of your use of the Service, and other statistics.
+        </p>
+        <p>
+            <strong>Cookies</strong>
+        </p>
+        <p>Cookies are files with small amount of data that is commonly used an anonymous unique identifier. These are sent
+            to your browser from the website that you visit and are stored on your device internal memory.
+        </p>
+        <p>This Service does not use these “cookies” explicitly. However, the app may use third party code and libraries that
+            use “cookies” to collection information and to improve their services. You have the option to either accept or
+            refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies,
+            you may not be able to use some portions of this Service.
+        </p>
+        <p>
+            <strong>Service Providers</strong>
+        </p>
+        <p> We may employ third-party companies and individuals due to the following reasons:</p>
+        <ul>
+            <li>To facilitate our Service;</li>
+            <li>To provide the Service on our behalf;</li>
+            <li>To perform Service-related services; or</li>
+            <li>To assist us in analyzing how our Service is used.</li>
+        </ul>
+        <p> We want to inform users of this Service that these third parties have access to your Personal Information. The reason
+            is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the
+            information for any other purpose.
+        </p>
+        <p>
+            <strong>Security</strong>
+        </p>
+        <p> We value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable
+            means of protecting it. But remember that no method of transmission over the internet, or method of electronic
+            storage is 100% secure and reliable, and we cannot guarantee its absolute security.
+        </p>
+        <p>
+            <strong>Links to Other Sites</strong>
+        </p>
+        <p>This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site.
+            Note that these external sites are not operated by us. Therefore, we strongly advise you to review the Privacy
+            Policy of these websites. We have no control over and assume no responsibility for the content, privacy policies,
+            or practices of any third-party sites or services.
+        </p>
+        <p>
+            <strong>Children’s Privacy</strong>
+        </p>
+        <p>These Services do not address anyone under the age of 13. We do not knowingly collect personally identifiable information
+            from children under 13. In the case we discover that a child under 13 has provided us with personal information,
+            we immediately delete this from our servers. If you are a parent or guardian and you are aware that your child
+            has provided us with personal information, please contact us so that we will be able to do necessary actions.
+        </p>
+        <p>
+            <strong>Changes to This Privacy Policy</strong>
+        </p>
+        <p> We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any
+            changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are
+            effective immediately after they are posted on this page.
+        </p>
+        <p>
+            <strong>Contact Us</strong>
+        </p>
+        <p>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us.
+        </p>
+        <p>This privacy policy page was created at
+            <a href="https://privacypolicytemplate.net" target="_blank">privacypolicytemplate.net</a> and modified/generated by
+            <a href="https://app-privacy-policy-generator.firebaseapp.com/" target="_blank">App Privacy Policy Generator</a>
+        </p>
+    </div>
+    <footer>
+        <a href="/"><p>Back to Home</p></a>
+        <p>&copy; Chaddon 2018</p>
+     </footer>
+
+</body>
+
+</html>

@@ -5,7 +5,6 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Chaddon</title>
-      <link rel="stylesheet" href="stylesheets/style.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -19,12 +18,12 @@
       <nav class="navbar navbar-inverse">
          <div class="container-fluid">
             <div class="navbar-header">
-               <a class="navbar-brand" href="/"><img src="./images/chaddon_logo.jpeg" alt="Chaddon Logo" height="28" width="28">
+               <a class="navbar-brand" href="/"><img src="../images/chaddon_logo.jpeg" alt="Chaddon Logo" height="28" width="28">
                </a>
             </div>
             <ul class="nav navbar-nav">
-               <li><a href="/">Home</a></li>
-               <li class="active"><a href="/lobby">Lobby</a></li>
+               <li class="active"><a href="/">Home</a></li>
+               <li><a href="/lobby">Lobby</a></li>
             </ul>
             <form class="navbar-form navbar-right" id="search-form" onSubmit="return channelSearch();">
                <div class="form-group">
@@ -36,36 +35,23 @@
             </form>
          </div>
       </nav>
-      <div class="container-fluid">
-         <div class="row chat-row">
-            <div class="col-sm-10 chat-left">
-               <div id="liveChat"></div>
-            </div>
-            <div class="users-online col-sm-2 chat-right">
-               <strong id="onlineUsersTag">Online Users</strong>
-               <ul id="onlineUserList"></ul>
-            </div>
+      <div class="container">
+         <div class="hero-unit">
+            <h1>Chaddon Beta</h1>
+            <p>Navigate to the channel of your choice - <b>chaddon.herokuapp.com/your_room_name</b></p>
+            <p>eg: https://chaddon.herokuapp.com/prj666 </p>
+            <p>And share with your friends, or you could simply hang out in the lobby.
+            <p><a class="btn btn-warning btn-large" href="/lobby">Go to lobby &raquo;</a></p>
          </div>
-         <nav class="navbar navbar-inverse navbar-fixed-bottom">
-            <form class="navbar-form">
-               <div class="container-fluid">
-                  <label for="displayUserName" id="usernameLabel" class="col-2 ">Welcome, </label>
-                  <a id="displayUserName" class="brand"></a>
-                  <div class="input-group" id="messageField">
-                     <input type="text" class="form-control" id="username" placeholder="Enter username" />
-                     <input type="text" class="form-control" id="message" placeholder="Be nice...">
-                     <span class="input-group-btn">
-                     <input class="btn btn-success" id="send" value="Send" type="button"/>
-                     </span>
-                  </div>
-               </div>
-            </form>
-         </nav>
+         <hr>
+         <footer>
+            <a href="/privacy"><p>Privacy Policy</p></a>
+            <p>&copy; Chaddon 2018</p>
+         </footer>
       </div>
       <!-- Including Bootstrap JS (with its jQuery dependency) so that dynamic components work -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-      <script src="/socket.io/socket.io.js"></script>
-      <script src="./scripts/chat.js"></script>
+      <script src="../scripts/chat.js"></script>
    </body>
 </html>

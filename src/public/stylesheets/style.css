@@ -1,51 +1,59 @@
+#liveChat{
+padding-bottom: 50px;
+}
+
 .post-current {
-	border-left: 6px solid #636ee7;
+    border-left: 6px solid #636ee7;
 }
-
 .post-inner {
-	margin-left: 10px;
-	word-wrap: break-word;
+    margin-left: 10px;
+    word-wrap: break-word;
 }
-
 .post-other {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	border-left: 6px solid #c3b8b8;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-left: 6px solid #c3b8b8;
+}
+.userError::-webkit-input-placeholder {
+    opacity: 0.7;
+    color: #FF0000;
+}
+.userError1::placeholder {
+    opacity: 0.7;
+    color: #FF0000;
 }
 
+.userError2::-ms-placeholder {
+    opacity: 0.7;
+    color: #FF0000;
+}
 .users_online {
-	border: 3px groove #555555;
-	background-color:#FAFAFA;
-	height:190px;
-	padding-top:10px;
-	text-align: center;
+    height:200px;
+    max-height: 200px;
+    background-color:#FAFAFA;
+    padding-top: 10px;
+    text-align: center;
 }
-
 .chaddon_headings {
-	font-family: "Bookman Old Style","Times New Roman";
-	font-weight: bold;
-	text-align: center;
-	font-size: 24px;
+    font-family: "Bookman Old Style","Times New Roman";
+    font-weight: bold;
+    font-size: 22px;
+    background-color:#FAC32B;
+    padding: 10px 0px 0px 48px ;
 }
-
-
 #online {
-	list-style: none;
+    list-style: none;
 }
-
 #usernameLabel {
-	color: #fff;
+    color: #fff;
 }
-
 #googleSignIn {
-	display: inline-block; 
-	margin-left: 10px;
+    display: inline-block;
+    margin-left: 10px;
 }
-
 .hide {
-	display: none;
+    display: none;
 }
-
 #message {
     margin-bottom: 3px;
     width:300px;
@@ -53,35 +61,29 @@
     border-radius: 7px;
 }
 .signIn {
-	text-align: center;
+    text-align: center;
 }
-
 .overlayLogo1 {
-	position: absolute;
-	color: white;
+    position: absolute;
+    color: white;
     top: 34%;
     left: 45%;
 }
-
 .chatAlign {
     position: fixed;
     height: 50px;
 }
-
-.parallax { 
-    /* The image used */
+.parallax {
+   /* The image used */
     background-image: url("../images/blurry_blue.jpg");
-
-    /* Set a specific height */
-    height: 500px; 
-
-    /* Create the parallax scrolling effect */
+   /* Set a specific height */
+    height: 500px;
+   /* Create the parallax scrolling effect */
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
-
 #overlay {
     position: fixed;
     display: none;
@@ -95,7 +97,6 @@
     z-index: 2;
     cursor: pointer;
 }
-
 #text{
     position: absolute;
     top: 30%;
@@ -105,34 +106,34 @@
     transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
 }
-
 .overlayLogo2 {
-	color: white;
-	position: absolute;
+    color: white;
+    position: absolute;
     top: 40%;
     left: 45%;
 }
-
 .usernameOverlay {
-	color: white;
-	position: absolute;
+    color: white;
+    position: absolute;
     top: 40%;
     left: 45%;
     padding-top: 10px;
 }
-
 .usernameOverlay2 {
-	color: white;
-	position: absolute;
+    color: white;
+    position: absolute;
     top: 43%;
     left: 45%;
 }
-
 .chatPad {
-	padding-top: 10px;
-	text-align: center;
+    padding-top: 10px;
+    text-align: center;
 }
-
+#user-profile-badge{
+    background: none;
+    border: none;
+    color: #CCCCCC;
+}
 
 @media (max-width:380px) {
     .overlayLogo1 {
@@ -140,13 +141,12 @@
         color: white;
         top: 34%;
         left: 30%;
-    }
-
+   }
     .usernameOverlay {
         color: white;
         position: absolute;
         top: 40%;
         left: 30%;
         padding-top: 10px;
-    }
-  }
+   }
+}
