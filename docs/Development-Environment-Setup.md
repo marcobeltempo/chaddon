@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 This guide will get you setup with Heroku and PostgreSQL on your local machine.
 
 * [Heroku](#heroku)

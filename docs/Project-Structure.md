@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 This hierarchy is based on the chaddon's master branch. Please update as new files and functions are added. 
 
 ***
