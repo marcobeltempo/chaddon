@@ -19,14 +19,14 @@ Please refer to the sidebar (on the left) for details on Project Structure, Cont
 - Google Chrome Browser 
 
 ### Installation
-1. Download the `.zip` or `.tar.` from the top right
-2. Save the file to your machine
-3. Extract the folder to the current directory
+1. Download the `.zip` or `.tar.` from the top right of this page
+2. Save the file to your local machine
+3. Extract the downloaded folder to the current directory
 4. Open a Google Chrome Browser
 5. Enter `chrome://extensions/` in the address bar
 6. Make sure `Developer Mode` is checked
 7. Click `Load unpacked extension...`
-8. Navigate to the downloaded package and select the `chrome_extension` folder
+8. Navigate to the downloaded package and select the `chaddon/chrome_extension` folder
 9. Chaddon 0.1 will display in your list of extensions
 
 ## [](#usingchaddon) Using Chaddon
