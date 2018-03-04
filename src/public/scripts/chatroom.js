@@ -369,7 +369,7 @@ $(this).keypress(function(e) {
 
 function timerIncrement() {
   idleTime = idleTime + 1;
-  if (idleTime > 2) {
+  if (idleTime > 15) {
     // 2 minutes for development purposes
     $("#overlay").show();
     $("#msgBar").hide();
