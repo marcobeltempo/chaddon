@@ -11,9 +11,8 @@ var bodyParser = require("body-parser");
 //Modules
 const config = require("./config/index.js");
 const db = require("./config/db.js");
-const apiRouter = require("./routers/index.js");
 const app = express();
-const routes = require("./routers")(app);
+require("./routers")(app);
 
 //Configuration
 app.set("views", "views");
@@ -25,7 +24,7 @@ app.use(bodyParser);
 var server;
 
 if (config.env === "production") {
-  //Create HTTP server 
+  //Create HTTP server
   server = http.createServer(app);
   app.use(config.forceSsl);
 } else {
@@ -42,17 +41,22 @@ server.listen(config.port, () => {
   console.log("\n__________________________________________________________\n");
   console.log(
     `Chaddon Express Server Started\nMode: ` +
-      app.get("env") +
-      `\nPort: ${config.port}`
+    app.get("env") +
+    `\nPort: ${config.port}`
   );
   console.log(`Link: ${config.host}${config.port}`);
   console.log("\n__________________________________________________________\n");
 
-  //monitor idle db clients
-  db.getClient(function(result) {
-    console.log("Checking for idle clients...");
+  // monitor idle db clients
+  db.getClient(err => {
+    if (err) {
+      console.info("Datbase client error: ", err);
+    }
+    console.info("Checking for idle clients...");
+
   });
 });
+
 
 //global variable to store input parameter
 var params;
@@ -64,9 +68,6 @@ var localUser = {};
 
 //usernames that are currently connected to chat
 var usernames = {};
-
-// deleted users list
-var delUsernames = [];
 
 //rooms that are currently active
 var rooms = [];
@@ -82,14 +83,14 @@ function htmlEntities(str) {
     .replace(/"/g, "&quot;");
 }
 
-io.sockets.on("connection", function(socket) {
+io.sockets.on("connection", function (socket) {
   socket.emit("news", "testdata");
 
-  socket.on("adduser", function(message) {
+  socket.on("adduser", function (message) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + message.token + "'";
 
-    db.query(sql, function(err, result) {
+    db.query(sql, function (err, result) {
       if (result.rowCount > 0) {
         if (result) {
           console.log("User verification status: verified");
@@ -130,19 +131,19 @@ io.sockets.on("connection", function(socket) {
             removeUser: socket.username,
             usernames: localUser["" + params]
           });
-		  //update your other tabs with new channel
-		  io.sockets.in(socket.username).emit("updateRooms", {
+          //update your other tabs with new channel
+          io.sockets.in(socket.username).emit("updateRooms", {
             room: socket.room
-		  });
-		  //update current tab with other channels
-		  socket.join(username);
-		  for (var i in localUser){
-			if (localUser[i][username] != undefined){
-			  socket.emit("updateRooms", {
-				room: i
-			  });
-			}
-		  }
+          });
+          //update current tab with other channels
+          socket.join(username);
+          for (var i in localUser) {
+            if (localUser[i][username] != undefined) {
+              socket.emit("updateRooms", {
+                room: i
+              });
+            }
+          }
           if (history["" + params] !== undefined) {
             socket.emit("loadHistory", history["" + params]);
           }
@@ -151,7 +152,7 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("getOnlineUsers", function() {
+  socket.on("getOnlineUsers", function () {
     io.sockets.in(socket.room).emit("updateUsersLogin", {
       removeUser: socket.username,
       usernames: localUser["" + params]
@@ -159,11 +160,11 @@ io.sockets.on("connection", function(socket) {
   });
 
   //pierre
-  socket.on("verifyUser", function(data) {
+  socket.on("verifyUser", function (data) {
     var token = generateUnid();
     var insert;
     var usernameCheck =
-      "SELECT name FROM tbl_verified_user WHERE name=" + "'" + data + "'";
+      "SELECT name FROM tbl_verified_user WHERE name='" + data + "'";
     db.query(usernameCheck, (err, result) => {
       if (err) {
         console.log(err);
@@ -177,7 +178,7 @@ io.sockets.on("connection", function(socket) {
           "','" +
           token +
           "')";
-        db.query(sql, (err, result) => {
+        db.query(sql, err => {
           if (err) {
             console.info(err);
           }
@@ -194,7 +195,7 @@ io.sockets.on("connection", function(socket) {
   });
 
 
-  socket.on("verifyUserGoogle", function(data) {
+  socket.on("verifyUserGoogle", function (data) {
     console.log("Verifying: Google User");
     var sql =
       "SELECT token FROM tbl_verified_user WHERE token ='" + data.token + "'";
@@ -211,16 +212,16 @@ io.sockets.on("connection", function(socket) {
           data.token +
           "')";
 
-        db.query(sql, (err, result) => {
+        db.query(sql, err => {
           if (err) {
-            console.log("Database " + err);
+            console.log("Database error: " + err);
           } else {
             console.log("Database query: succesfully inserted 1 record");
           }
         });
       }
     });
-    
+
     console.log("Generated id: ", generateUnid());
     io.sockets.emit("verifySuccess", {
       username: data.username,
@@ -228,7 +229,7 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("verifySend", function(data) {
+  socket.on("verifySend", function (data) {
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + data.token + "'";
     db.query(sql, (err, result) => {
@@ -242,7 +243,7 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("removeUser", function(data) {
+  socket.on("removeUser", function (data) {
     var sql2 = "DELETE FROM tbl_verified_user WHERE TOKEN ='" + data + "'";
     var sql = "SELECT name FROM tbl_verified_user WHERE TOKEN ='" + data + "'";
     db.query(sql, (err, result) => {
@@ -260,7 +261,7 @@ io.sockets.on("connection", function(socket) {
     });
   });
 
-  socket.on("message", function(msg) {
+  socket.on("message", function (msg) {
     var message = {};
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
@@ -288,17 +289,17 @@ io.sockets.on("connection", function(socket) {
     //logAction("Message sent",socket.room,socket.username);
   });
 
-  socket.on("viewchannel", function(data) {
-	if (data.oldchannel != undefined){
-		socket.leave(data.oldchannel);
-	}
-	socket.join(data.room);
-	if (history["" + data.room] !== undefined) {
+  socket.on("viewchannel", function (data) {
+    if (data.oldchannel != undefined) {
+      socket.leave(data.oldchannel);
+    }
+    socket.join(data.room);
+    if (history["" + data.room] !== undefined) {
       socket.emit("loadHistory", history["" + data.room]);
     }
   });
 
-  socket.on("disconnect", function() {
+  socket.on("disconnect", function () {
     console.log("Disconnected: true");
     //logAction("Left room",socket.room,socket.username);
     //remove username from the global username list
@@ -314,9 +315,13 @@ io.sockets.on("connection", function(socket) {
       console.log(
         "in this if where undefined " + localUser["" + socket.room][socket.username]
       );
-     if (delete localUser["" + socket.room][socket.username]) {
-     //if (localUser.splice["" + socket.room][socket.username]) {
+      if (delete localUser["" + socket.room][socket.username]) {
+        //if (localUser.splice["" + socket.room][socket.username]) {
         console.info("Remove local user: true");
+      }
+
+      if (localUser["" + params] != undefined) {
+        //empty
       }
     } else {
       console.info("Room: undefined");
@@ -332,50 +337,49 @@ io.sockets.on("connection", function(socket) {
       removeUser: socket.username,
       usernames: localUser["" + params]
     });
-	io.sockets.in(socket.username).emit("updateRooms", {
+    io.sockets.in(socket.username).emit("updateRooms", {
       disconnectFlag: disconnectFlag,
       room: socket.room
-	});
-	socket.leave(socket.username);
+    });
+    socket.leave(socket.username);
     delete socket.username;
     socket.leave(socket.room);
   });
 });
 
-function generateUnid(
-  a // placeholder
-) {
+function generateUnid(a) {
   return a // if the placeholder was passed, return
     ? // a random number from 0 to 15
-      (
-        a ^ // unless b is 8,
-        ((Math.random() * // in which case
-          16) >> // a random number from
-          (a / 4))
-      ) // 8 to 11
-        .toString(16) // in hexadecimal
+    (
+      a ^ // unless b is 8,
+      ((Math.random() * // in which case
+        16) >> // a random number from
+        (a / 4))
+    ) // 8 to 11
+      .toString(16) // in hexadecimal
     : // or otherwise a concatenated string:
-      ([1e10] + 1e10 + 1e9)
-        .replace(
-          // replacing
-          /[01]/g, // zeroes and ones with
-          generateUnid // random hex digits
-        )
-        .toUpperCase();
+    ([1e10] + 1e10 + 1e9)
+      .replace(
+        // replacing
+        /[01]/g, // zeroes and ones with
+        generateUnid // random hex digits
+      )
+      .toUpperCase();
 }
 
-function logAction(action, room, user) {
-  var fs = require("fs");
-  var log = fs.createWriteStream("chatroom-log.txt", { flags: "a" });
-  log.write(
-    new Date() +
-      " - \t" +
-      action +
-      " - \t user: " +
-      user +
-      " - \t room: " +
-      room +
-      "\n"
-  );
-  log.end();
-}
+// Uncomment for debugging
+// function logAction(action, room, user) {
+// var fs = require("fs");
+// var log = fs.createWriteStream("chatroom-log.txt", { flags: "a" });
+// log.write(
+// new Date() +
+// " - \t" +
+// action +
+// " - \t user: " +
+// user +
+// " - \t room: " +
+// room +
+// "\n"
+// );
+// log.end();
+// }
