@@ -87,6 +87,7 @@ io.sockets.on("connection", function (socket) {
   socket.emit("news", "testdata");
 
   socket.on("adduser", function (message) {
+    console.log("Add user called --- " + message.token);
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + message.token + "'";
 
@@ -204,6 +205,8 @@ io.sockets.on("connection", function (socket) {
         console.log("Database " + err);
       } else if (result.rowCount > 0) {
         console.log("Database query: google user verified");
+
+
       } else {
         sql =
           "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
@@ -261,7 +264,7 @@ io.sockets.on("connection", function (socket) {
     });
   });
 
-  socket.on("message", function (msg) {
+  socket.on("message", function (msg) { //one
     var message = {};
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
@@ -269,19 +272,19 @@ io.sockets.on("connection", function (socket) {
     message.timestamp = new Date();
     params = msg.room;
     socket.room = msg.room;
-
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + msg.token + "'";
     db.query(sql, (err, result) => {
       if (result.rowCount > 0) {
         if (result) {
-          console.log("Message status: sending");
+          console.log("Record found message");
           if (history["" + params] === undefined) {
             history["" + params] = [];
             history["" + params].push(message);
           } else {
             history["" + params].push(message);
           }
+          console.info("Socket room message " + socket.room);
           io.sockets.in(socket.room).emit("update", message);
         }
       }
