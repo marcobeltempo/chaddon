@@ -1,3 +1,5 @@
+var room = document.URL.split("/")[3];		  
+
 function onSignIn(googleUser) {
   console.info("google login");
   // Useful data for your client-side scripts:
@@ -6,11 +8,13 @@ function onSignIn(googleUser) {
   socket.on("news", function(data) {
     console.log(data);
   });
+
   var messageBar =
     '<form class="navbar-form" onSubmit="return false;"><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
   console.log("Full Name: " + profile.getName());
   var id_token = googleUser.getAuthResponse().id_token;
   var sendMessage = document.getElementById("sendMessageBar");
+  var content = document.getElementById("content");
 
   sessionStorage.username = profile.getName();
   id_token = id_token.substring(0, 200);
@@ -20,9 +24,14 @@ function onSignIn(googleUser) {
   });
   socket.on("verifySuccess", function(data) {
     console.info(
-      "Username: " + data.username + " Token: " + sessionStorage.token
+      "Username: " + data.username + " Token: " + data.token
     );
     sessionStorage.token = data.token;
+    //socket.emit("getOnlineUsers");
+    var loggedInOverlay = '<div id="overlayLoggedIn"> <div id="text">Welcome '+ sessionStorage.username + '</div>  <button type="button" onclick="enterChat()" class="btn btn-primary buttonEnterChat">Enter Chat!</button></div>';
+    if(!sessionStorage.loaded) {
+    content.innerHTML= loggedInOverlay;
+    }
   });
 
   userProf = profile.getName();
@@ -30,7 +39,7 @@ function onSignIn(googleUser) {
   sendMessage.innerHTML = messageBar;
   $("#usernameLabel").text("Welcome, " + userProf);
 
-  sendMessage.classList.remove("hide");
+
 
   if (userProf != "") {
     var usr = userProf;
@@ -40,7 +49,23 @@ function onSignIn(googleUser) {
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
     sessionStorage.username = safe;
-    // socket.emit('adduser', {username : sessionStorage.username, token : sessionStorage.token });
-    // $('#onlineUserList').append("<li class='userOnline'>"+userProf+"</li>");
+    $("#googleSignIn").attr("data-onsuccess", "signedIn");
+    
+    
+     
   }
 }
+
+function enterChat() { 
+
+  $("#overlayLoggedIn").css("display","none");
+  sessionStorage.loaded = "true"; 
+  location.reload();
+  sendMessage.classList.remove("hide");
+
+}
+
+
+
+
+
