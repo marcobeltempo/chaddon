@@ -134,6 +134,11 @@ padding-bottom: 50px;
     border: none;
     color: #CCCCCC;
 }
+.footer{
+    padding: 0 5px;
+    text-align: center;
+    display: inline;
+}
 
 @media (max-width:380px) {
     .overlayLogo1 {
@@ -150,3 +155,4 @@ padding-bottom: 50px;
         padding-top: 10px;
    }
 }
+
