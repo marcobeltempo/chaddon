@@ -10,7 +10,12 @@
         <% include ../partials/navbar %>
     </header>
     <main>
+            <%if(!user) { %>
         <% include ../partials/login %>
+          <%  } else {  %>
+            <%  include ../partials/chat   %>
+            <% } %>
+           
     </main>
     <footer>
         <% include ../partials/footer %>

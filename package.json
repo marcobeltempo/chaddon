@@ -10,10 +10,17 @@
     "author": "Michael Pierre, Even Davies, Geoff McCollam, Marco Beltempo",
     "dependencies": {
         "body-parser": "^1.18.2",
+        "cookie-parser": "~1.4.3",
+        "connect-flash": "~0.1.1",
+        "connect-ensure-login": "^0.1.1",
         "dotenv": "^5.0.0",
+        "morgan": "~1.7.0",
         "ejs": "^2.5.7",
         "express": "^4.16.0",
+        "express-session": "^1.11.3",
         "pg": "7.4.1",
+        "passport": "~0.3.2",
+        "passport-local": "~1.0.0",
         "socket.io": "^2.0.3"
     },
     "devDependencies": {

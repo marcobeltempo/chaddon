@@ -19,9 +19,7 @@ function sendMessage() {
       .replace(/"/g, "&quot;");
     console.log("message is not null");
     socket.emit("message", {
-      token: sessionStorage.token,
-      message: safe,
-      user: sessionStorage.username,
+      message: safe, 
 	  room: currentchannel,
       timestamp: new Date()
     }); // this is insecure user can delete all validation on client side and send messages

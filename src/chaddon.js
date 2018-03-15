@@ -1,9 +1,42 @@
 //Dependacies
 const express = require("express");
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+
+var dbAuth = require('./authentication/userAuth.js');
+
 const fs = require("fs");
 const http = require("http");
 const https = require("https");
 let io = require("socket.io");
+// Local Strategy Passport 
+
+passport.use(new Strategy(
+
+  function(username, password, cb) {
+    console.info("USERNAME " + username);
+    var password = generateUnid();
+    var userStatus = dbAuth.userExist(username);
+
+    if(!userStatus) {
+       // Add user to DB and login 
+        dbAuth.addUser(username, password);
+    }
+    else {
+      // Set token for existing user
+      dbAuth.setToken(username, password);
+    }
+
+    dbAuth.findByUsername(username, function(err, user) {   
+      if (err) { return cb(err); }
+      if (!user) { return cb(null, false); }
+      if (user.password != password) { return cb(null, false); }
+      userLoggedIn = user;
+      return cb(null, user);
+    });
+}));
+
+
 
 //Middleware
 var bodyParser = require("body-parser");
@@ -13,6 +46,32 @@ const config = require("./config/index.js");
 const db = require("./config/db.js");
 const app = express();
 require("./routers")(app);
+
+// Use application-level middleware for common functionality, including
+// logging, parsing, and session handling.
+app.use(require('morgan')('combined'));
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+passport.serializeUser(function(user, cb) {
+  console.info("Serialize Users");
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  console.info("Deserialize User");
+  dbAuth.findById(id, function (err, user) {
+    if (err) { return cb(err); }
+    cb(null, user);
+  });
+});
+
+
 
 //Configuration
 app.set('views', __dirname + '/views');
@@ -87,14 +146,10 @@ io.sockets.on("connection", function (socket) {
   socket.emit("news", "testdata");
 
   socket.on("adduser", function (message) {
-    var sql =
-      "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + message.token + "'";
 
-    db.query(sql, function (err, result) {
-      if (result.rowCount > 0) {
-        if (result) {
-          console.log("User verification status: verified");
 
+
+          console.info("Checking object: " + message.username);
           var username = htmlEntities(message.username);
           params = message.room;
           //store the username in the socket session for this client
@@ -146,10 +201,7 @@ io.sockets.on("connection", function (socket) {
           }
           if (history["" + params] !== undefined) {
             socket.emit("loadHistory", history["" + params]);
-          }
-        }
-      }
-    });
+          } 
   });
 
   socket.on("getOnlineUsers", function () {
@@ -262,6 +314,9 @@ io.sockets.on("connection", function (socket) {
   });
 
   socket.on("message", function (msg) {
+//  require('connect-ensure-login').ensureLoggedIn();
+
+   
     var message = {};
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
@@ -269,12 +324,8 @@ io.sockets.on("connection", function (socket) {
     message.timestamp = new Date();
     params = msg.room;
     socket.room = msg.room;
-
-    var sql =
-      "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + msg.token + "'";
-    db.query(sql, (err, result) => {
-      if (result.rowCount > 0) {
-        if (result) {
+   
+      
           console.log("Message status: sending");
           if (history["" + params] === undefined) {
             history["" + params] = [];
@@ -283,9 +334,9 @@ io.sockets.on("connection", function (socket) {
             history["" + params].push(message);
           }
           io.sockets.in(socket.room).emit("update", message);
-        }
-      }
-    });
+        
+      
+  
     //logAction("Message sent",socket.room,socket.username);
   });
 

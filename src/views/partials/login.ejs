@@ -8,13 +8,15 @@
                     <div class="clearfix"></div>
                 </div>
                 <div id="login">
-                    <form action="javascript:void(0);" method="post">
+                    <form action="/" method="post">
                         <fieldset class="clearfix">
                             <p class="g-signin2" data-width="250" data-height="50" data-longtitle="true">
                                 <p>
                                     <p>
                                         <span class="fa fa-user"></span>
-                                        <input type="text" Placeholder="Guest Username">
+                                        <input type="text" name="username" Placeholder="Guest Username">
+                                        <input id="password" style="display:none;" type="password" name="password"/>
+
                                     </p>
                                     <div>
                                         <span style="width:50%; text-align:right; float:right;">
@@ -30,3 +32,7 @@
         </center>
     </div>
 </div>
+
+<script> 
+    document.getElementById('password').value='tempPassword';
+    </script>
