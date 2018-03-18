@@ -265,30 +265,32 @@ $(function() {
   socket.on("updateUsers", function(data) {
     console.info("updating users. Disconnect Flag: " + data.disconnectFlag);
     console.info("This user left: " + data.removeUser);
-    if (data != null && data.disconnectFlag == undefined) {
-      console.info("Clearing the online user list!");
-      console.info("Desired user to remove " + data.removeUser);
+	if (data.room == currentchannel) {
+		if (data != null && data.disconnectFlag == undefined) {
+		  console.info("Clearing the online user list!");
+		  console.info("Desired user to remove " + data.removeUser);
 
-      $("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
-      // Were clearing the list however sometimes data.usernames has no data which is causing this error
-      for (var key in data.usernames) {
-        console.info("Names " + key);
-        //add the user to the list of online users
-        $("#onlineUserList").append("<li class='userOnline'>" + key + "</li>");
-      }
-    } else if (data.disconnectFlag == true) {
-      console.info("Disconnect call to function");
-      var liUsers = document.getElementsByClassName("userOnline");
-      var i;
-      for (i = 0; i < liUsers.length; i++) {
-        var liUser = liUsers[i].textContent;
-        console.info("USER: " + liUsers[i].textContent);
-        if (liUser == data.removeUser) {
-          console.info("Found and removing user: " + data.removeUser);
-          document.getElementsByClassName("userOnline")[i].remove();
-        }
-      }
-    }
+		  $("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
+		  // Were clearing the list however sometimes data.usernames has no data which is causing this error
+		  for (var key in data.usernames) {
+			console.info("Names " + key);
+			//add the user to the list of online users
+			$("#onlineUserList").append("<li class='userOnline'>" + key + "</li>");
+		  }
+		} else if (data.disconnectFlag == true) {
+		  console.info("Disconnect call to function");
+		  var liUsers = document.getElementsByClassName("userOnline");
+		  var i;
+		  for (i = 0; i < liUsers.length; i++) {
+			var liUser = liUsers[i].textContent;
+			console.info("USER: " + liUsers[i].textContent);
+			if (liUser == data.removeUser) {
+			  console.info("Found and removing user: " + data.removeUser);
+			  document.getElementsByClassName("userOnline")[i].remove();
+			}
+		  }
+		}
+	}
   });
 
   socket.on("updateRooms",function(data){
@@ -326,28 +328,28 @@ $(function() {
     console.log("updatechat called");
 	
 	if (data.room == currentchannel){
-    var postClass;
-    if (data.user === user) {
-      postClass = "post-current";
-    } else {
-      postClass = "post-other";
-    }
-    var html =
-      "<div class='" +
-      postClass +
-      "'> <div class='post-inner'><b>" +
-      data.user +
-      "</b> " +
-      data.message +
-      "</div></div>";
-    console.log("Message " + html);
-    $("#liveChat").append(html);
-    $("html, body").animate(
-      {
-        scrollTop: $(document).height()
-      },
-      "slow"
-    );
+		var postClass;
+		if (data.user === user) {
+		  postClass = "post-current";
+		} else {
+		  postClass = "post-other";
+		}
+		var html =
+		  "<div class='" +
+		  postClass +
+		  "'> <div class='post-inner'><b>" +
+		  data.user +
+		  "</b> " +
+		  data.message +
+		  "</div></div>";
+		console.log("Message " + html);
+		$("#liveChat").append(html);
+		$("html, body").animate(
+		  {
+			scrollTop: $(document).height()
+		  },
+		  "slow"
+		);
 	}
   });
 });
