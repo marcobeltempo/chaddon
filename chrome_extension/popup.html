@@ -11,38 +11,14 @@
          min-height: 0 !important;
          }
       </style>
+	   
    </head>
    <body>
-      <form>
-   <font size="50" > CHADDON </font>
-   <br>
-<p>Disable Chat on this page</p>
-
-
-<input type="checkbox" id="EDisableCur" name="DisableCur" value="True">
-
-<br>
-<br>
-
-<p>Disable all chats</p>
-
-
-<input type="checkbox" id="DisableAll" name="DisableAll" value="True">
-
-<br>
-<br>
-<font size = "5">Chatroom Settings</font>
-<br>
-<br>
-<font size = "3"> General </font>
-<br>
-<p> Automatically join classrooms </p>
-<input type="checkbox" id="Settings" name="Settings" value="True"> 
-
-<br>
-<br>
-  <button type="submit">Save Settings</button>
- </form>
-  <script src="popup.js"></script>
+   <div id="status"></div>
+      <div class="myIframe"> 
+	  <iframe src="settings.html" scrolling="no" height="560" width="380"></iframe>
+	   
+      </div>
+      <script src="popup.js"></script>
    </body>
 </html>

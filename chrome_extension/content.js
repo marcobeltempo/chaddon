@@ -1,4 +1,13 @@
 // content.js
+ var frameHeight = "560px";
+ var frameWidth = "800px";
+ var disArray = new Array;
+  var blankArray = new Array;
+  var arrayNo = 0;
+  var enabled = true;
+  var domain = extractHostname(document.URL);	
+  
+
 
 //Create button on page
 var notify = document.createElement("button");
@@ -19,13 +28,68 @@ chatWindow.style.right = "10px";
 chatWindow.style.top = "40px";
 chatWindow.style.zIndex = "9999";
 
+//if (channel.Enabled == true){
 //positioned in the chatroom window, the rest of the chat functionality from heroku
+	
+
+
+
+
+
+function getInfo(callback){
+ chrome.storage.local.get({
+	'size' : '',
+	'tabList' : blankArray
+  }, function(items) {
+	  
+  disArray = items.tabList;
+  var sized = items.size;
+   
+   if(sized == 'small'){
+	   frameHeight = "360px";
+	   frameWidth = "360px";
+   }
+   else if(sized == 'medium'){
+	    frameHeight = "560px";
+	   frameWidth = "800px";
+   }
+   else if(sized == 'large'){
+	   frameHeight = "800px";
+	   frameWidth = "1000px";
+   }
+ 
+  
+ callback(disArray);
+  });
+  
+}
+
+function useInfo(){
+
+   for (var i = 0; i < disArray.length; i++){
+	  if(disArray[i] == domain ){
+		  
+		  arrayNo = i;
+	  }
+	 
+  }
+  if (domain == disArray[arrayNo]){
+ enabled = false;
+}
+if (domain != disArray[arrayNo]){
+ enabled = true;
+}
+if(enabled){
 var iframe = document.createElement("iframe");
 chatWindow.appendChild(iframe);
 iframe.src =
-  "https://www.chaddon.ca/" + extractHostname(document.URL);
-iframe.style.height = "560px";
-iframe.style.width = "800px";
+  "https://chaddon.ca/" + extractHostname(document.URL);
+iframe.style.height = frameHeight;
+iframe.style.width = frameWidth;
+}
+}
+
+getInfo(useInfo);
 
 function extractHostname(url) {
   var hostname;

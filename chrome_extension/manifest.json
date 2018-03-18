@@ -14,7 +14,7 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["jquery-3.2.1.min.js", "content.js"]
+      "js": ["jquery-3.2.1.min.js", "content.js","settings.js"]
     }
   ],
   "icons": { 
@@ -22,6 +22,11 @@
     "48": "icon48.png",
    "128": "icon128.png" 
   },
+  "web_accessible_resources": [
+"/src/public/scripts/chatroom.js"
+
+],
+	
   "permissions": [
     "activeTab",
     "storage"
