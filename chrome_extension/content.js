@@ -83,7 +83,7 @@ if(enabled){
 var iframe = document.createElement("iframe");
 chatWindow.appendChild(iframe);
 iframe.src =
-  "https://chaddon.ca/" + extractHostname(document.URL);
+  "https://www.chaddon.ca/" + extractHostname(document.URL);
 iframe.style.height = frameHeight;
 iframe.style.width = frameWidth;
 }
