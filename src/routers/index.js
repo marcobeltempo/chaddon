@@ -22,7 +22,7 @@ module.exports = function(app) {
       root: "./"
     });
   });
-  
+
   app.get("/:id", (req, res) => {
     res.sendFile("./src/views/chatroom.html", {
       root: "./"

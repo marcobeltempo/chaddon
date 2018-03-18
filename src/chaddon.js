@@ -100,7 +100,7 @@ io.sockets.on("connection", function (socket) {
 
           //store room in the socket session
           socket.room = params;
-		  
+
           //add client username to global list
           usernames[username] = username;
 
@@ -127,7 +127,7 @@ io.sockets.on("connection", function (socket) {
           io.sockets.in(socket.room).emit("updateUsers", {
             removeUser: socket.username,
             usernames: localUser["" + params],
-			room: socket.room
+            room: socket.room
           });
           //update your other tabs with new channel
           io.sockets.in(socket.username).emit("updateRooms", {
@@ -144,10 +144,9 @@ io.sockets.on("connection", function (socket) {
           }
           if (history["" + params] !== undefined) {
             socket.emit("loadHistory", history["" + params]);
+          } else {
+            history["" + params] = [];
           }
-		  else {
-			  history["" + params] = [];
-		  }
         }
       }
     });
@@ -157,7 +156,7 @@ io.sockets.on("connection", function (socket) {
     io.sockets.in(socket.room).emit("updateUsersLogin", {
       removeUser: socket.username,
       usernames: localUser["" + params],
-	  room: socket.room
+      room: socket.room
     });
   });
 
@@ -264,10 +263,10 @@ io.sockets.on("connection", function (socket) {
       }
     });
   });
-  
-  socket.on("getMasterList", function(){
-	//admin validation is needed here
-	socket.emit("displayMasterList",localUser);
+
+  socket.on("getMasterList", function() {
+    //admin validation is needed here
+    socket.emit("displayMasterList", localUser);
   });
 
   socket.on("message", function (msg) { //one
@@ -303,9 +302,9 @@ io.sockets.on("connection", function (socket) {
       socket.leave(data.oldchannel);
     }
     socket.join(data.room);
-	socket.emit("updateUsers", {
-		usernames: localUser["" + data.room],
-		room: data.room
+    socket.emit("updateUsers", {
+        usernames: localUser["" + data.room],
+        room: data.room
     });
     if (history["" + data.room] !== undefined) {
       socket.emit("loadHistory", history["" + data.room]);
@@ -331,10 +330,10 @@ io.sockets.on("connection", function (socket) {
       if (delete localUser["" + socket.room][socket.username]) {
         //if (localUser.splice["" + socket.room][socket.username]) {
         console.info("Remove local user: true");
-		if (!Object.keys(localUser["" + socket.room]).length){ //last user left; room now empty
-			delete localUser["" + socket.room];
-			delete history["" + socket.room];
-		}
+        if (!Object.keys(localUser["" + socket.room]).length) { //last user left; room now empty
+            delete localUser["" + socket.room];
+            delete history["" + socket.room];
+        }
       }
 
     } else {
@@ -347,7 +346,7 @@ io.sockets.on("connection", function (socket) {
       disconnectFlag: disconnectFlag,
       removeUser: socket.username,
       usernames: localUser["" + params],
-	  room: socket.room
+      room: socket.room
     });
     io.sockets.in(socket.username).emit("updateRooms", {
       disconnectFlag: disconnectFlag,
