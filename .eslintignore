@@ -1,9 +1,10 @@
 **/*.min.js
-chrome_extension
+browser_extension/js
+browser_extension/icons
+browser_extension/src/options_custom
+browser_extension/src/bg/background.js
 LICENSE
 node_modules
 package-lock.json
 PRIVACY_POLICY.md
 README.MD
-src/config/db.js
-src/public/scripts/

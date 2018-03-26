@@ -1,36 +1,38 @@
 {
-    "name": "chaddon",
-    "version": "0.0.2",
-    "license": "LICENSE",
-    "description": "A Chrome browser extension connecting visitors of a specific url.",
-    "keywords": [
-        "chaddon, chrome, bowser, addon"
-    ],
-    "repository": "https://github.com/marcobeltempo/chaddon",
-    "author": "Michael Pierre, Even Davies, Geoff McCollam, Marco Beltempo",
-    "dependencies": {
-        "body-parser": "^1.18.2",
-        "dotenv": "^5.0.0",
-        "express": "^4.16.0",
-        "pg": "7.4.1",
-        "socket.io": "^2.0.3"
-    },
-    "devDependencies": {
-        "eslint": "^4.13.1",
-        "eslint-config-prettier": "^2.9.0",
-        "eslint-plugin-prettier": "^2.3.1",
-        "nodemon": "^1.14.12",
-        "npm-run-all": "^4.1.2",
-        "prettier": "^1.9.2"
-    },
-    "engines": {
-        "node": ">= 8.9.4"
-    },
-    "scripts": {
-        "start": "node ./src/chaddon.js",
-        "start:dev": "nodemon ./src/chaddon.js",
-        "test:lint": "eslint .",
-        "test:lint:fix": "eslint . --fix",
-        "test": "npm run-s test:lint"
-    }
+  "name": "chaddon",
+  "version": "0.2.0",
+  "license": "LICENSE",
+  "description": "A NodeJS socket server that connects users to a variety of channels all within a browser extension.",
+  "keywords": [
+    "chaddon, chrome, browser, addon, extension"
+  ],
+  "repository": "https://github.com/marcobeltempo/chaddon",
+  "author": "Michael Pierre, Even Davies, Geoff McCollam, Marco Beltempo",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "express": "4.13.4",
+    "pg": "7.4.1",
+    "socket.io": "^2.0.4",
+    "socket.io-adapter": "^1.1.0",
+    "socket.io-client": "^2.0.4",
+    "socket.io-parser": "^3.2.0"
+  },
+  "devDependencies": {
+    "debug": "^3.1.0",
+    "eslint": "^4.13.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "nodemon": "^1.17.2",
+    "npm-run-all": "^4.1.2",
+    "prettier": "^1.9.2"
+  },
+  "engines": {
+    "node": ">= 8.9.4"
+  },
+  "scripts": {
+    "start": "nodemon ./src/chaddon.js",
+    "test:lint": "eslint .",
+    "test:lint:fix": "eslint . --fix",
+    "test": "npm run-s test:lint"
+  }
 }

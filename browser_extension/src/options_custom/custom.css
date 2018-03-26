@@ -1,0 +1,15 @@
+/*
+// Add your own style rules here, not in css/main.css
+// or css/setting.css for easy updating reasons.
+*/
+#sidebar {
+ background: #fac230;
+}
+#tab-container .tab{
+    color: #fff;
+    font-size: 14px;
+}
+
+#tab-container .tab.active, body.searching #search-container {
+    background-color: #ffffff;
+}

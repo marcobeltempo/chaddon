@@ -2,16 +2,14 @@
     "env": {
         "browser": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "jquery": true
     },
     "extends": [
       "eslint:recommended",
       "prettier" 
     ],
     "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
         "sourceType": "module"
     },
     "rules": {
@@ -184,7 +182,7 @@
         "no-negated-condition": "off",
         "no-negated-in-lhs": "error",
         "no-nested-ternary": "error",
-        "no-new": "error",
+        "no-new": "off",
         "no-new-func": "error",
         "no-new-object": "error",
         "no-new-require": "error",
@@ -211,7 +209,7 @@
         "no-return-await": "error",
         "no-script-url": "error",
         "no-self-compare": "error",
-        "no-sequences": "error",
+        "no-sequences": "off",
         "no-shadow": "off",
         "no-shadow-restricted-names": "error",
         "no-spaced-func": "error",
@@ -232,9 +230,9 @@
         "no-underscore-dangle": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
-        "no-unused-expressions": "error",
+        "no-unused-expressions": "off",
         "no-unused-labels": "error",
-        "no-unused-vars": "error",
+        "no-unused-vars": "warn",
         "no-use-before-define": "off",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",
