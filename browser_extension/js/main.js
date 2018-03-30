@@ -1,6 +1,6 @@
-$(function() {
+$(function () {
   var FADE_TIME = 150; // ms
-  var TYPING_TIMER_LENGTH = 400; // ms
+  var TYPING_TIMER_LENGTH = 300; // ms
   var COLORS = [
     '#e21400', '#91580f', '#f8a700', '#f78b00',
     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
@@ -8,16 +8,16 @@ $(function() {
   ];
 
   // Initialize variables
-  var $window = $(window);
+  var $window = $(window)
   var $usernameInput = $('.usernameInput'); // Input for username
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
 
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
+  var $googleSignInButton = $('#btnGoogleSignIn'); // Google login button
+  var $guestSignInButton = $('#btnGuestLogin'); //Guest login button
 
-  // Prompt for setting a username
-  var username;
   var connected = false;
   var typing = false;
   var lastTypingTime;
@@ -25,7 +25,50 @@ $(function() {
 
   var socket = io.connect('http://localhost:3000');
 
-  function addParticipantsMessage (data) {
+  // Payload stores the username and channel
+  var payload = {
+    username: "",
+    domain: ""
+  }
+
+  function loginGoogleUser() {
+    // Use identity API to get the logged in user.
+    chrome.identity.getAuthToken({
+      interactive: true
+    }, function (token) {
+
+      if (chrome.runtime.lastError) {
+        callback(chrome.runtime.lastError);
+        return;
+      }
+    });
+    //Get the response from background.js
+    chrome.extension.sendMessage({}, function (response) {
+      console.log("Response value", response);
+
+      if (response.emails.length > 0) {
+        console.log("response.emails is", response.emails);
+        console.log("response.domainis", response.domain);
+
+        payload.username = response.emails[0].split('@')[0]; // A Google users "username" is their email
+        payload.domain = response.domain; // Stores the domain of the current active tab
+        console.log("Payload", payload);
+
+        if (payload.username) {
+          $loginPage.fadeOut();
+          $chatPage.show();
+          $loginPage.off('click');
+          $currentInput = $inputMessage.focus();
+
+          setUsername(); // Tell server to set username
+        }
+      } else {
+        console.log("Couldn't get email address of chrome user.");
+      }
+    });
+  }
+
+  function addParticipantsMessage(data) {
     var message = '';
     if (data.numUsers === 1) {
       message += "there's 1 participant";
@@ -36,24 +79,29 @@ $(function() {
   }
 
   // Sets the client's username
-  function setUsername () {
-    username = cleanInput($usernameInput.val().trim());
+  function setUsername() {
 
-    // If the username is valid
-    if (username) {
-      $loginPage.fadeOut();
-      $chatPage.show();
-      $loginPage.off('click');
-      $currentInput = $inputMessage.focus();
+    $window.keydown(function (event) {
+      if (event.which == 13 && !payload.username) {
+        payload.username = cleanInput($usernameInput.val().trim());
+      }
 
-      // Tell the server your username
-      socket.emit('add user', username);
-    }
+      // If the username is valid
+      if (payload.username) {
+        $loginPage.fadeOut();
+        $chatPage.show();
+        $loginPage.off('click');
+        $currentInput = $inputMessage.focus();
+
+        // Tell the server your username
+        socket.emit('add user', payload);
+      }
+    });
   }
 
   // Sends a chat message
   //TODO: handle '@username' notification for all users in the user array
-  function sendMessage () {
+  function sendMessage() {
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
@@ -61,38 +109,42 @@ $(function() {
     if (message && connected) {
       $inputMessage.val('');
       addChatMessage({
-        username: username,
+        username: payload.username,
         message: message
       });
       var subStr = message.toString();
-      if(subStr.indexOf("@marcob") >-1){
-        console.log("Real: ",subStr);
-        show(username, message);
+      if (subStr.indexOf("@marcob") > -1) {
+        console.log("Real: ", subStr);
+        show(payload.username, message);
       }
       // tell server to execute 'new message' and send along one parameter
       socket.emit('new message', message);
     }
   }
 
+  /** Triggers a notification popup
+   * @param username The display name of the user sending the message
+   * @param message The message to display within the notification
+   * @returns a new Notification popup
+   */
   function show(username, message) {
     var time = /(..)(:..)/.exec(new Date()); //The prettyprinted time.
     var hour = time[1] % 12 || 12; //The prettyprinted hour.
     var period = time[1] < 12 ? 'a.m.' : 'p.m.'; //The period of the day.
     new Notification(hour + time[2] + ' ' + period, {
-        icon: '../../icons/icon48.png',
-        body: "From: @" + username + ": '" + message + "'"
+      icon: '../../icons/icon48.png',
+      body: "From: @" + username + ": '" + message + "'"
     })
-};
-
+  };
 
   // Log a message
-  function log (message, options) {
+  function log(message, options) {
     var $el = $('<li>').addClass('log').text(message);
     addMessageElement($el, options);
   }
 
   // Adds the visual chat message to the message list
-  function addChatMessage (data, options) {
+  function addChatMessage(data, options) {
     // Don't fade the message in if there is an 'X was typing'
     var $typingMessages = getTypingMessages(data);
     options = options || {};
@@ -117,25 +169,26 @@ $(function() {
   }
 
   // Adds the visual chat typing message
-  function addChatTyping (data) {
+  function addChatTyping(data) {
     data.typing = true;
     data.message = 'is typing';
     addChatMessage(data);
   }
 
   // Removes the visual chat typing message
-  function removeChatTyping (data) {
+  function removeChatTyping(data) {
     getTypingMessages(data).fadeOut(function () {
       $(this).remove();
     });
   }
 
-  // Adds a message element to the messages and scrolls to the bottom
-  // el - The element to add as a message
-  // options.fade - If the element should fade-in (default = true)
-  // options.prepend - If the element should prepend
-  //   all other messages (default = false)
-  function addMessageElement (el, options) {
+  /** Adds a message element to the messages and scrolls to the bottom
+   *  @param el - The element to add as a message
+   *  @param options.fade - If the element should fade-in (default = true)
+   *  @param options.prepend - If the element should prepend
+   *   all other messages (default = false)
+   */
+  function addMessageElement(el, options) {
     var $el = $(el);
 
     // Setup default options
@@ -162,12 +215,12 @@ $(function() {
   }
 
   // Prevents input from having injected markup
-  function cleanInput (input) {
+  function cleanInput(input) {
     return $('<div/>').text(input).html();
   }
 
   // Updates the typing event
-  function updateTyping () {
+  function updateTyping() {
     if (connected) {
       if (!typing) {
         typing = true;
@@ -187,18 +240,18 @@ $(function() {
   }
 
   // Gets the 'X is typing' messages of a user
-  function getTypingMessages (data) {
+  function getTypingMessages(data) {
     return $('.typing.message').filter(function (i) {
       return $(this).data('username') === data.username;
     });
   }
 
   // Gets the color of a username through our hash function
-  function getUsernameColor (username) {
+  function getUsernameColor(username) {
     // Compute hash code
     var hash = 7;
     for (var i = 0; i < username.length; i++) {
-       hash = username.charCodeAt(i) + (hash << 5) - hash;
+      hash = username.charCodeAt(i) + (hash << 5) - hash;
     }
     // Calculate color
     var index = Math.abs(hash % COLORS.length);
@@ -208,27 +261,39 @@ $(function() {
   // Keyboard events
 
   $window.keydown(function (event) {
+    console.log("Detected a keydown", event.which);
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
       $currentInput.focus();
     }
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
-      if (username) {
-        sendMessage();
+      if (payload.username) {
+
         socket.emit('stop typing');
         typing = false;
+        sendMessage();
       } else {
         setUsername();
       }
     }
   });
 
-  $inputMessage.on('input', function() {
+  $inputMessage.on('input', function () {
     updateTyping();
   });
 
   // Click events
+
+  // Launches thethe Google login flow
+  $googleSignInButton.click(function () {
+    loginGoogleUser();
+  });
+
+  // Reveals the guest username input field
+  $guestSignInButton.click(function () {
+    document.getElementById('guestUsername').style.display = "inline";
+  });
 
   // Focus input when clicking anywhere on login page
   $loginPage.click(function () {
@@ -287,8 +352,8 @@ $(function() {
 
   socket.on('reconnect', function () {
     log('you have been reconnected');
-    if (username) {
-      socket.emit('add user', username);
+    if (payload.username) {
+      socket.emit('add user', payload);
     }
   });
 

@@ -26,18 +26,18 @@ var BackgroundSettings = (function () {
   }
   var _defaultSettingsMap = new Map(_getDefaultSettings().map(setting => [setting.id, setting]));
 
-
   var _setDefaultSettings = function () {
     chrome.storage.sync.clear();
-    let keys = Array.from( _defaultSettingsMap.keys() );
-    let values = Array.from( _defaultSettingsMap.values() );
+    let keys = Array.from(_defaultSettingsMap.keys());
+    let values = Array.from(_defaultSettingsMap.values());
 
-      chrome.storage.sync.set({values} );
-      
-      chrome.storage.sync.get(null, function (result) {
-        console.log("Setting",  result);
-      });
-     
+    chrome.storage.sync.set({
+      values
+    });
+
+    chrome.storage.sync.get(null, function (result) {
+      console.log("Setting", result);
+    });
 
     /*
     console.log("Is initialized before default? ", _isDefaultInitialized());
@@ -56,7 +56,7 @@ var BackgroundSettings = (function () {
 
   var _isDefaultInitialized = function () {
     _setDefaultSettings();
-    
+
   }
 
   //public
@@ -69,7 +69,6 @@ var BackgroundSettings = (function () {
 
 })();
 
-
 chrome.storage.onChanged.addListener(function (changes, namespace) {
   for (key in changes) {
     var storageChange = changes[key];
@@ -78,12 +77,11 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
       key,
       namespace,
       storageChange.oldValue,
-  JSON.stringify(storageChange.newValue));
+      JSON.stringify(storageChange.newValue));
   }
 });
 
 BackgroundSettings.initSettings();
-
 
 /*
      chrome.storage.sync.clear();

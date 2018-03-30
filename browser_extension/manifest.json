@@ -11,7 +11,7 @@
   },
   "background": {
     "page": "src/bg/background.html",
-    "persistent": true
+    "persistent": false
   },
   "options_ui": {
     "page": "src/options_custom/index.html",
@@ -24,15 +24,30 @@
     "default_popup": "src/browser_action/browser_action.html"
   },
   "permissions": [
+    "identity",
     "notifications",
+    "storage",
     "tabs",
     "https://*/* ",
-    "storage"
+    "https://accounts.google.com/*",
+    "https://www.googleapis.com/*"
   ],
+  "oauth2": {
+    "client_id": "290957858380-g33uc6a8c3vovaejjojjvqg4ppvqhp5q.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/plus.login",
+      "email"
+    ]
+  },
   "content_scripts": [{
     "matches": [
       "<all_urls>"
     ],
-    "js": ["js/jquery/jquery-3.3.1.min.js", "js/socket.io/socket.io.js"]
-  }]
+    "js": [
+      "js/jquery/jquery-3.3.1.min.js",
+      "js/socket.io/socket.io.js",
+      "js/main.js"
+    ]
+  }],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgP/8L5aKjpok3EsJU5BaAHDJ1CSnNNISgv95I8pOZemjBuhyYFDaUDLGTn27lDF2FMuuLKAsWaRy1Fd5vaRgAnYztcGN6Z+x2fTh95BRmjy0iZ8YcKSvuR8GAL33dFo8+wopy9YeHrv94Q/H1M7CoQ6MnBRiV5ZG/mbHOzsoICDIkIpCP+2NkOms4l65f0CN6BTRFwoULbk6izp8EIw8euoC4y8GZlF62esOrYpU6NY7Zp6fa+x603WlKI5/QdPPrSIncwezmT0u+u9DpuE9QGRuy3Tnyg65xpS2K6qUyRK7SwMwXG25YV0Hpd3f6NI6ZobnLRuu4VjQivUsy3qz/wIDAQAB"
 }
