@@ -97,6 +97,20 @@ padding-bottom: 50px;
     z-index: 2;
     cursor: pointer;
 }
+
+#overlayLoggedIn {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
 #text{
     position: absolute;
     top: 30%;
@@ -139,6 +153,15 @@ padding-bottom: 50px;
     text-align: center;
     display: inline;
 }
+
+
+.buttonEnterChat {
+    margin: -20px -50px; 
+    position:relative;
+    top:50%; 
+    left:50%;
+}
+
 
 @media (max-width:380px) {
     .overlayLogo1 {

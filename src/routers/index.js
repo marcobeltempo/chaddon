@@ -19,3 +19,9 @@ res.render("pages/index");
     res.render("./src/views/chatroom.html");
   });
 };
+  app.get("/admin", (req, res) => {
+    res.sendFile("./src/views/admin.html", {
+      root: "./"
+    });
+  });
+}

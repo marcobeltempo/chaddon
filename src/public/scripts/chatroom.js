@@ -7,6 +7,7 @@ var currentchannel = room;
 var messageBar =
   '<form id="msgBar" class="navbar-form" onSubmit="return false;"><label id="usernameLabel" class="col-2 col-form-label">Welcome, <a class="brand"></a></label><input class="span8" type="text" id="message" onkeydown="enterSend()" placeholder="Be nice"/><!--<input class="btn btn-primary span2" OnClick="myFunction()" type="button" id="sendGoogleLogin" value="Login" />*/--><input class="btn btn-primary span2" onclick="sendMessage()" type="button" id="send" value="Send" />';
 
+var initialLoad = false;
 // sends message only
 function sendMessage() {
   console.info("Secure send message");
@@ -59,11 +60,11 @@ function userLogin() {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
       sessionStorage.username = safe;
-      socket.emit("adduser", {
-        username: sessionStorage.username,
-		room: room,
-        token: sessionStorage.token
-      });
+     /// socket.emit("adduser", {
+       // username: sessionStorage.username,
+		   // room: room,
+       // token: sessionStorage.token
+     // });
       $("#onlineUserList").append(
         "<li class='userOnline'>" + userName + "</li>"
       );
@@ -118,20 +119,23 @@ document.getElementById("usrName").addEventListener("keyup", function(event) {
 // Important! For form tag add onSubmit="return false;" to stop page refresh
 function checkUsername() {
   //current-channel
+  console.info("Checking username");
   $("#current-channel").text(room + " Chat");
 
   var userName = document.getElementById("usrName").value;
   var sendMessage = document.getElementById("sendMessageBar");
 
-  if (sessionStorage.username) {
+  if (sessionStorage.username ) {
     document.getElementById("overlay").style.display = "none";
     sendMessage.innerHTML = messageBar;
     $("#usernameLabel").text("Welcome, " + sessionStorage.username);
-
     sendMessage.classList.remove("hide");
+    
   } else {
     document.getElementById("overlay").style.display = "block";
   }
+
+  
 }
 
 // Checks for enter key on message input and calls sendMessage() if key is pressed
@@ -261,30 +265,32 @@ $(function() {
   socket.on("updateUsers", function(data) {
     console.info("updating users. Disconnect Flag: " + data.disconnectFlag);
     console.info("This user left: " + data.removeUser);
-    if (data != null && data.disconnectFlag == undefined) {
-      console.info("Clearing the online user list!");
-      console.info("Desired user to remove " + data.removeUser);
+	if (data.room == currentchannel) {
+		if (data != null && data.disconnectFlag == undefined) {
+		  console.info("Clearing the online user list!");
+		  console.info("Desired user to remove " + data.removeUser);
 
-      $("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
-      // Were clearing the list however sometimes data.usernames has no data which is causing this error
-      for (var key in data.usernames) {
-        console.info("Names " + key);
-        //add the user to the list of online users
-        $("#onlineUserList").append("<li class='userOnline'>" + key + "</li>");
-      }
-    } else if (data.disconnectFlag == true) {
-      console.info("Disconnect call to function");
-      var liUsers = document.getElementsByClassName("userOnline");
-      var i;
-      for (i = 0; i < liUsers.length; i++) {
-        var liUser = liUsers[i].textContent;
-        console.info("USER: " + liUsers[i].textContent);
-        if (liUser == data.removeUser) {
-          console.info("Found and removing user: " + data.removeUser);
-          document.getElementsByClassName("userOnline")[i].remove();
-        }
-      }
-    }
+		  $("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
+		  // Were clearing the list however sometimes data.usernames has no data which is causing this error
+		  for (var key in data.usernames) {
+			console.info("Names " + key);
+			//add the user to the list of online users
+			$("#onlineUserList").append("<li class='userOnline'>" + key + "</li>");
+		  }
+		} else if (data.disconnectFlag == true) {
+		  console.info("Disconnect call to function");
+		  var liUsers = document.getElementsByClassName("userOnline");
+		  var i;
+		  for (i = 0; i < liUsers.length; i++) {
+			var liUser = liUsers[i].textContent;
+			console.info("USER: " + liUsers[i].textContent);
+			if (liUser == data.removeUser) {
+			  console.info("Found and removing user: " + data.removeUser);
+			  document.getElementsByClassName("userOnline")[i].remove();
+			}
+		  }
+		}
+	}
   });
 
   socket.on("updateRooms",function(data){
@@ -322,28 +328,28 @@ $(function() {
     console.log("updatechat called");
 	
 	if (data.room == currentchannel){
-    var postClass;
-    if (data.user === user) {
-      postClass = "post-current";
-    } else {
-      postClass = "post-other";
-    }
-    var html =
-      "<div class='" +
-      postClass +
-      "'> <div class='post-inner'><b>" +
-      data.user +
-      "</b> " +
-      data.message +
-      "</div></div>";
-    console.log("Message " + html);
-    $("#liveChat").append(html);
-    $("html, body").animate(
-      {
-        scrollTop: $(document).height()
-      },
-      "slow"
-    );
+		var postClass;
+		if (data.user === user) {
+		  postClass = "post-current";
+		} else {
+		  postClass = "post-other";
+		}
+		var html =
+		  "<div class='" +
+		  postClass +
+		  "'> <div class='post-inner'><b>" +
+		  data.user +
+		  "</b> " +
+		  data.message +
+		  "</div></div>";
+		console.log("Message " + html);
+		$("#liveChat").append(html);
+		$("html, body").animate(
+		  {
+			scrollTop: $(document).height()
+		  },
+		  "slow"
+		);
 	}
   });
 });
@@ -358,6 +364,8 @@ var idleTime = 0;
 console.info("Timeout");
 //Increment the idle time counter every minute.
 var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+
+
 
 //Zero the idle timer on mouse movement.
 $(this).mousemove(function(e) {

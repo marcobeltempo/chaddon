@@ -1,6 +1,9 @@
+
+
 // Copyright (c) 2014 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+//let io = require("socket.io");
 
 /**
  * Get the current URL.
@@ -86,6 +89,14 @@ function saveBackgroundColor(url, color) {
   chrome.storage.sync.set(items);
 }
 
+
+
+
+
+
+
+
+
 /**
  * Add text to chatroom
  *
@@ -101,10 +112,12 @@ function clearChatField() {
 
 document.addEventListener("DOMContentLoaded", () => {
   var chatroom = document.getElementById("chat");
-
+ 
+if(chatroom){
   // Update chat and clear message field
   chatroom.addEventListener("click", () => {
     updateChat(document.getElementById("message").value);
     clearChatField();
   });
+}
 });
