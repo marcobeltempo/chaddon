@@ -1,21 +1,29 @@
 module.exports = function(app) {
   app.get("/", (req, res) => {
-    res.sendFile("./src/views/index.html", {
-      root: "./"
-    });
+    params = req.params.id;
+res.render("pages/index");
   });
 
   app.get("/login", (req, res) => {
-    res.sendFile("./src/views/login.html", {
-      root: "./"
-    });
+    params = req.params.id;
+    res.render("./src/views/login.html");
   });
 
   app.get("/privacy", (req, res) => {
-    res.sendFile("./src/views/privacy_policy.html", {
+    params = req.params.id;
+    res.render("./src/views/privacy_policy.html");
+  });
+
+  app.get("/:id", (req, res) => {
+    params = req.params.id;
+    res.render("./src/views/chatroom.html");
+  });
+
+  app.get("/admin", (req, res) => {
+    res.sendFile("./src/views/admin.html", {
       root: "./"
     });
-  });
+});
 
   app.get("/admin", (req, res) => {
     res.sendFile("./src/views/admin.html", {
@@ -23,9 +31,4 @@ module.exports = function(app) {
     });
   });
 
-  app.get("/:id", (req, res) => {
-    res.sendFile("./src/views/chatroom.html", {
-      root: "./"
-    });
-  });
 };

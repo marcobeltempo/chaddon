@@ -148,6 +148,11 @@ padding-bottom: 50px;
     border: none;
     color: #CCCCCC;
 }
+.footer{
+    padding: 0 5px;
+    text-align: center;
+    display: inline;
+}
 
 
 .buttonEnterChat {
@@ -173,3 +178,4 @@ padding-bottom: 50px;
         padding-top: 10px;
    }
 }
+
