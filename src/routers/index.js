@@ -24,10 +24,11 @@ res.render("pages/index");
       root: "./"
     });
 });
-};
+
   app.get("/admin", (req, res) => {
     res.sendFile("./src/views/admin.html", {
       root: "./"
     });
   });
-}
+
+};
