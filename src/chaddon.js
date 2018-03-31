@@ -69,6 +69,9 @@ var localUser = {};
 //usernames that are currently connected to chat
 var usernames = {};
 
+//rooms that are currently active
+var rooms = [];
+
 //storing room specific history
 var history = {};
 
@@ -84,7 +87,6 @@ io.sockets.on("connection", function (socket) {
   socket.emit("news", "testdata");
 
   socket.on("adduser", function (message) {
-    console.log("Add user called --- " + message.token);
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + message.token + "'";
 
@@ -100,7 +102,8 @@ io.sockets.on("connection", function (socket) {
 
           //store room in the socket session
           socket.room = params;
-
+          //store room in rooms array
+          rooms.push(params);
           //add client username to global list
           usernames[username] = username;
 
@@ -126,8 +129,7 @@ io.sockets.on("connection", function (socket) {
           console.log("Update users: 2nd call " + socket.room);
           io.sockets.in(socket.room).emit("updateUsers", {
             removeUser: socket.username,
-            usernames: localUser["" + params],
-            room: socket.room
+            usernames: localUser["" + params]
           });
           //update your other tabs with new channel
           io.sockets.in(socket.username).emit("updateRooms", {
@@ -144,8 +146,6 @@ io.sockets.on("connection", function (socket) {
           }
           if (history["" + params] !== undefined) {
             socket.emit("loadHistory", history["" + params]);
-          } else {
-            history["" + params] = [];
           }
         }
       }
@@ -155,8 +155,7 @@ io.sockets.on("connection", function (socket) {
   socket.on("getOnlineUsers", function () {
     io.sockets.in(socket.room).emit("updateUsersLogin", {
       removeUser: socket.username,
-      usernames: localUser["" + params],
-      room: socket.room
+      usernames: localUser["" + params]
     });
   });
 
@@ -205,8 +204,6 @@ io.sockets.on("connection", function (socket) {
         console.log("Database " + err);
       } else if (result.rowCount > 0) {
         console.log("Database query: google user verified");
-
-
       } else {
         sql =
           "INSERT INTO tbl_verified_user (name,token) VALUES ('" +
@@ -264,12 +261,7 @@ io.sockets.on("connection", function (socket) {
     });
   });
 
-  socket.on("getMasterList", function() {
-    //admin validation is needed here
-    socket.emit("displayMasterList", localUser);
-  });
-
-  socket.on("message", function (msg) { //one
+  socket.on("message", function (msg) {
     var message = {};
     message.message = htmlEntities(msg.message);
     message.user = htmlEntities(msg.user);
@@ -277,19 +269,19 @@ io.sockets.on("connection", function (socket) {
     message.timestamp = new Date();
     params = msg.room;
     socket.room = msg.room;
+
     var sql =
       "SELECT * FROM tbl_verified_user WHERE TOKEN = '" + msg.token + "'";
     db.query(sql, (err, result) => {
       if (result.rowCount > 0) {
         if (result) {
-          console.log("Record found message");
+          console.log("Message status: sending");
           if (history["" + params] === undefined) {
             history["" + params] = [];
             history["" + params].push(message);
           } else {
             history["" + params].push(message);
           }
-          console.info("Socket room message " + socket.room);
           io.sockets.in(socket.room).emit("update", message);
         }
       }
@@ -302,10 +294,6 @@ io.sockets.on("connection", function (socket) {
       socket.leave(data.oldchannel);
     }
     socket.join(data.room);
-    socket.emit("updateUsers", {
-        usernames: localUser["" + data.room],
-        room: data.room
-    });
     if (history["" + data.room] !== undefined) {
       socket.emit("loadHistory", history["" + data.room]);
     }
@@ -330,23 +318,24 @@ io.sockets.on("connection", function (socket) {
       if (delete localUser["" + socket.room][socket.username]) {
         //if (localUser.splice["" + socket.room][socket.username]) {
         console.info("Remove local user: true");
-        if (!Object.keys(localUser["" + socket.room]).length) { //last user left; room now empty
-            delete localUser["" + socket.room];
-            delete history["" + socket.room];
-        }
       }
 
+      if (localUser["" + params] != undefined) {
+        //empty
+      }
     } else {
       console.info("Room: undefined");
     }
 
+    // Has bug where it clears the entire user list on disconnect. Could be because of added security verification
+    // CONFIRMED: bug was in demo code used in late 2017
+    // Update userlist
     console.log("Update users: 1st call");
     var disconnectFlag = true;
     io.sockets.in(socket.room).emit("updateUsers", {
       disconnectFlag: disconnectFlag,
       removeUser: socket.username,
-      usernames: localUser["" + params],
-      room: socket.room
+      usernames: localUser["" + params]
     });
     io.sockets.in(socket.username).emit("updateRooms", {
       disconnectFlag: disconnectFlag,
