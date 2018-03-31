@@ -18,6 +18,12 @@ res.render("pages/index");
     params = req.params.id;
     res.render("./src/views/chatroom.html");
   });
+
+  app.get("/admin", (req, res) => {
+    res.sendFile("./src/views/admin.html", {
+      root: "./"
+    });
+});
 };
   app.get("/admin", (req, res) => {
     res.sendFile("./src/views/admin.html", {
