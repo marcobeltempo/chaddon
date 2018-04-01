@@ -1,34 +1,18 @@
-module.exports = function(app) {
+module.exports = function (app) {
   app.get("/", (req, res) => {
-    params = req.params.id;
-res.render("pages/index");
-  });
-
-  app.get("/login", (req, res) => {
-    params = req.params.id;
-    res.render("./src/views/login.html");
+    res.render("pages/index", {user: req.user});
   });
 
   app.get("/privacy", (req, res) => {
-    params = req.params.id;
-    res.render("./src/views/privacy_policy.html");
+    res.render("pages/privacy_policy");
+  });
+
+  app.get("/admin", (req, res) => {
+    res.render("pages/admin", {});
   });
 
   app.get("/:id", (req, res) => {
-    params = req.params.id;
-    res.render("./src/views/chatroom.html");
-  });
-
-  app.get("/admin", (req, res) => {
-    res.sendFile("./src/views/admin.html", {
-      root: "./"
-    });
-});
-
-  app.get("/admin", (req, res) => {
-    res.sendFile("./src/views/admin.html", {
-      root: "./"
-    });
+    res.render("pages/chatroom");
   });
 
 };
