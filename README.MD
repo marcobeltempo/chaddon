@@ -72,4 +72,4 @@ Make sure to go through the following checklist before submitting and merging a 
 ---
 
 **[License](LICENSE) |** 
-**[Privacy Policy](PRIVACY)**
+**[Privacy Policy](PRIVACY.md)**
