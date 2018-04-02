@@ -5,7 +5,7 @@ module.exports = function (http) {
 
   var module = {};
   module.dbClient;
-  module.host = "https://localhost:",
+  module.host = "http://localhost:",
   module.port = parseInt(process.env.PORT || 3000, 10),
   module.env = process.env.NODE_ENV || "development",
 
@@ -24,7 +24,7 @@ module.exports = function (http) {
      |----------------------------------------------------------|
      |   Mode:  ${module.env}                                     |
      |   Port:  ${module.port}                                            |
-     |   Link:  ${module.host}${module.port}                          |
+     |   Link:  ${module.host}${module.port}                           |
      |__________________________________________________________|
      `);
       });
