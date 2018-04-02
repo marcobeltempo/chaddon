@@ -1,7 +1,7 @@
 # Chaddon v0.2.0
 
 ![alt text](https://travis-ci.com/marcobeltempo/chaddon.svg?token=M3Dz3y61ixyrS7SXSzMF&branch=dev "Travis CI Build Status:Dev Branch")
-![Heroku](https://heroku-badge.herokuapp.com/?app=chaddon-dev&style=flat))
+![Heroku](https://heroku-badge.herokuapp.com/?app=chaddon-dev&style=flat)
 
 ---
 ## Chrome Extension Dev-Install
