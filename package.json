@@ -29,6 +29,10 @@
   "engines": {
     "node": ">= 8.9.4"
   },
+  "nodemonConfig": {
+    "ignore": ["browser_extension/*", "docs/*"],
+    "delay": "1000"
+  },
   "scripts": {
     "start": "nodemon ./src/chaddon.js",
     "test:lint": "eslint .",
