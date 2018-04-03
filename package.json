@@ -30,7 +30,10 @@
     "node": ">= 8.9.4"
   },
   "nodemonConfig": {
-    "ignore": ["browser_extension/*", "docs/*"],
+    "ignore": [
+      "browser_extension/*",
+      "docs/*"
+    ],
     "delay": "1000"
   },
   "scripts": {
