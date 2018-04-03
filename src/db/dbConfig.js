@@ -1,19 +1,20 @@
 const { Pool } = require("pg");
 require("dotenv").load();
-const conString = process.env.DATABASE_URL;
+
+const connString = process.env.DATABASE_URL;
 
 const pool = new Pool({
-  connectionString: conString,
+  connectionString: connString,
   ssl: true
 });
 
 module.exports = {
   query: (text, callback) => pool.query(text, (err, res) => {
-
-      // uncomment for debugging
-      // const start = Date.now();
-      // const duration = Date.now() - start;
-      // console.log('executed query', { text, duration, rows: res.rowCount })
+    if (err) {
+      debugDatabase("There was an error executing a query.: %s,", debugDatabase.err);
+}
+    ;
+    debugDatabase("Executing the following query: %s,", debugDatabase.text);
 
       callback(err, res);
     }),

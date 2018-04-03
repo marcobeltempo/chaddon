@@ -1,23 +1,22 @@
 ---
 layout: default
 ---
-
-![Chaddon Logo](http://i64.tinypic.com/nd7mop.jpg)
-
-# [](#home)Chaddon Wiki
-
-Welcome to the Chaddon Wiki. These pages are primarily intended for Chaddon developers. 
-
-Please refer to the sidebar (on the left) for details on Project Structure, Contributing Guidelines, and Documentation.
-
 ![alt text](https://travis-ci.com/marcobeltempo/chaddon.svg?token=M3Dz3y61ixyrS7SXSzMF&branch=dev
  "Travis CI Build Status:Dev Branch")
 
-## [](#chromeextensioninstall) Chrome Extension Dev-Install
+**Chaddon** is a browser extensions that detects an active tab's url and connects you with other users currently browsing the same domain to a dynamic chatroom.
 
-### Requirments
+This project has been developed and maitained by Michael Pierre, Evan Davies, Geoff McCollam and Marco Beltempo.
+
+Although Chaddon is still in it's early stages, the team plans to have the extension publically available in the Chrome Webstore by late April 2018.
+
+For now feel free to download the source code to test the extension locally. Or try the demo over at [app.chaddon.ca](http://app.chaddon.ca/)
+
+## [](#chromeextensioninstall) Browser Extension Dev-Install
+
+**Requirements**
 - Google Chrome Browser 
-
+<a src="google.com">chaddon</a>
 ### Installation
 1. Download the `.zip` or `.tar.` from the top right of this page
 2. Save the file to your local machine
@@ -36,15 +35,16 @@ Please refer to the sidebar (on the left) for details on Project Structure, Cont
 3. Click the hover box to load the chat for your current URL
 4. On first launch, you will be prompted to login
   - Create a temporary username
-  - Sig-in with a valid Google account
+  - Sign-in with a valid Google account
 
 ## [](#buildsource) Build Source
 1.  Fork the chaddon repository to your profile
 2. `git clone https://github.com/marcobeltempo/chaddon`
 3. `cd chaddon`
 4. `npm install`
-5. `npm run start:dev` //(uses nodemon to watch for changes)
+5. `npm run start`
 6.  Navigate to https://localhost:3000/ to view the results
+
 
 ## [](#authors) Authors
 * **Michael Pierre**
@@ -55,4 +55,4 @@ Please refer to the sidebar (on the left) for details on Project Structure, Cont
 ***
 
 **[License](https://github.com/marcobeltempo/chaddon/blob/dev/LICENSE) |** 
-**[Privacy Policy](https://github.com/marcobeltempo/chaddon/blob/dev/PRIVACY_POLICY.md)**
+**[Privacy Policy](https://github.com/marcobeltempo/chaddon/blob/dev/PRIVACY.md)**

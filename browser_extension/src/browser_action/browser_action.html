@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chaddon</title>
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap-3.3.7.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <ul class="pages">
+    <li class="chat page">
+      <div class="chatArea">
+        <ul class="messages"></ul>
+      </div>
+      <input class="inputMessage" placeholder="Type here..." />
+    </li>
+    <li class="login page">
+      <div class="container">
+        <div id="user_info"></div>
+        <section id="Login">
+          <div id="row">
+            <div id="divError" class="alert alert-danger collapse">
+              <a id="lnkCloseError" class="close" href="#">&times;</a>
+              <div id="divErrorMessage">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10 .offset-md-2">
+              <div id="user_info"></div>
+              <div class="panel-body">
+                <input type="button" id="btnGoogleSignIn" class="btn btn-primary btn-block" value="Sign in with Google" />
+                <input type="button" id="getxhr" class="btn  btn-info btn-block" disabled value="Get personal data" />
+                <input type="button" id="revoke" class="btn btn-danger btn-block" value="Revoke token" disabled />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10 .offset-md-2">
+              <div class="panel-body" id="guestSignInBody">
+                <input type="button" id="btnGuestLogin" class="btn btn-basic btn-block" value="Guest Login" />
+                <input class="form-control usernameInput" id="guestUsername" placeholder="Username" type="text" style="display:none" maxlength="14"
+                />
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </li>
+  </ul>
+  <script type="text/javascript" src="/js/jquery/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="/js/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="/js/bootstrap/bootstrap-3.3.7.min.js"></script>
+  <script type="text/javascript" src="/js/fontawesome/fontawesome-all.js"></script>
+  <script type="text/javascript" src="/js/main.js"></script>
+</body>
+
+</html>
