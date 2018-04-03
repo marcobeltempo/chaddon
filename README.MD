@@ -40,9 +40,8 @@ For more detailed information visit our [Development-Environment-Setup](https://
 * Google Chrome v65.0 and up
 * pgAdmin 4 v2.1 (optional)
 
-1. `git clone https://github.com/marcobeltempo/chaddon`
-2. `cd chaddon`
-3. `npm install`
+1. `cd chaddon`
+2. `npm install`
 
 ### Build
 From a terminal, where you have cloned the Chaddon repository, execute the following command to run the nodemon server:
