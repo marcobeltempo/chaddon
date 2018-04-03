@@ -20,13 +20,6 @@ this.manifest = {
         },
         {
             "tab": "General",
-            "group": "Login",
-            "name": "myDescription",
-            "type": "description",
-            "text": "description"
-        },
-        {
-            "tab": "General",
             "group": "Incognito",
             "name": "enableIncognito",
             "type": "checkbox",
@@ -84,6 +77,44 @@ this.manifest = {
             },
         },
         {
+            "tab": "Apperance",
+            "group": "Size",
+            "name": "popupWindowSize",
+            "type": "popupButton",
+            "label": "Select a popup size:",
+            "options": {
+                "values": [{
+                        "value": "small-823x411",
+                        "text": "Small (823 x 411)"
+                    },
+                    {
+                        "value": "medium-736x414",
+                        "text": "Medium (736 x 414)"
+                    },
+                    {
+                        "value": "large-1355x1025",
+                        "text": "Large (1355 x 1025)"
+                    }
+                ]
+            },
+        },
+        {
+         "tab": "Blacklisted Domains",
+        "group": "Blacklisted",
+        "name": "domainToBlacklist",
+        "type": "text",
+        "label": "",
+        "text": "Add a domain to blacklist"
+    },
+    {
+    "tab": "Blacklisted Domains",
+       "group": "Blacklisted",
+       "name": "addBlacklistDomainButton",
+       "type": "button",
+       "label": "",
+       "text": "Add"
+   },
+        {
             "tab": "Blacklisted Domains",
             "group": "Blacklisted",
             "name": "blacklistedListBox",
@@ -104,26 +135,14 @@ this.manifest = {
             ]
         },
         {
-            "tab": "Apperance",
-            "group": "Size",
-            "name": "popupWindowSize",
-            "type": "radioButtons",
-            "label": "Select a popup size:",
-            "options": [{
-                    "value": "small-823x411",
-                    "text": "Small (823 x 411)"
-                },
-                {
-                    "value": "medium-736x414",
-                    "text": "Medium (736 x 414)"
-                },
-                {
-                    "value": "large-1355x1025",
-                    "text": "Large (1355 x 1025)"
-                }
-            ]
-        }
-  ],
+            "tab": "Blacklisted Domains",
+               "group": "Blacklisted",
+               "name": "deleteBlacklistDomainButton",
+               "type": "button",
+               "label": "",
+               "text": "Delete"
+           },
+    ],
     "alignment": [
         [
             "username",
