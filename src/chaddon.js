@@ -47,7 +47,7 @@ io.on('connection', function (socket) {
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
-    socket.broadcast.to(socket.channel).emit('new message', {
+    socket.to(socket.channel).emit('new message', {
       username: socket.username,
       message: data
     });
@@ -55,14 +55,14 @@ io.on('connection', function (socket) {
 
   // when the client emits 'typing', we broadcast it to others
   socket.on('typing', function () {
-    socket.broadcast.to(socket.channel).emit('typing', {
+    socket.to(socket.channel).emit('typing', {
       username: socket.username
     });
   });
 
   // when the client emits 'stop typing', we broadcast it to others
   socket.on('stop typing', function () {
-    socket.broadcast.to(socket.channel).emit('stop typing', {
+    socket.to(socket.channel).emit('stop typing', {
       username: socket.username
     });
   });
