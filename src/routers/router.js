@@ -5,7 +5,7 @@ module.exports = function (app) {
             root: "./src/public/"
         });
     });
-    
+
     app.use(function (req, res) {
         res.status(404).sendFile("404.html", {
             root: "./src/public/"
