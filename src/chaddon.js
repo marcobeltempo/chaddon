@@ -3,6 +3,7 @@ var app = express();
 var path = require('path');
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
+require("./routers/router")(app);
 
 //Modules
 const envConfig = require(path.join(__dirname, "./config/envConfig.js"))(http);
