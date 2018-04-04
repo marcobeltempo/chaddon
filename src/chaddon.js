@@ -1,6 +1,10 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+
+app.use(express.static(path.join(__dirname, './browser_extension')));
+app.use(express.static(__dirname + '/public'));
+
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 require("./routers/router")(app);
@@ -12,7 +16,6 @@ const dbClient = require(path.join(__dirname, "./db/dbConfig.js"));
 envConfig.startServer(http);
 
 // Routing
-app.use(express.static(path.join(__dirname, '../browser_extension')));
 
 var numUsers = 0;
 
