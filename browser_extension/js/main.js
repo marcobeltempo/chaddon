@@ -12,6 +12,7 @@ $(function () {
   var $usernameInput = $('.usernameInput'); // Input for username
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
+  var $logout = $('#logout');
 
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
@@ -28,15 +29,34 @@ $(function () {
   // Payload stores the username and channel
   var payload = {
     username: "",
-    domain: ""
+    domain: "",
   }
+
+  // Check local storage to see if use has logged in
+  chrome.storage.local.get(['key'], function(result) {
+    //chrome.storage.local.clear();
+    if(result.key) {
+      console.log("Key exists " + result.key);
+       loginGoogleUser();
+    } else {
+      $chatPage.hide();
+      $loginPage.fadeIn();
+      console.log("Key deleted " + result.key);
+    }
+  });
+
+
+  console.info("Hello!");
+
+    socket.emit("sessionCheck");
+
 
   function loginGoogleUser() {
     // Use identity API to get the logged in user.
     chrome.identity.getAuthToken({
       interactive: true
     }, function (token) {
-
+        console.log("Token: " + token);
       if (chrome.runtime.lastError) {
         callback(chrome.runtime.lastError);
         return;
@@ -53,6 +73,11 @@ $(function () {
         payload.username = response.emails[0].split('@')[0]; // A Google users "username" is their email
         payload.domain = response.domain; // Stores the domain of the current active tab
         console.log("Payload", payload);
+        
+        chrome.storage.local.get(['key'], function(result) {
+          console.log('Value currently is ' + result.key);
+        });
+
 
         if (payload.username) {
           $loginPage.fadeOut();
@@ -61,6 +86,13 @@ $(function () {
           $currentInput = $inputMessage.focus();
 
           setUsername(); // Tell server to set username
+          chrome.storage.local.get(['key'], function(result) {
+            if(result.key) {
+              setUsernameExist();
+            } else {
+              setUsername(); // Tell server to set username
+            }
+          });
         }
       } else {
         console.log("Couldn't get email address of chrome user.");
@@ -81,6 +113,38 @@ $(function () {
   // Sets the client's username
   function setUsername() {
 
+    chrome.storage.local.get(['key'], function(result) {
+      if(!result.key) {
+        loginGoogleUser();
+     
+    $window.keydown(function (event) {
+      if (event.which == 13 && !payload.username) {
+        payload.username = cleanInput($usernameInput.val().trim());
+      }
+    
+      // If the username is valid
+      if (payload.username) {
+        $loginPage.fadeOut();
+        $chatPage.show();
+        $loginPage.off('click');
+        $currentInput = $inputMessage.focus();
+
+        // Tell the server your username
+        
+
+        
+      }
+    });
+    chrome.storage.local.set({key: payload.username}, function() {
+      console.log('Value is set to ' + payload.username);
+    });
+    socket.emit('add user', payload);
+  }
+});
+  }
+
+  function setUsernameExist() {
+
     $window.keydown(function (event) {
       if (event.which == 13 && !payload.username) {
         payload.username = cleanInput($usernameInput.val().trim());
@@ -94,9 +158,17 @@ $(function () {
         $currentInput = $inputMessage.focus();
 
         // Tell the server your username
-        socket.emit('add user', payload);
+       
+
+       
+        
       }
     });
+     chrome.storage.local.set({key: payload.username}, function() {
+      console.log('Value is set to Existing ' + payload.username);
+    });
+    socket.emit('add existing', payload);
+
   }
 
   // Sends a chat message
@@ -273,8 +345,15 @@ $(function () {
         socket.emit('stop typing');
         typing = false;
         sendMessage();
-      } else {
-        setUsername();
+      } else { //getter
+        chrome.storage.local.get(['key'], function(result) {
+          if(result.key) {
+            console.log("calling exist");
+            setUsernameExist();
+          } else {
+            setUsername();
+          }
+        });
       }
     }
   });
@@ -283,11 +362,25 @@ $(function () {
     updateTyping();
   });
 
+
+
   // Click events
 
   // Launches thethe Google login flow
   $googleSignInButton.click(function () {
     loginGoogleUser();
+  });
+
+  $logout.click(function () {
+    console.log("Cleared storage");
+
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+    chrome.storage.local.clear();
+    $chatPage.hide();
+    $loginPage.fadeIn();
   });
 
   // Reveals the guest username input field
@@ -325,7 +418,13 @@ $(function () {
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', function (data) {
-    log(data.username + ' joined');
+
+    chrome.storage.local.get(['key'], function(result) {
+      //chrome.storage.local.clear();
+      if(result.key != data.username) {
+        log(data.username + ' joined2');
+      } 
+    });
     addParticipantsMessage(data);
   });
 
@@ -338,7 +437,11 @@ $(function () {
 
   // Whenever the server emits 'typing', show the typing message
   socket.on('typing', function (data) {
-    addChatTyping(data);
+    chrome.storage.local.get(['key'], function(result) {
+      if(result.key !=data.username) {
+        addChatTyping(data);
+      }
+    });
   });
 
   // Whenever the server emits 'stop typing', kill the typing message
@@ -354,11 +457,24 @@ $(function () {
     log('you have been reconnected');
     if (payload.username) {
       socket.emit('add user', payload);
-    }
+    
+    chrome.storage.local.get(['key'], function(result) {
+      if(result.key) {
+        socket.emit('add existing', payload);
+      } else {
+        socket.emit('add user', payload);
+
+      }
+    });
+  }
   });
 
   socket.on('reconnect_error', function () {
     log('attempt to reconnect has failed');
+  });
+
+  socket.on('session',function() {
+    console.log("session Check ");
   });
 
 });

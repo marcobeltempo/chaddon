@@ -21,6 +21,7 @@ io.on('connection', function (socket) {
 
   // when the client emits 'add user', this listens and executes
   socket.on("add user", function (payload) {
+    console.log("add user called!");
     if (addedUser) {
       return;
     };
@@ -34,7 +35,35 @@ io.on('connection', function (socket) {
     socket.join(socket.channel);
 
     numUsers += 1;
-    addedUser = true;
+      addedUser = true;
+    io.to(socket.channel).emit('login', {
+      numUsers: numUsers
+    });
+
+    socket.broadcast.to(socket.channel).emit('user joined', {
+      username: socket.username,
+      numUsers: numUsers
+    });
+  });
+
+  socket.on("add existing", function (payload) {
+    console.log("Existing Called!");
+    if (addedUser) {
+      return;
+    };
+
+
+    // we store the username in the socket session for this client
+    socket.username = payload.username;
+    socket.channel = payload.domain;
+
+    socket.join(socket.channel);
+
+    if (numUsers == 0) {
+      numUsers = 1;
+    }
+
+      addedUser = true;
     io.to(socket.channel).emit('login', {
       numUsers: numUsers
     });
@@ -47,6 +76,8 @@ io.on('connection', function (socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
+
+    //console.log("Attempt to get session " + socket.handshake.session.userdata);
     // we tell the client to execute 'new message'
     socket.to(socket.channel).emit('new message', {
       username: socket.username,
@@ -70,8 +101,11 @@ io.on('connection', function (socket) {
 
   // when the user disconnects.. perform this
   socket.on('disconnect', function () {
+    console.log("User disconnect");
     if (addedUser) {
-      numUsers -= 1;
+      if (numUsers > 1) {
+        numUsers -= 1;
+      }
 
       // echo globally that this client has left
       socket.broadcast.to(socket.channel).emit('user left', {
