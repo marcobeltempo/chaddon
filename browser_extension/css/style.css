@@ -135,6 +135,13 @@ ul {
   text-align: right;
 }
 
+.chaddon_headings {
+    font-family: "Bookman Old Style","Times New Roman";
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px 0px 0px 48px ;
+}
+
 /* Input */
 
 .inputMessage {
@@ -148,3 +155,4 @@ ul {
   right: 0;
   width: 100%;
 }
+
