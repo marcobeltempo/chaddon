@@ -23,12 +23,20 @@ $(function () {
   var $currentInput = $usernameInput.focus();
 
   var socket = io.connect('http://localhost:3000');
+  
+  var currentchannel;
 
   // Payload stores the username and channel
   var payload = {
     username: "",
     domain: ""
   }
+  
+  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    var url = new URL(tabs[0].url);
+    payload.domain = url.hostname;
+	currentchannel = payload.domain;
+  });
 
   function loginGoogleUser() {
     // Use identity API to get the logged in user.
@@ -50,7 +58,7 @@ $(function () {
         console.log("response.domainis", response.domain);
 
         payload.username = response.emails[0].split('@')[0]; // A Google users "username" is their email
-        payload.domain = response.domain; // Stores the domain of the current active tab
+        //payload.domain = response.domain; // Stores the domain of the current active tab
         console.log("Payload", payload);
 
         if (payload.username) {
@@ -91,7 +99,7 @@ $(function () {
         $chatPage.show();
         $loginPage.off('click');
         $currentInput = $inputMessage.focus();
-
+		$("#chat_name").text(currentchannel);
         // Tell the server your username
         socket.emit('add user', payload);
       }
@@ -117,7 +125,10 @@ $(function () {
         show(payload.username, message);
       }
       // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', message);
+      socket.emit('new message', { 
+	    message: message,
+		room: currentchannel
+	  });
     }
   }
 
@@ -299,6 +310,23 @@ $(function () {
   $inputMessage.click(function () {
     $inputMessage.focus();
   });
+  
+  //handle clicking channels in the channel box
+  $("div").on("click", ".changechannel", function(e){
+	e.preventDefault();
+	if (currentchannel != e.currentTarget.innerHTML){
+		var oldchannel;
+		if (currentchannel != payload.domain){ //you will leave old channel unless old channel is your current room since that affects other tabs
+			oldchannel = currentchannel;
+		}
+		currentchannel = e.currentTarget.innerHTML;
+		$("#chat_name").text(currentchannel);
+		socket.emit("viewchannel", {
+			old: oldchannel,
+			room: currentchannel
+		});
+    }
+  });
 
   // Socket events
 
@@ -315,9 +343,45 @@ $(function () {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
-    addChatMessage(data);
+	if (data.room == currentchannel){
+      addChatMessage(data);
+	}
   });
 
+  socket.on("updateUsers", function(data) {
+	if (data.room == currentchannel) {
+		$("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
+		for (var key in data.usernames) {
+	      //add the user to the list of online users
+		  $("#onlineUserList").append("<li class='userOnline'>" + key + "</li>");
+		}
+	}
+  });
+  
+  socket.on("updateRooms",function(data){
+	  if (data != null && data.disconnectFlag == undefined){
+		$("#userOpenChats").append("<li class='userOnline'><a href='' class='changechannel' value='"+data.room+"'>"+data.room+"</div></li>");
+	  }
+	  else if (data.disconnectFlag == true){
+		var liRooms = document.getElementsByClassName("userOnline");
+		for (var i = 0; i < liRooms.length; i++) {
+			var liRoom = liRooms[i].textContent;
+			if (liRoom == data.room) {
+			  document.getElementsByClassName("userOnline")[i].remove();
+			}
+		}
+	  }
+  });
+  
+  //load history
+  socket.on("loadHistory", function(data) {
+	$(".messages").empty();
+    for (var i = 0; i < data.length; i++) {
+		console.log(data[i]);
+      addChatMessage(data[i]);
+    }
+  });
+  
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', function (data) {
     log(data.username + ' joined');
@@ -348,6 +412,7 @@ $(function () {
   socket.on('reconnect', function () {
     log('you have been reconnected');
     if (payload.username) {
+	  $("#chat_name").text(payload.domain);
       socket.emit('add user', payload);
     }
   });
