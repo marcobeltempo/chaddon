@@ -16,7 +16,6 @@ $(function () {
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
   var $googleSignInButton = $('#btnGoogleSignIn'); // Google login button
-  // var $guestSignInButton = $('#btnGuestLogin'); //Guest login button - disabled
 
   var connected = false;
   var typing = false;
@@ -290,10 +289,6 @@ $(function () {
     loginGoogleUser();
   });
 
-  // Reveals the guest username input field
-  /* $guestSignInButton.click(function () {
-    document.getElementById('guestUsername').style.display = "inline";
-  }); 88? */
 
   // Focus input when clicking anywhere on login page
   $loginPage.click(function () {
