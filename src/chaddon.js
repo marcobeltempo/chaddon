@@ -59,7 +59,7 @@ io.on('connection', function (socket) {
     } else { //user is already in this chat
       localUser["" + socket.channel][socket.username] = localUser["" + socket.channel][socket.username]+1;
     }
-	
+
     numUsers += 1;
     addedUser = true;
     io.to(socket.channel).emit('login', {
