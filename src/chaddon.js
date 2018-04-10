@@ -59,7 +59,7 @@ io.on('connection', function (socket) {
     } else { //user is already in this chat
       localUser["" + socket.channel][socket.username] = localUser["" + socket.channel][socket.username]+1;
     }
-
+	
     numUsers += 1;
     addedUser = true;
     io.to(socket.channel).emit('login', {
@@ -81,7 +81,6 @@ io.on('connection', function (socket) {
         });
       }
     }
-
 
     if (history[socket.channel] !== undefined) {
       socket.emit("loadHistory", history[socket.channel]);
@@ -121,9 +120,9 @@ io.on('connection', function (socket) {
     });
   });
 
-  socket.on("viewchannel", function (data) {
-    if (data.oldchannel != undefined) {
-      socket.leave(data.oldchannel);
+  socket.on("viewChannel", function (data) {
+    if (data.oldChannel != undefined) {
+      socket.leave(data.oldChannel);
     }
     socket.join(data.room);
     socket.emit("updateUsers", {

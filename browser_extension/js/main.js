@@ -25,7 +25,7 @@ $(function () {
 
   var socket = io.connect('http://localhost:3000');
   
-  var currentchannel;
+  var currentChannel;
 
   // Payload stores the username and channel
   var payload = {
@@ -36,7 +36,7 @@ $(function () {
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     var url = new URL(tabs[0].url);
     payload.domain = url.hostname;
-	currentchannel = payload.domain;
+    currentChannel = payload.domain;
   });
 
   function loginGoogleUser() {
@@ -56,10 +56,8 @@ $(function () {
 
       if (response.emails.length > 0) {
         console.log("response.emails is", response.emails);
-        console.log("response.domainis", response.domain);
 
         payload.username = response.emails[0].split('@')[0]; // A Google users "username" is their email
-        //payload.domain = response.domain; // Stores the domain of the current active tab
         console.log("Payload", payload);
 
         if (payload.username) {
@@ -100,7 +98,7 @@ $(function () {
         $chatPage.show();
         $loginPage.off('click');
         $currentInput = $inputMessage.focus();
-		$("#chat_name").text(currentchannel);
+		$("#chat_name").text(currentChannel);
         // Tell the server your username
         socket.emit('add user', payload);
       }
@@ -128,7 +126,7 @@ $(function () {
       // tell server to execute 'new message' and send along one parameter
       socket.emit('new message', { 
 	    message: message,
-		room: currentchannel
+		room: currentChannel
 	  });
     }
   }
@@ -319,16 +317,16 @@ $(function () {
   //handle clicking channels in the channel box
   $("div").on("click", ".changechannel", function(e){
 	e.preventDefault();
-	if (currentchannel != e.currentTarget.innerHTML){
-		var oldchannel;
-		if (currentchannel != payload.domain){ //you will leave old channel unless old channel is your current room since that affects other tabs
-			oldchannel = currentchannel;
+	if (currentChannel != e.currentTarget.innerHTML){
+		var oldChannel;
+		if (currentChannel != payload.domain){ //you will leave old channel unless old channel is your current room since that affects other tabs
+			oldChannel = currentChannel;
 		}
-		currentchannel = e.currentTarget.innerHTML;
-		$("#chat_name").text(currentchannel);
-		socket.emit("viewchannel", {
-			old: oldchannel,
-			room: currentchannel
+		currentChannel = e.currentTarget.innerHTML;
+		$("#chat_name").text(currentChannel);
+		socket.emit("viewChannel", {
+			oldChannel: oldChannel,
+			room: currentChannel
 		});
     }
   });
@@ -348,13 +346,13 @@ $(function () {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
-	if (data.room == currentchannel){
+	if (data.room == currentChannel){
       addChatMessage(data);
 	}
   });
 
   socket.on("updateUsers", function(data) {
-	if (data.room == currentchannel) {
+	if (data.room == currentChannel) {
 		$("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
 		for (var key in data.usernames) {
 	      //add the user to the list of online users
