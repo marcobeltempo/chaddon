@@ -54,13 +54,6 @@ function xhrWithAuth(callback) {
     }
   }
 
-  /*** Get domain of the users current active tab ***/
-  chrome.tabs.getSelected(null, function (tab, response) {
-    var url = new URL(tab.url);
-    domain = url.hostname;
-    console.log("URL", domain);
-  });
-
   /*** Return the email addresses when main.js asks for it ***/
   chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
     console.log("Sending emails:", emails);
