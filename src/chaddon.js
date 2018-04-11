@@ -29,36 +29,36 @@ io.on('connection', function (socket) {
   socket.on("guest", function(guest) {
     console.log("guest login called " + guest);
 
-    var UID_ = Math.random().toString(24) + new Date() ;
-    var query = "INSERT INTO guest (token_id,username) VALUES ('" +UID_ +"','" + guest + "')";
+    var UID = Math.random().toString(24) + new Date();
+    var query = "INSERT INTO guest (token_id,username) VALUES ('" +UID +"','" + guest + "')";
     dbClient.query(query, (err, result) => {
       if (err) {
         console.info(err);
         socket.emit("guestFailure");
       } else {
           console.log("1 row inserted");
-          socket.emit("guestSuccess",UID_);
+          socket.emit("guestSuccess", UID);
       }
-    });  
+    });
   });
 
   socket.on("guestLoginCheck", function(UID) {
     console.log("Guest login check " + UID);
-    query = "SELECT * FROM guest WHERE token_id = " + "'" + UID + "'"; 
+    query = "SELECT * FROM guest WHERE token_id ='" + UID + "'";
     dbClient.query(query, (err, result) => {
       if (err) {
         console.info(err);
       } else {
-        var username_ = result.rows[0].username;
-        console.log("1 row found. Username: " + username_);
-        socket.emit("guestCheckSuccess", username_);
+        var username1 = result.rows[0].username;
+        console.log("1 row found. Username: " + username1);
+        socket.emit("guestCheckSuccess", username1);
       }
     });
   });
 
   socket.on("logout", function(UID) {
     console.info("Deleting user record");
-    query = "DELETE FROM guest WHERE token_id = " + "'" + UID + "'"; 
+    query = "DELETE FROM guest WHERE token_id = '" + UID + "'";
     dbClient.query(query, (err, result) => {
       if (err) {
         console.info(err);
@@ -66,11 +66,6 @@ io.on('connection', function (socket) {
         console.log("Delete sucess");
       }
     });
-  });
-
-  // when the client emits 'add user', this listens and executes
-  socket.on("guestLogin", function (UID) {
-
   });
 
   // when the client emits 'add user', this listens and executes
