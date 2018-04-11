@@ -16,6 +16,10 @@ $(function () {
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
   var $googleSignInButton = $('#btnGoogleSignIn'); // Google login button
+  var $guestSignInButton = $('#btnGuestLogin'); //Guest login button
+  var $guestSignInCheck = $('#btnGuestCheck'); //Guest login button
+  var $guestUser = $('#guestUser'); 
+  var $logout = $('#logout');
 
   var connected = false;
   var typing = false;
@@ -31,6 +35,14 @@ $(function () {
     username: "",
     domain: ""
   }
+
+  chrome.storage.local.get(['UID'], function(result) {
+    if(result.UID) {
+      socket.emit('guestLoginCheck', result.UID)
+    } else {
+      showLogin();
+    }
+  });
   
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     var url = new URL(tabs[0].url);
@@ -38,6 +50,77 @@ $(function () {
     currentChannel = payload.domain;
   });
 
+  // Reveals the guest username input field
+  $guestSignInButton.click(function () {
+    console.log("sign in");
+    var username_ = $guestUser.val();
+    socket.emit('guest',username_);
+  });
+
+  // Reveals the guest username input field
+  $logout.click(function () {
+
+    chrome.storage.local.get(['UID'], function(result) {
+      if(result.UID) {
+        payload.username = null;
+        socket.emit("logout",result.UID);
+      }
+    });
+
+    chrome.storage.local.clear();
+    showLogin();
+  });
+
+  socket.on('guestSuccess', function (data) {
+    console.info("Setting unique key " + data);
+    chrome.storage.local.set({UID: data }, function() {
+      
+    });
+
+    chrome.storage.local.get(['UID'], function(result) {
+      if(result.UID) {
+        socket.emit('guestLoginCheck', result.UID)
+      } else {
+        showLogin();
+      }
+    });
+
+  });
+
+  socket.on('guestFailure', function (data) {
+    showLogin();    
+  });
+
+  //TODO: Allow user to revoke their username
+  socket.on('guestCheckSuccess', function (username) {
+    console.info("This user is logged in " + username);
+    payload.username = username;
+    if (username) {
+      console.log("User logged in");
+      $loginPage.fadeOut();
+      $chatPage.show();
+      $loginPage.off('click');
+      $currentInput = $inputMessage.focus();
+      setUsername(); // Tell server to set username
+    }
+  });  
+
+  // Reveals the guest username input field
+  $guestSignInCheck.click(function () {
+    console.info("guest Check");
+   
+     chrome.storage.local.get(['UID'], function(result) {
+       if(result.UID) {
+         socket.emit('guestLoginCheck', result.UID)
+       }
+     });
+  });
+
+  function showLogin() {
+    $loginPage.fadeIn();
+    $chatPage.hide();
+   // $currentInput = $inputMessage.focus();
+  }
   function loginGoogleUser() {
     // Use identity API to get the logged in user.
     chrome.identity.getAuthToken({
@@ -74,13 +157,13 @@ $(function () {
   }
 
   function addParticipantsMessage(data) {
-    var message = '';
+    /*var message = '';
     if (data.numUsers === 1) {
       message += "there's 1 participant";
     } else {
       message += "there are " + data.numUsers + " participants";
     }
-    log(message);
+    log(message);*/ // Disabled for now
   }
 
   // Sets the client's username
@@ -99,9 +182,9 @@ $(function () {
         $currentInput = $inputMessage.focus();
 		$("#chat_name").text(currentChannel);
         // Tell the server your username
-        socket.emit('add user', payload);
       }
     });
+    socket.emit('add user', payload);
   }
 
   // Sends a chat message
@@ -113,6 +196,7 @@ $(function () {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
+      // send users UID to server to send back right username
       addChatMessage({
         username: payload.username,
         message: message
@@ -281,9 +365,7 @@ $(function () {
         socket.emit('stop typing');
         typing = false;
         sendMessage();
-      } else {
-        setUsername();
-      }
+      } 
     }
   });
 

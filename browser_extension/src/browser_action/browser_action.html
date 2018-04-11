@@ -34,6 +34,9 @@
         <ul class="messages"></ul>
       </div>
       <input class="inputMessage" placeholder="Type here..." />
+      <button id="logout" type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-log-out"></span> Log out
+        </button>
     </li>
     <li class="login page">
       <div class="container">
@@ -59,6 +62,11 @@
           <div class="row">
             <div class="col-md-10 .offset-md-2">
               <div class="panel-body" id="guestSignInBody">
+                  <input type="button" id="btnGuestLogin" class="btn btn-basic btn-block" value="Guest Login" />
+                  <input type="button" id="btnGuestCheck" class="btn btn-basic btn-block" value="Guest Login Check" />
+                  <label for="exampleInputEmail1">Guest User</label>
+                  <input type="email" id="guestUser" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username">
+                  <small id="emailHelp" class="form-text text-muted">Message to the user</small>
               </div>
             </div>
           </div>
