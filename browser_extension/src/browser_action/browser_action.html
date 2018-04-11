@@ -8,71 +8,78 @@
   <title>Chaddon</title>
   <link rel="stylesheet" href="/css/bootstrap/bootstrap-3.3.7.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/Login-Form-Dark.css">
+  <link rel="stylesheet" href="/fonts/ionicons.min.css">
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Pacifico" />
+  <link href="/css/bootstrap-social.css" rel="stylesheet" >
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
+
+
+
 </head>
 
 <body>
   <ul class="pages">
-    <li class="chat page">
-	  <div id="channels_users">
-	    <div class="chaddon_headings">Channels</div>
-	    <div class="users_online">
-		  <ul id="userOpenChats" class="list-group list-unstyled">
-			 <li class="list-group-item-action">
-			 </li>
-			 <li class="list-group-item-action active">
-			 </li>
-		  </ul>
-	    </div>
-	    <div class="container"></div>
-	    <div class="chaddon_headings">Online</div>
-	    <div class="users_online">
-		  <ul id="onlineUserList" class="list-unstyled"></ul>
-	    </div>
-	  </div>
-      <div class="chatArea">
-		<div id="chat_name" class="chaddon_headings"></div>
-        <ul class="messages"></ul>
+    <li class="chat page" >
+      <div class="container containerChat">
+      <div class="row containerChat">
+        <div class="col-xs-4 channelView">
+            <div class="chaddon_headings">Channels</div>
+            <div class="users_online">
+            <ul id="userOpenChats" class="list-group list-unstyled">
+             <li class="list-group-item-action">
+             </li>
+             <li class="list-group-item-action active">
+             </li>
+            </ul>
+            </div>
+            <div class="chaddon_headings">Online</div>
+            <div class="users_online">
+            <ul id="onlineUserList" class="list-unstyled"></ul>
+            </div>
+        </div>
+        <div class="col-xs-8 containerChat" >
+            <div class="chatArea containerChat">
+              <div class="messageArea containerChat">
+                    <h2 class="sr-only">Login Form</h2>
+                        <ul class="messages">
+                            
+                        </ul>
+                        <div class="illustration"></div>
+                        <div class="input-group sendBottom">
+                            <input class="form-control inputMessage">
+                            <span class="input-group-btn">
+                              <button class="btn btn-info">Send</button>
+                              <button id="logout" class="btn btn-info">Logout</button>
+            
+                            </span>
+                        </div>
+
+                </div>
+        </div>
+      </div>  
+      
       </div>
-      <input class="inputMessage" placeholder="Type here..." />
-      <button id="logout" type="button" class="btn btn-default btn-sm">
-          <span class="glyphicon glyphicon-log-out"></span> Log out
-        </button>
+	  <div id="channels_users">
+	    
+	    
+	  </div>
+     
     </li>
     <li class="login page">
-      <div class="container">
-        <div id="user_info"></div>
-        <section id="Login">
-          <div id="row">
-            <div id="divError" class="alert alert-danger collapse">
-              <a id="lnkCloseError" class="close" href="#">&times;</a>
-              <div id="divErrorMessage">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-10 .offset-md-2">
-              <div id="user_info"></div>
-              <div class="panel-body">
-                <input type="button" id="btnGoogleSignIn" class="btn btn-primary btn-block" value="Sign in with Google" />
-                <input type="button" id="getxhr" class="btn  btn-info btn-block" disabled value="Get personal data" />
-                <input type="button" id="revoke" class="btn btn-danger btn-block" value="Revoke token" disabled />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-10 .offset-md-2">
-              <div class="panel-body" id="guestSignInBody">
-                  <input type="button" id="btnGuestLogin" class="btn btn-basic btn-block" value="Guest Login" />
-                  <input type="button" id="btnGuestCheck" class="btn btn-basic btn-block" value="Guest Login Check" />
-                  <label for="exampleInputEmail1">Guest User</label>
-                  <input type="email" id="guestUser" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username">
-                  <small id="emailHelp" class="form-text text-muted">Message to the user</small>
-              </div>
-            </div>
-          </div>
-
-        </section>
-      </div>
+      <div class="login-dark">
+          <div class="login-dark2"> 
+            <h2 class="sr-only">Login Form</h2>
+            <div class="illustration">
+                <h1 style="color:yellow;font-family: Pacifico;">Chaddon </h1><i class="icon ion-ios-locked-outline" style="color:yellow;"></i></div>
+            <div class="form-group"><input id="guestUser" class="form-control" name="email" placeholder="Guest User"></div>
+            <a class="btn btn-block btn-social btn-google">
+              <span><img class="manImg" src="/img/rsz_1google.png"></img>
+              </span>
+              Sign in with Google
+            </a>
+            <div class="form-group"><button id="btnGuestLogin" class="btn btn-primary btn-block">Guest Login</button></div></div>
+    </div>
     </li>
   </ul>
   <script type="text/javascript" src="/js/jquery/jquery-3.3.1.min.js"></script>

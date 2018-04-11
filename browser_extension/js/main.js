@@ -57,7 +57,6 @@ $(function () {
     socket.emit('guest',username_);
   });
 
-  // Reveals the guest username input field
   $logout.click(function () {
 
     chrome.storage.local.get(['UID'], function(result) {
@@ -433,7 +432,7 @@ $(function () {
 		$("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
 		for (var key in data.usernames) {
 	      //add the user to the list of online users
-		  $("#onlineUserList").append("<li class='userOnline'>" + key + "</li>");
+		  $("#onlineUserList").append("<li class='userOnline' style='color: white;'>" + key + "</li>");
 		}
 	}
   });
