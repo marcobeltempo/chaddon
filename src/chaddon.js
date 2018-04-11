@@ -7,7 +7,7 @@ require("./routers/router")(app);
 
 //Modules
 const envConfig = require(path.join(__dirname, "./config/envConfig.js"))(http);
-//const dbClient = require(path.join(__dirname, "./db/dbConfig.js"));
+const dbClient = require(path.join(__dirname, "./db/dbConfig.js"));
 
 envConfig.startServer(http);
 
@@ -24,6 +24,49 @@ var history = {};
 
 io.on('connection', function (socket) {
   var addedUser = false;
+
+
+  socket.on("guest", function(guest) {
+    console.log("guest login called " + guest);
+
+    var UID = Math.random().toString(24) + new Date();
+    var query = "INSERT INTO guest (token_id,username) VALUES ('" +UID +"','" + guest + "')";
+    dbClient.query(query, (err, result) => {
+      if (err) {
+        console.info(err);
+        socket.emit("guestFailure");
+      } else {
+          console.log("1 row inserted");
+          socket.emit("guestSuccess", UID);
+      }
+    });
+  });
+
+  socket.on("guestLoginCheck", function(UID) {
+    console.log("Guest login check " + UID);
+    query = "SELECT * FROM guest WHERE token_id ='" + UID + "'";
+    dbClient.query(query, (err, result) => {
+      if (err) {
+        console.info(err);
+      } else {
+        var username1 = result.rows[0].username;
+        console.log("1 row found. Username: " + username1);
+        socket.emit("guestCheckSuccess", username1);
+      }
+    });
+  });
+
+  socket.on("logout", function(UID) {
+    console.info("Deleting user record");
+    query = "DELETE FROM guest WHERE token_id = '" + UID + "'";
+    dbClient.query(query, (err, result) => {
+      if (err) {
+        console.info(err);
+      } else {
+        console.log("Delete sucess");
+      }
+    });
+  });
 
   // when the client emits 'add user', this listens and executes
   socket.on("add user", function (payload) {

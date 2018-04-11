@@ -11,10 +11,10 @@ const pool = new Pool({
 module.exports = {
   query: (text, callback) => pool.query(text, (err, res) => {
     if (err) {
-      debugDatabase("There was an error executing a query.: %s,", debugDatabase.err);
+      //debugDatabase("There was an error executing a query.: %s,", debugDatabase.err);
 }
     ;
-    debugDatabase("Executing the following query: %s,", debugDatabase.text);
+    //debugDatabase("Executing the following query: %s,", debugDatabase.text);
 
       callback(err, res);
     }),
