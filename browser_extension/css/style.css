@@ -125,6 +125,8 @@ ul {
   background-color:#1e2833;
 }
 
+
+
 /* Font */
 .channelView {
   background: #2d3c4c;
@@ -165,15 +167,16 @@ ul {
   padding: 10px 20px 10px 20px;
 }
 
-.sendBottom {
- 
-}
+
 
 input {
   color: #fff;
 }
 .message.typing .messageBody {
   color: gray;
+}
+
+#userOpenChats li {
 }
 
 .username {
