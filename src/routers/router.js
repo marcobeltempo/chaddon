@@ -6,14 +6,14 @@ module.exports = function (app, passport) {
         if (req.isAuthenticated()) {
             res.redirect("/profile");
         } else {
-            res.render("index.ejs");
+            res.render("pages/index");
         }
     });
 
     // GET
     // Display the users profile
     app.get("/profile", isLoggedIn, function (req, res) {
-        res.render("profile.ejs", {
+        res.render("pages/profile", {
             user: req.user
         });
     });
@@ -28,7 +28,7 @@ module.exports = function (app, passport) {
     // GET
     // Display the login form
     app.get("/login", function (req, res) {
-        res.render("login.ejs", {
+        res.render("pages/login", {
             message: req.flash("loginMessage")
         });
     });
@@ -44,7 +44,7 @@ module.exports = function (app, passport) {
     // GET
     // display the registration form
     app.get("/signup", function (req, res) {
-        res.render("signup.ejs", {
+        res.render("pages/signup", {
             message: req.flash("signupMessage")
         });
     });
@@ -74,7 +74,7 @@ module.exports = function (app, passport) {
     // Authorize users if they're already logged in
     // or linking another social account
     app.get("/connect/local", function (req, res) {
-        res.render("connect-local.ejs", {
+        res.render("pages/connectLocal", {
             message: req.flash("loginMessage")
         });
     });
@@ -126,14 +126,14 @@ module.exports = function (app, passport) {
     // GET
     // Displays the server status
     app.get("/status", (req, res) => {
-        res.render("server_status.ejs", {
+        res.render("pages/server", {
         });
     });
 
     // 404 Error
     // Redirect to 404 error page
     app.use(function (req, res) {
-        res.status(404).render("404.ejs", {
+        res.status(404).render("pages/404", {
         });
     });
 };
