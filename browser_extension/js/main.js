@@ -400,9 +400,9 @@ $(function () {
     function() {
       console.log("Hovered");
 
-      $(".channelHidden").slideDown();
+      $(".channelHidden").stop(true,true).slideDown();
     }, function() {
-      $(".channelHidden").slideUp();
+      $(".channelHidden").stop(true,true).slideUp();
     }
   );
   
@@ -456,9 +456,9 @@ $(function () {
   
   socket.on("updateRooms",function(data){
 	  if (data != null && data.disconnectFlag == undefined){
-      if(roomsShown < 3) {
+      if(roomsShown < 5) {
 		    $("#userOpenChats").append("<li class='userOnline'><a href='' class='changechannel' value='"+data.room+"'>"+data.room+"</div></li>");
-      } else if(roomsShown > 3) {
+      } else if(roomsShown > 5) {
         $("#userOpenChats").append("<li class='userOnline channelHidden' style='display:none'><a href='' class='changechannel' value='"+data.room+"'>"+data.room+"</div></li>");
       }
       console.log("Rooms shown " + roomsShown);
