@@ -24,7 +24,7 @@ chatbutton.style.cssText = "\
 	right:0px;\
 	width:" + buttonspace + ";\
 	height:100%;\
-	background:white;\
+	background: linear-gradient(to right, #ffff00 0%, #1e2833 42.5%);\
 	box-shadow:inset 0 0 1em black;\
 	z-index:999999;\
 ";
@@ -32,6 +32,8 @@ chatbutton.style.cssText = "\
 document.body.appendChild(chatbutton);
 
 chatbutton.addEventListener("click", function () {
+	//alert("click");
+
 	if (ChaddonOpen) {
 			FX.fadeOut(chatbar, {
 				duration: 500,
@@ -39,7 +41,9 @@ chatbutton.addEventListener("click", function () {
 					chatbar.style.width = "0%";
 					ChaddonOpen = false;
 				}
-			});		
+			});
+			
+		
 	} else {
 		chatbar.style.width = "30%";
 		ChaddonOpen = true;
@@ -48,9 +52,13 @@ chatbutton.addEventListener("click", function () {
 			duration: 500,
 			complete: function() {
 			}
-		});		
+		});
+		
+		
 	}
 });
+
+
 
 var FX = {
 	easing: {

@@ -8,6 +8,36 @@ html {
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
 }
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+#onlineUserList {
+  color:white;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #1e2833;; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #e6e600; 
+}
+
+.containerChat {
+  height: 100%;
+}
+
+#logout {
+  background:red;
+}
 
 html, input {
   font-family:
@@ -21,8 +51,7 @@ html, input {
 }
 
 html, body {
-  height: 600px;
-  width: 500px;
+  height: 100%;
   margin: 0;
   padding: 0;
 }
@@ -88,19 +117,29 @@ ul {
 }
 
 /* Chat page */
-
+.messageArea {
+  height: 100%;
+}
 .chat.page {
   display: none;
+  background-color:#1e2833;
 }
 
-/* Font */
 
+
+/* Font */
+.channelView {
+  background: #2d3c4c;
+  height: 100%;
+}
 .messages {
-  font-size: 150%;
+  font-size: 100%;
+  color:white;
 }
 
 .inputMessage {
   font-size: 100%;
+  color: white;
 }
 
 .log {
@@ -108,6 +147,10 @@ ul {
   font-size: 70%;
   margin: 5px;
   text-align: center;
+}
+
+.innerA {
+  height: 98%;
 }
 
 /* Messages */
@@ -124,8 +167,16 @@ ul {
   padding: 10px 20px 10px 20px;
 }
 
+
+
+input {
+  color: #fff;
+}
 .message.typing .messageBody {
   color: gray;
+}
+
+#userOpenChats li {
 }
 
 .username {
@@ -138,21 +189,20 @@ ul {
 .chaddon_headings {
     font-family: "Bookman Old Style","Times New Roman";
     font-weight: bold;
-    font-size: 18px;
-    padding: 10px 0px 0px 48px ;
+    font-size: 110%;
+    padding: 5% 0px 0px 10% ;
+    color:white;
 }
 
 /* Input */
 
 .inputMessage {
-  border: 10px solid #000;
   bottom: 0;
-  height: 60px;
   left: 0;
+  background-color:#1e2833;
   outline: none;
   padding-left: 10px;
   position: absolute;
   right: 0;
-  width: 100%;
 }
 

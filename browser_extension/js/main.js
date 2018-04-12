@@ -12,6 +12,7 @@ $(function () {
   var $usernameInput = $('.usernameInput'); // Input for username
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
+  var roomsShown = 0;
 
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
@@ -24,7 +25,8 @@ $(function () {
 
   var socket = io.connect('http://localhost:3000');
   var currentChannel;
-
+  //var listSize = $("#userOpenChats").size();
+  //console.log("List size " + listSize);
   // Payload stores the username and channel
   var payload = {
     username: "",
@@ -37,7 +39,10 @@ $(function () {
     } else {
     }
   });
+  var mlist = document.getElementById("userOpenChats").getElementsByTagName("li").length;
 
+
+  console.log("List size " + mlist);
   
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     var url = new URL(tabs[0].url);
@@ -367,6 +372,16 @@ $(function () {
   $inputMessage.click(function () {
     $inputMessage.focus();
   });
+
+  $( "#userOpenChats" ).hover(
+    function() {
+      console.log("Hovered");
+
+      $(".channelHidden").slideDown();
+    }, function() {
+      $(".channelHidden").slideUp();
+    }
+  );
   
   //handle clicking channels in the channel box
   $("div").on("click", ".changechannel", function(e){
@@ -406,6 +421,7 @@ $(function () {
   });
 
   socket.on("updateUsers", function(data) {
+    
 	if (data.room == currentChannel) {
 		$("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
 		for (var key in data.usernames) {
@@ -417,8 +433,14 @@ $(function () {
   
   socket.on("updateRooms",function(data){
 	  if (data != null && data.disconnectFlag == undefined){
-		$("#userOpenChats").append("<li class='userOnline'><a href='' class='changechannel' value='"+data.room+"'>"+data.room+"</div></li>");
-	  }
+      if(roomsShown < 3) {
+		    $("#userOpenChats").append("<li class='userOnline'><a href='' class='changechannel' value='"+data.room+"'>"+data.room+"</div></li>");
+      } else if(roomsShown > 3) {
+        $("#userOpenChats").append("<li class='userOnline channelHidden' style='display:none'><a href='' class='changechannel' value='"+data.room+"'>"+data.room+"</div></li>");
+      }
+      console.log("Rooms shown " + roomsShown);
+        roomsShown = roomsShown + 1;
+    }
 	  else if (data.disconnectFlag == true){
 		var liRooms = document.getElementsByClassName("userOnline");
 		for (var i = 0; i < liRooms.length; i++) {
@@ -477,4 +499,8 @@ $(function () {
   socket.on('reconnect_error', function () {
     log('attempt to reconnect has failed');
   });
+
+
+
+
 });
