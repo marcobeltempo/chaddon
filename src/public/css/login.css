@@ -1,0 +1,81 @@
+.login {
+    background: #fff;
+    padding:10px 0px;
+}
+
+.login-index {
+    background: #fff;
+    padding: 80px 0px;
+}
+
+h1 {
+    margin: 0;
+    font-weight: 600;
+    text-align: center;
+    color: #fff;
+    background: #f0b500;
+    padding: 25px 0px;
+}
+
+form {
+    padding: 60px 40px 25px 40px;
+}
+
+.inner-form {
+    background: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+}
+
+label {
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.form-control {
+    box-shadow: none;
+    color: #565656;
+    font-size: 14px;
+    padding: 30px 10px;
+    margin-bottom: 30px;
+    border: 1px solid #f1f1f1;
+}
+
+.btn {
+    border-radius: 1px;
+    margin: 0 auto;
+    height: 48px;
+    line-height: 38px;
+    display: table;
+    font-size: 16px;
+    width: 50%;
+}
+
+.btn:hover {
+    border: 2px solid #FFF;
+}
+
+.forgot {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 16px;
+}
+
+input[type=text],
+input[type=password],
+input[type=email] {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #000;
+    border-radius: 0;
+    width: 100%;
+    margin: 0 0 30px 0;
+    padding: 0;
+    box-shadow: none;
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus {
+    box-shadow: none;
+    border-bottom: 1px solid #ffc400;
+}

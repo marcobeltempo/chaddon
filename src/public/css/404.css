@@ -1,0 +1,28 @@
+.error-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.error-actions {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.error-actions .btn {
+    margin-right: 10px;
+}
+
+h2 {
+    text-align: center;
+    font-size: 50px;
+}
+
+.pulp-fiction {
+    width: 360px;
+    height: 360px;
+    background-image: url("./images/travolta_pulp_fiction.gif");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: 0 auto;
+}
