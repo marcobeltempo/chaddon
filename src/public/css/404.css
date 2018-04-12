@@ -20,7 +20,7 @@ h2 {
 .pulp-fiction {
     width: 360px;
     height: 360px;
-    background-image: url("./images/travolta_pulp_fiction.gif");
+    background-image: url("../images/travolta_pulp_fiction.gif");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;

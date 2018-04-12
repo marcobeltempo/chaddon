@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/header %>
+    <title>Chaddon-Server Status</title>
+    <link rel="stylesheet" type="text/css" href="css/server.css">
+</head>
+
+<body class="container">
+    <main>
+            <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="server-template">
+                                <h2>Chaddon Server Status
+                                    <img src="../images/green_checkmark.png" width="20" height="20" alt="server running">
+                                </h2>
+                                <div class="server-details">
+                                    <img src="https://travis-ci.com/marcobeltempo/chaddon.svg?token=M3Dz3y61ixyrS7SXSzMF&branch=dev" alt="Travis CI Build Status:Dev Branch">
+                                    <img src="https://heroku-badge.herokuapp.com/?app=chaddon-dev-v2" alt="Heroku status">
+                                </div>
+                                <div class="button-actions">
+                                    <a href="https://github.com/marcobeltempo/chaddon">
+                                    <button type="button" class="btn btn-primary btn-lg">
+                                        <i class="fab fa-github"></i> GitHub</button>
+                                    </a>
+            
+                                    <a href="https://www.chaddon.ca">
+                                    <button type="button" class="btn btn-warning btn-lg">
+                                        <i class="fas fa-comments"></i> Chaddon.ca</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </main>
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+</body>
+
+</html>

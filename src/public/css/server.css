@@ -1,0 +1,13 @@
+.server-template {
+    padding: 100px 15px;
+    text-align: center;
+}
+
+.button-actions {
+    margin-top: 150px;
+    margin-bottom: 15px;
+}
+
+.button-actions .btn {
+    margin-right: 10px;
+}
