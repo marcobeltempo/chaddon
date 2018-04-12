@@ -28,10 +28,8 @@ $(function () {
   var $currentInput = $usernameInput.focus();
 
   var socket = io.connect('http://localhost:3000');
-  
   var currentChannel;
-  //var listSize = $("#userOpenChats").size();
-  //console.log("List size " + listSize);
+
   // Payload stores the username and channel
   var payload = {
     username: "",
@@ -42,13 +40,9 @@ $(function () {
     if(result.UID) {
       socket.emit('guestLoginCheck', result.UID)
     } else {
-      showLogin();
     }
   });
-  var mlist = document.getElementById("userOpenChats").getElementsByTagName("li").length;
 
-
-  console.log("List size " + mlist);
   
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     var url = new URL(tabs[0].url);
@@ -73,7 +67,6 @@ $(function () {
     });
 
     chrome.storage.local.clear();
-    showLogin();
   });
 
   socket.on('guestSuccess', function (data) {
@@ -85,15 +78,13 @@ $(function () {
     chrome.storage.local.get(['UID'], function(result) {
       if(result.UID) {
         socket.emit('guestLoginCheck', result.UID)
-      } else {
-        showLogin();
-      }
+      } 
     });
 
   });
 
   socket.on('guestFailure', function (data) {
-    showLogin();    
+    //show login
   });
 
   //TODO: Allow user to revoke their username
@@ -121,11 +112,6 @@ $(function () {
      });
   });
 
-  function showLogin() {
-    $loginPage.fadeIn();
-    $chatPage.hide();
-   // $currentInput = $inputMessage.focus();
-  }
   function loginGoogleUser() {
     // Use identity API to get the logged in user.
     chrome.identity.getAuthToken({
@@ -159,16 +145,6 @@ $(function () {
         console.log("Couldn't get email address of chrome user.");
       }
     });
-  }
-
-  function addParticipantsMessage(data) {
-    /*var message = '';
-    if (data.numUsers === 1) {
-      message += "there's 1 participant";
-    } else {
-      message += "there are " + data.numUsers + " participants";
-    }
-    log(message);*/ // Disabled for now
   }
 
   // Sets the client's username
@@ -522,8 +498,4 @@ $(function () {
   socket.on('reconnect_error', function () {
     log('attempt to reconnect has failed');
   });
-
-
-
-
 });
