@@ -1,21 +1,66 @@
 var express = require('express');
 var app = express();
+var mongoose = require('mongoose');
+var passport = require('passport');
+var flash = require('connect-flash');
+var morgan = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var fs = require("fs");
 var path = require('path');
 
-app.use(express.static(path.join(__dirname, './browser_extension')));
-app.use(express.static(__dirname + '/public'));
+require("dotenv").load(); // loadd .env file variables
+require('./config/passport.js')(passport); // pass passport for configuration
 
-var http = require('http').createServer(app);
+app.use(express.static(path.join(__dirname, '/public')));
+
+// Read in our SSL test certs
+const httpsOptions = {
+  key: fs.readFileSync("./src/config/server.key"),
+  cert: fs.readFileSync("./src/config/server.csr")
+};
+
+//var http = require('http').createServer(app);
+var http = require('https').createServer(httpsOptions, app);
 var io = require('socket.io')(http);
-require("./routers/router")(app);
 
-//Modules
+// Modules
 const envConfig = require(path.join(__dirname, "./config/envConfig.js"))(http);
-//const dbClient = require(path.join(__dirname, "./db/dbConfig.js"));
+const dbClient = require(path.join(__dirname, "./db/dbConfig.js"));
 
-envConfig.startServer(http);
+// Express setup
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser.json()); // get information from html forms
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+// view engine + templating setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// DB connection
+mongoose.connect(process.env.MONGOOSE_URL, {
+  useMongoClient: true
+});
+
+// Passport setup
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 // Routing
+require('./routers/router.js')(app, passport); // load our routes and pass in our app with passport
+
+envConfig.startServer(http);
 
 var numUsers = 0;
 
@@ -60,7 +105,7 @@ io.on('connection', function (socket) {
         numUsers: numUsers
       });
     } else { //user is already in this chat
-      localUser["" + socket.channel][socket.username] = localUser["" + socket.channel][socket.username]+1;
+      localUser["" + socket.channel][socket.username] = localUser["" + socket.channel][socket.username] + 1;
     }
 
     numUsers += 1;
@@ -129,8 +174,8 @@ io.on('connection', function (socket) {
     }
     socket.join(data.room);
     socket.emit("updateUsers", {
-        usernames: localUser[data.room],
-        room: data.room
+      usernames: localUser[data.room],
+      room: data.room
     });
     if (history[data.room] !== undefined) {
       socket.emit("loadHistory", history[data.room]);
@@ -144,7 +189,7 @@ io.on('connection', function (socket) {
       if (localUser[socket.channel] != undefined) {
         //user is in this chat in multiple instances
         if (localUser[socket.channel][socket.username] > 1) {
-            localUser[socket.channel][socket.username] -= 1;
+          localUser[socket.channel][socket.username] -= 1;
         } else if (delete localUser[socket.channel][socket.username]) {
           if (!Object.keys(localUser[socket.channel]).length) { //last user left; room now empty
             delete localUser[socket.channel];
