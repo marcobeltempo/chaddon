@@ -41,9 +41,7 @@ chatbutton.addEventListener("click", function () {
 					chatbar.style.width = "0%";
 					ChaddonOpen = false;
 				}
-			});
-			
-		
+			});		
 	} else {
 		chatbar.style.width = "30%";
 		ChaddonOpen = true;
@@ -52,13 +50,9 @@ chatbutton.addEventListener("click", function () {
 			duration: 500,
 			complete: function() {
 			}
-		});
-		
-		
+		});		
 	}
 });
-
-
 
 var FX = {
 	easing: {
