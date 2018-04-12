@@ -23,7 +23,6 @@ $(function () {
   var $currentInput = $usernameInput.focus();
 
   var socket = io.connect('http://localhost:3000');
-  
   var currentChannel;
 
   // Payload stores the username and channel
@@ -31,11 +30,81 @@ $(function () {
     username: "",
     domain: ""
   }
+
+  chrome.storage.local.get(['UID'], function(result) {
+    if(result.UID) {
+      socket.emit('guestLoginCheck', result.UID)
+    } else {
+    }
+  });
+
   
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     var url = new URL(tabs[0].url);
     payload.domain = url.hostname;
     currentChannel = payload.domain;
+  });
+
+  // Reveals the guest username input field
+  $guestSignInButton.click(function () {
+    console.log("sign in");
+    var username_ = $guestUser.val();
+    socket.emit('guest',username_);
+  });
+
+  $logout.click(function () {
+
+    chrome.storage.local.get(['UID'], function(result) {
+      if(result.UID) {
+        payload.username = null;
+        socket.emit("logout",result.UID);
+      }
+    });
+
+    chrome.storage.local.clear();
+  });
+
+  socket.on('guestSuccess', function (data) {
+    console.info("Setting unique key " + data);
+    chrome.storage.local.set({UID: data }, function() {
+      
+    });
+
+    chrome.storage.local.get(['UID'], function(result) {
+      if(result.UID) {
+        socket.emit('guestLoginCheck', result.UID)
+      } 
+    });
+
+  });
+
+  socket.on('guestFailure', function (data) {
+    //show login
+  });
+
+  //TODO: Allow user to revoke their username
+  socket.on('guestCheckSuccess', function (username) {
+    console.info("This user is logged in " + username);
+    payload.username = username;
+    if (username) {
+      console.log("User logged in");
+      $loginPage.fadeOut();
+      $chatPage.show();
+      $loginPage.off('click');
+      $currentInput = $inputMessage.focus();
+      setUsername(); // Tell server to set username
+    }
+  });  
+
+  // Reveals the guest username input field
+  $guestSignInCheck.click(function () {
+    console.info("guest Check");
+   
+     chrome.storage.local.get(['UID'], function(result) {
+       if(result.UID) {
+         socket.emit('guestLoginCheck', result.UID)
+       }
+     });
   });
 
   function loginGoogleUser() {
@@ -71,16 +140,6 @@ $(function () {
         console.log("Couldn't get email address of chrome user.");
       }
     });
-  }
-
-  function addParticipantsMessage(data) {
-    var message = '';
-    if (data.numUsers === 1) {
-      message += "there's 1 participant";
-    } else {
-      message += "there are " + data.numUsers + " participants";
-    }
-    log(message);
   }
 
   // Sets the client's username
@@ -418,5 +477,4 @@ $(function () {
   socket.on('reconnect_error', function () {
     log('attempt to reconnect has failed');
   });
-
 });
