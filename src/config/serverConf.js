@@ -41,7 +41,7 @@ const serverInfo = `
      |_______________________________________|`;
 
      debugServer('%s', serverInfo);
-     
+
     // monitor idle db clients
     dbClient(err => {
       if (err) {
