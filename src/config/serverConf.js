@@ -1,6 +1,7 @@
 var path = require('path');
 var pem = require('pem');
 const dbClient = require(path.join(__dirname, '../db')).getClient;
+const debugServer= require('debug')('chaddon:server');
 
 module.exports = {
   dbCLient: dbClient,
@@ -29,20 +30,22 @@ module.exports = {
     );
   },
   serverMessage: function () {
-    console.info(`
+
+const serverInfo = `
       _______________________________________
      |    Chaddon Express Server Started     |
      |---------------------------------------|
      |   Mode:  ${this.env}                  |
      |   Port:  ${this.port}                         |
      |   Link:  ${this.host}${this.port}       |
-     |_______________________________________|
-     `);
+     |_______________________________________|`;
 
+     debugServer('%s', serverInfo);
+     
     // monitor idle db clients
     dbClient(err => {
       if (err) {
-        console.error('Datbase client error: ', err);
+        debugRouter('server:database:error ', err);
       }
     });
   }

@@ -9,6 +9,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var path = require('path');
 
+const debugSocket = require('debug')('chaddon:socket');
+
 require('dotenv').load(); // loadd .env file variables
 require('./config/passport.js')(passport); // pass passport for configuration
 
@@ -86,12 +88,12 @@ io.on('connection', function (socket) {
       return;
     }
 
-    console.log('Adding: ', payload.username);
-    console.log('Domain: ', payload.domain);
+debugSocket('Adding user: ', payload.username);
+debugSocket('Domain: ', payload.domain);
     // we store the username in the socket session for this client
     socket.username = payload.username;
     socket.channel = payload.domain;
-    console.log('socket.channel : ', socket.channel);
+    debugSocket('socket:channel : ', socket.channel);
 
     // add user to channel
     socket.join(socket.channel);
@@ -191,7 +193,7 @@ io.on('connection', function (socket) {
     }
   });
 
-  // when the user disconnects.. perform this
+  // when the user disconnects
   socket.on('disconnect', function () {
     if (addedUser) {
       numUsers -= 1;

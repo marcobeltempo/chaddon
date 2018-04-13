@@ -1,3 +1,5 @@
+const debugRouter = require('debug')('chaddon:router');
+
 module.exports = function (app, passport) {
   // GET
   // Select authentication/ registration screen
@@ -129,7 +131,7 @@ module.exports = function (app, passport) {
     user.local.password = undefined;
     user.save(function (err) {
       if (err) {
-        return err;
+        debugRouter('router:error: /unlink/local ', err);
       }
       res.redirect('/profile');
     });
@@ -143,7 +145,7 @@ module.exports = function (app, passport) {
     user.google.token = undefined;
     user.save(function (err) {
       if (err) {
-        return err;
+        debugRouter('router:error: /unlink/google ', err);
       }
       res.redirect('/profile');
     });
