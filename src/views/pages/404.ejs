@@ -3,32 +3,32 @@
 
 <head>
     <% include ../partials/header %>
-    <title>Chaddon-Server Status</title>
-    <link rel="stylesheet" type="text/css" href="css/404.css">
+        <title>Chaddon-Server Status</title>
+        <link rel="stylesheet" type="text/css" href="css/404.css">
 </head>
 
 <body class="container-fluid">
     <main>
-            <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="error-template">
-                                <h2>404</h2>
-                                <div class="error-details pulp-fiction"></div>
-                                <div class="error-actions">
-                                    <a href="https://github.com/marcobeltempo/chaddon">
-                                    <button type="button" class="btn btn-primary btn-lg">
-                                        <i class="fab fa-github"></i> GitHub</button>
-                                    </a>
-                                    <a href="https://www.chaddon.ca">
-                                    <button type="button" class="btn btn-warning btn-lg">
-                                        <i class="fas fa-comments"></i> Chaddon.ca</button>
-                                    </a>
-                                </div>
-                            </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="error-template">
+                        <h2 id="errorHeader">404</h2>
+                        <div class="error-details pulp-fiction"></div>
+                        <div class="error-actions">
+                            <a href="https://github.com/marcobeltempo/chaddon">
+                                <button type="button" class="btn btn-lg" id="githubBtn">
+                                    <i class="fab fa-github"></i> GitHub</button>
+                            </a>
+                            <a href="https://www.chaddon.ca">
+                                <button type="button" class="btn btn-lg" id="chaddonBtn">
+                                    <i class="fas fa-comments"></i> Chaddon.ca</button>
+                            </a>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
     </main>
     <footer>
         <% include ../partials/footer %>

@@ -3,38 +3,36 @@
 
 <head>
     <% include ../partials/header %>
-        <title>Chaddon | Guest Login</title>
-        <link rel="stylesheet" type="text/css" href="css/login-index.css">
-        <link rel="stylesheet" type="text/css" href="css/login.css">
+        <title>Chaddon | Link Guest Account</title>
+        <link rel="stylesheet" type="text/css" href="css/connect-local.css">
 </head>
 
 <body>
     <main>
         <h1>
-            <span class="fas fa-sign-in-alt"></span> Login
+            <i class="fas fa-link"></i> Link Guest Account
         </h1>
-        <div class="login">
+        <div class="connect-local">
             <div class="container">
                 <% if (message.length > 0) { %>
                     <div class="alert alert-danger">
                         <%= message %>
                     </div>
                     <% } %>
-                        <form action="/login" method="post">
+                        <form action="/connect/local" method="post">
                             <% include ../partials/formInputFields %>
                                 <div class="row justify-content-center">
                                     <div class="col-4">
                                         <button type="submit" class="btn btn-success" id="loginBtn">Login</button>
                                     </div>
-                                    <div class="col-4">
-                                        <a href="/profile">
-                                            <button type="button" class="btn btn-outline-secondary" id="backToLoginBtn">Back</button>
-                                        </a>
-                                    </div>
-                                </div>
                         </form>
-            </div>
-        </div>
+                        <div class="col-4">
+                            <a href="/profile">
+                                <button type="button" class="btn btn-outline-secondary" id="backToLoginBtn">Back</button>
+                            </a>
+                        </div>
+                        </div>
+                        <div>
     </main>
     <footer>
         <% include ../partials/footer %>
