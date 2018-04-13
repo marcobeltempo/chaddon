@@ -2,7 +2,7 @@
 browser_extension/js
 browser_extension/icons
 browser_extension/src/options_custom
-browser_extension/src/bg/background.js
+browser_extension/src/bg/*.js
 LICENSE
 node_modules
 package-lock.json

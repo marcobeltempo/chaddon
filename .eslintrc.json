@@ -2,12 +2,10 @@
     "env": {
         "browser": true,
         "es6": true,
-        "node": true,
-        "jquery": true
+        "node": true
     },
     "extends": [
-      "eslint:recommended",
-      "prettier" 
+      "eslint:recommended"
     ],
     "parserOptions": {
         "sourceType": "module"
