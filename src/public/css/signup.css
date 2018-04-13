@@ -22,20 +22,10 @@ input[type=email]:focus {
     border-bottom: 1px solid #ffc900;
 }
 
-#loginBtn {
-    color: #ffffffd0;
-    background: #454679;
-}
-
-#loginBtn:hover{
-    color: #7b7b7b;
-    border: 2px solid #3d3d3d;
-}
-
-#backToLoginBtn{
+#existingAccountBtn, #backToLoginBtn{
     color: 	#1d1d1d;
 }
-#backToLoginBtn:hover{
+
+#existingAccountBtn:hover, #backToLoginBtn:hover{
     color: 	#fff;
 }
-
