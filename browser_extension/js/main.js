@@ -1,27 +1,3 @@
-var currChannel;
-var blackList,blankArray = new Array;
-var isBlocked = false;
-chrome.storage.sync.get({
-						'blackList': blankArray
-						
-						}, function(items) {
-						blackList = items.blackList;
-						
-						chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-						var url = new URL(tabs[0].url);
-						currChannel = url.hostname;
-						
-						console.log("current channel:" + currChannel);
-						for(var i = 0; i < blackList.length; i++){
-							if(blackList[i] == currChannel.toString()){
-								isBlocked = true;		
-							}
-						}
-						
-
-if(isBlocked == false){					
-				console.log("Not Blacklisted");		
-
 $(function () {
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 300; // ms
@@ -72,8 +48,6 @@ $(function () {
     var url = new URL(tabs[0].url);
     payload.domain = url.hostname;
     currentChannel = payload.domain;
-	
-	
   });
 
   // Reveals the guest username input field
@@ -524,19 +498,4 @@ $(function () {
   socket.on('reconnect_error', function () {
     log('attempt to reconnect has failed');
   });
-});
-chrome.storage.sync.set({
-							'blocked': false
-							}, function() {
-							});	
-}
-else{
-console.log("Blacklisted");	
-chrome.storage.sync.set({
-							'blocked': true
-							}, function() {
-							});	
-}
-isBlocked = false;
-});
 });
