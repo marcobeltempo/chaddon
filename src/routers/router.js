@@ -30,7 +30,7 @@ module.exports = function (app, passport) {
   // Display the login form
   app.get('/login', function (req, res) {
     res.render('pages/login', {
-      message: req.flash('loginMessage')
+      message: req.flash("loginMessage")
     });
   });
 
@@ -49,7 +49,7 @@ module.exports = function (app, passport) {
   // display the registration form
   app.get('/signup', function (req, res) {
     res.render('pages/signup', {
-      message: req.flash('signupMessage')
+      message: req.flash("signupMessage")
     });
   });
 
@@ -59,7 +59,7 @@ module.exports = function (app, passport) {
     '/signup',
     passport.authenticate('local-signup', {
       successRedirect: '/profile',
-      failureRedirect: '/signup',
+      failureRedirect: '/',
       failureFlash: true // allow flash messages
     })
   );
@@ -88,7 +88,7 @@ module.exports = function (app, passport) {
   // or linking another social account
   app.get('/connect/local', function (req, res) {
     res.render('pages/connect-local', {
-      message: req.flash('loginMessage')
+      message: req.flash("loginMessage")
     });
   });
 
@@ -96,7 +96,7 @@ module.exports = function (app, passport) {
     '/connect/local',
     passport.authenticate('local-signup', {
       successRedirect: '/profile',
-      failureRedirect: '/connect/local',
+      failureRedirect: "/connect/local",
       failureFlash: true // allow flash messages
     })
   );

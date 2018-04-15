@@ -1,27 +1,27 @@
-require('dotenv').load(); 
-var express          = require('express');
-var app              = express();
-var redis            = require("redis");
-var session          = require('express-session');
-var flash            = require('connect-flash');
-var RedisStore       = require('connect-redis')(session);
+require('dotenv').load();
+var express = require('express');
+var app = express();
+var redis = require("redis");
+var session = require('express-session');
+var flash = require('connect-flash');
+var RedisStore = require('connect-redis')(session);
 
-var client           = redis.createClient(process.env.REDIS_URL);
-var mongoose         = require('mongoose');
-var http             = require('http');
+var client = redis.createClient(process.env.REDIS_URL);
+var mongoose = require('mongoose');
+var http = require('http');
 
-var morgan           = require('morgan');
-var cookieParser     = require('cookie-parser');
-var bodyParser       = require('body-parser');
-var passport         = require('passport');
+var morgan = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var passport = require('passport');
 
-var server           = http.createServer(app);
-var io               = require('socket.io')(server);
+var server = http.createServer(app);
+var io = require('socket.io')(server);
 var passportSocketIo = require("passport.socketio");
-var path             = require('path');
+var path = require('path');
 
-var serverConf       = require(path.join(__dirname, './config/serverConf'));
-const debugSocket    = require('debug')('chaddon:socket');
+var serverConf = require(path.join(__dirname, './config/serverConf'));
+const debugSocket = require('debug')('chaddon:socket');
 // const dbClient    = require(path.join(__dirname, './db'))
 
 // DB connection
@@ -54,7 +54,7 @@ app.use(session({
   })
 }));
 
-// // Use passport 
+// // Use passport
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -70,7 +70,7 @@ io.use(passportSocketIo.authorize({
     client: client
   }),
   success: onAuthorizeSuccess,
-  fail: onAuthorizeFail,
+  fail: onAuthorizeFail
 }));
 
 function onAuthorizeSuccess(data, accept) {
