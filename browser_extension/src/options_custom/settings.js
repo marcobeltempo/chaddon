@@ -1,6 +1,6 @@
-var blackList = [];
+var blackList = new Array;
 var newDomain;
-var blankArray = [];
+var blankArray = new Array;
 var counter = 0;
 function getValue(callback){
 	chrome.storage.sync.get("blackList", callback);
@@ -50,7 +50,7 @@ window.addEvent("domready", function () {
 							blackList = items.blackList;
 							
 							console.log("Value:" + blackList[4]);
-			
+			//for (var i = 0; i = blackList.length; i++)
 			var count = blackList.length;
 			for (var i = 0; i < count; i++){
 	        document.getElementById("blacklistedListBox").innerHTML += "<option>" + blackList[i] + "</option>";
