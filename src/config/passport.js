@@ -1,6 +1,8 @@
 require('dotenv').config();
 var LocalStrategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var redis            = require("redis");
+var client           = redis.createClient(process.env.REDIS_URL);
 
 // load up the user model
 var User = require('../models/user.js');
@@ -9,7 +11,7 @@ var User = require('../models/user.js');
 module.exports = function (passport) {
   // Passport Setup
   // used to serialize the user for the session
-  passport.serializeUser((user, done) => {
+  passport.serializeUser(function(user, done)  {
     done(null, user.id);
   });
 
@@ -51,7 +53,7 @@ module.exports = function (passport) {
                 return done(
                   null,
                   false,
-                  req.flash('loginMessage', 'No user found.')
+                  {message: req.flash('loginMessage', 'No user found.')}
                 );
               }
 
@@ -59,7 +61,7 @@ module.exports = function (passport) {
                 return done(
                   null,
                   false,
-                  req.flash('loginMessage', 'Oops! Wrong password.')
+                  {message: req.flash('loginMessage', 'Oops! Wrong password.')}
                 );
               }
 
@@ -103,7 +105,7 @@ module.exports = function (passport) {
                   return done(
                     null,
                     false,
-                    req.flash('signupMessage', 'That email is already taken.')
+                    {message: req.flash('signupMessage', 'That email is already taken.')}
                   );
                 }
 
@@ -139,7 +141,7 @@ module.exports = function (passport) {
                   return done(
                     null,
                     false,
-                    req.flash('loginMessage', 'That email is already taken.')
+                    {message: req.flash('loginMessage', 'That email is already taken.')}
                   );
                   // Using 'loginMessage instead of signupMessage because it's used by /connect/local'
                 }

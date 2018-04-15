@@ -1,75 +1,89 @@
-var express = require('express');
-var app = express();
-var mongoose = require('mongoose');
-var passport = require('passport');
-var flash = require('connect-flash');
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var path = require('path');
+require('dotenv').load(); 
+var express          = require('express');
+var app              = express();
+var redis            = require("redis");
+var session          = require('express-session');
+var flash            = require('connect-flash');
+var RedisStore       = require('connect-redis')(session);
 
-const debugSocket = require('debug')('chaddon:socket');
+var client           = redis.createClient(process.env.REDIS_URL);
+var mongoose         = require('mongoose');
+var http             = require('http');
 
-require('dotenv').load(); // loadd .env file variables
-require('./config/passport.js')(passport); // pass passport for configuration
+var morgan           = require('morgan');
+var cookieParser     = require('cookie-parser');
+var bodyParser       = require('body-parser');
+var passport         = require('passport');
 
-app.use(express.static(path.join(__dirname, '/public')));
+var server           = http.createServer(app);
+var io               = require('socket.io')(server);
+var passportSocketIo = require("passport.socketio");
+var path             = require('path');
 
-// Modules
-var serverConf = require(path.join(__dirname, './config/serverConf.js'));
-//const dbClient = require(path.join(__dirname, './db'))
-// Read in our SSL test certs
-var https = require('https');
-
-serverConf.getSSL(key => {
-  https
-    .createServer(
-      {
-        key: key.serviceKey,
-        cert: key.certificate
-      },
-      app
-    )
-    .listen(serverConf.port);
-  serverConf.serverMessage();
-});
-var io = require('socket.io')(https);
-
-// Express setup
-app.use(morgan('dev')); // log every request to the console
-app.use(cookieParser()); // read cookies (needed for auth)
-app.use(bodyParser.json()); // get information from html forms
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
-
-// view engine + templating setup
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '/views'));
-app.use(express.static(path.join(__dirname, 'public')));
+var serverConf       = require(path.join(__dirname, './config/serverConf'));
+const debugSocket    = require('debug')('chaddon:socket');
+// const dbClient    = require(path.join(__dirname, './db'))
 
 // DB connection
 mongoose.connect(process.env.MONGOOSE_URL, {
   useMongoClient: true
 });
 
-// Passport setup
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true
+require('./config/passport.js')(passport); // pass passport for configuration
+
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser.json()); // get information from html forms
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '/public')));
+
+// view engine + templating setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  key: 'connect.chaddon.sid',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: false
+  },
+  store: new RedisStore({
+    client: client
   })
-);
+}));
+
+// // Use passport 
 app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
+app.use(passport.session());
+app.use(flash());
 
 // Routing
-require('./routers/router.js')(app, passport); // load our routes and pass in our app with passport
+require('./routers/router.js')(app, passport);
+
+io.use(passportSocketIo.authorize({
+  cookieParser: cookieParser,
+  key: 'connect.chaddon.sid',
+  secret: process.env.SESSION_SECRET,
+  store: new RedisStore({
+    client: client
+  }),
+  success: onAuthorizeSuccess,
+  fail: onAuthorizeFail,
+}));
+
+function onAuthorizeSuccess(data, accept) {
+  debugSocket("socket:session: successful connection to socket.io");
+  accept();
+}
+
+function onAuthorizeFail(data, message, error, accept) {
+  if (error) {
+    accept(new Error(message));
+    debugSocket('socket:session: ', error);
+  }
+}
 
 var numUsers = 0;
 
@@ -79,20 +93,30 @@ var localUser = {};
 // storing room specific history
 var history = {};
 
-io.on('connection', function (socket) {
+server.listen(serverConf.port, function () {
+  serverConf.serverMessage();
+});
+
+io.sockets.on('connection', function (socket) {
   var addedUser = false;
+
+  const email = socket.request.user.local.email.substring(0, socket.request.user.local.email.indexOf("@"));
+  if (email) {
+    socket.emit('init user', email);
+  }
 
   // when the client emits 'add user', this listens and executes
   socket.on('add user', function (payload) {
     if (addedUser) {
       return;
     }
+    debugSocket('socket:payload:user: ', payload.username);
+    debugSocket('socket:payload:domain: ', payload.domain);
 
-debugSocket('Adding user: ', payload.username);
-debugSocket('Domain: ', payload.domain);
-    // we store the username in the socket session for this client
+    //store the username in the socket session for this client
     socket.username = payload.username;
     socket.channel = payload.domain;
+
     debugSocket('socket:channel : ', socket.channel);
 
     // add user to channel
@@ -101,6 +125,7 @@ debugSocket('Domain: ', payload.domain);
     if (localUser['' + socket.channel] === undefined) {
       localUser['' + socket.channel] = {};
     }
+
     // if user isn't already in this chat somewhere else
     if (localUser['' + socket.channel][socket.username] === undefined) {
       localUser['' + socket.channel][socket.username] = 1;
