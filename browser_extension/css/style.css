@@ -1,79 +1,74 @@
-body{
-background:#3d3d3d;
-color: #fff;
+body {
+  background: #3d3d3d;
+  color: #fff;
 }
 
 /* TOP BAR */
-.top-banner{
-background: #454679;
-color: #ffc900;
-text-align: center;
-padding:5px;
+.top-banner {
+  background: #454679;
+  color: #ffc900;
+  text-align: center;
+  padding: 5px;
 }
 
 /* LEFT SIDEBAR */
-
-.sidebar-heading{
+.sidebar-heading {
   background: #ffc900;
-  padding:4px;
+  padding: 4px;
 }
 
 .left-sidebar {
-  border:1px solid #3d3d3d;
-  padding:0;
+  border: 1px solid #3d3d3d;
+  padding: 0;
 }
 
-.left-sidebar li{
+.left-sidebar li {
   list-style: none;
-  }
-
-.left-sidebar h3{
-text-align: left;
 }
 
-#onlineUserColumn{
-  border:2px solid black;
-}
-#channelListHeader {
-
+.left-sidebar h3 {
+  text-align: left;
 }
 
-.users_online{
-
+#onlineUserColumn {
+  border: 2px solid black;
 }
+
+#channelListHeader {}
+
+.users_online {}
+
 /* CHAT AREA */
-.chat-area{
+.chat-area {
   padding-bottom: 22px;
-  background-color:#45467949;
+  background-color: #45467949;
   max-height: 540px;
   max-width: 100%;
-overflow-y: scroll;
- display: flex; 
-flex-direction: column-reverse;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
 }
-#chatContentArea li{
 
-list-style: none;
+#chatContentArea li {
+  list-style: none;
 }
-.chat-messages{
+
+.chat-messages {
   float: left;
-  padding:0;
+  padding: 0;
 }
-#chatContentArea{
+
+#chatContentArea {
   text-align: left;
 }
 
 /* BOTTOM BAR */
-#bottomToolbar{
+#bottomToolbar {
   position: absolute;
-   left: 4px;
-   bottom: 5px;
+  left: 4px;
+  bottom: 5px;
 }
 
-#sendChatMessageBtn{
+#sendChatMessageBtn {}
 
-}
-
-#logoutBtn{
-
-}
+#logoutBtn {}
