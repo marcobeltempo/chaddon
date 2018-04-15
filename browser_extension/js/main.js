@@ -1,6 +1,5 @@
 var currChannel;
-var blackList = [];
-var blankArray = [];
+var blackList,blankArray = new Array;
 var isBlocked = false;
 chrome.storage.sync.get({
 						'blackList': blankArray
@@ -10,7 +9,7 @@ chrome.storage.sync.get({
 						
 						chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 						var url = new URL(tabs[0].url);
-						currChannel = url.domain;
+						currChannel = url.hostname;
 						
 						console.log("current channel:" + currChannel);
 						for(var i = 0; i < blackList.length; i++){
