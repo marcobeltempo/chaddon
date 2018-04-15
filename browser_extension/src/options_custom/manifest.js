@@ -1,37 +1,19 @@
+
+
 this.manifest = {
     "name": "Chaddon Settings",
     "icon": "../../icons/icon48.png",
     "settings": [{
             "tab": "General",
-            "group": "Login",
-            "name": "username",
-            "type": "text",
-            "label": "username",
-            "text": "Username"
-        },
-        {
-            "tab": "General",
-            "group": "Login",
-            "name": "password",
-            "type": "text",
-            "label": "password",
-            "text": "Password",
-            "masked": true
-        },
-        {
-            "tab": "General",
-            "group": "Incognito",
-            "name": "enableIncognito",
-            "type": "checkbox",
-            "label": "enable/disable"
-        },
-        {
-            "tab": "General",
             "group": "Notifications",
             "name": "setNotification",
+			"id": "setNotification",
             "type": "checkbox",
             "label": "enable/disable"
         },
+	
+		
+        
         {
             "tab": "General",
             "group": "Notifications",
@@ -55,9 +37,10 @@ this.manifest = {
             },
         },
         {
-            "tab": "Apperance",
+            "tab": "Appearance",
             "group": "Theme",
             "name": "themeDropdown",
+			"id" : "themeDropdown",
             "type": "popupButton",
             "label": "Select a theme:",
             "options": {
@@ -76,28 +59,7 @@ this.manifest = {
                 ]
             },
         },
-        {
-            "tab": "Apperance",
-            "group": "Size",
-            "name": "popupWindowSize",
-            "type": "popupButton",
-            "label": "Select a popup size:",
-            "options": {
-                "values": [{
-                        "value": "small-823x411",
-                        "text": "Small (823 x 411)"
-                    },
-                    {
-                        "value": "medium-736x414",
-                        "text": "Medium (736 x 414)"
-                    },
-                    {
-                        "value": "large-1355x1025",
-                        "text": "Large (1355 x 1025)"
-                    }
-                ]
-            },
-        },
+      
         {
          "tab": "Blacklisted Domains",
         "group": "Blacklisted",
@@ -118,21 +80,13 @@ this.manifest = {
             "tab": "Blacklisted Domains",
             "group": "Blacklisted",
             "name": "blacklistedListBox",
+			"id": "blacklistedListBox",
             "type": "listBox",
-            "label": "Chaddon will not launch while browsing the domains listed below.",
-            "options": [{
-                    "value": "http://www.example.com",
-                    "text": "http://www.example.com"
-                },
-                {
-                    "value": "http://www.example.ca",
-                    "text": "http://www.example.ca"
-                },
-                {
-                    "value": "http://www.example.io",
-                    "text": "http://www.example.io"
-                }
-            ]
+            "label": "Chaddon will not enter a chatroom while browsing the domains listed below. (Refresh the page to see the updated blacklist)",
+            "options": [
+			
+				]
+                
         },
         {
             "tab": "Blacklisted Domains",
@@ -142,11 +96,6 @@ this.manifest = {
                "label": "",
                "text": "Delete"
            },
-    ],
-    "alignment": [
-        [
-            "username",
-            "password"
-        ]
     ]
+    
 };
