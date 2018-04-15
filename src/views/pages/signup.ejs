@@ -15,11 +15,6 @@
         </h1>
         <div class="login">
             <div class="container">
-                <% if (message.length > 0) { %>
-                    <div class="alert alert-danger">
-                        <%= message %>
-                    </div>
-                    <% } %>
                         <form action="/signup" method="post">
                             <% include ../partials/formInputFields %>
                                 <div class="row justify-content-center">
@@ -32,7 +27,7 @@
                             <div class="col-4">
                                 <label>Already have an account?</label>
                                 <a href="/login">
-                                    <button type="button" class="btn btn-outline-secondary" id="existingAccountBtn">Login</button>
+                                    <button type="submit" class="btn btn-outline-secondary" id="existingAccountBtn">Login</button>
                                 </a>
                             </div>
                             <div class="col-4">
