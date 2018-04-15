@@ -6,13 +6,15 @@ Licensed under MIT
 
 html,
 body {
-  background: #F1F3FA;
-  width: 400px;
-  height: 600px;
+  background: rgb(245, 245, 245);
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 #popup {
   height: 600px;
   overflow: scroll;
-  width: 500px"
+  width: 520px;
+  border:none;
 }
