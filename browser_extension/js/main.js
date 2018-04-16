@@ -442,4 +442,80 @@ chrome.storage.sync.get({
     }
     isBlocked = false;
   });
+  
+  $(".themeGroup").hover(
+    function () {
+      $(".themeGroup").stop(true, true).show();
+    },
+    function () {
+      $(".themeGroup").stop(true, true).slideUp();
+    }
+  );
+
+  $(".themeSettings").hover(
+    function () {
+      $(".themeGroup").stop(true, true).slideDown();
+    },
+    function () {
+      $(".themeGroup").stop(true, true).slideUp();
+    }
+  );
+  
+  $("#changeColor1").hover(
+    function () {
+      $(".channelView").css("background","#673AB7");
+      $(".headerBack").css("background","#7E57C2");
+  });
+
+  $("#changeColor2").hover(
+    function () {
+      $(".channelView").css("background","#FF5722");
+      $(".headerBack").css("background","#FF7043");
+  });
+
+  $("#changeColor3").hover(
+    function () {
+      $(".channelView").css("background","#4CAF50");
+      $(".headerBack").css("background","#66BB6A");
+  });
+
+  $("#changeColor4").hover(
+    function () {
+      $(".channelView").css("background","#80DEEA");
+    $(".headerBack").css("background","#B2EBF2");
+  });
+  $("#changeColor5").hover(
+    function () {
+      $(".channelView").css("background","#78909C");
+    $(".headerBack").css("background","#90A4AE");
+  });
+  $("#changeColor1").click(function() {
+    console.log("Clicked change color");
+    $(".channelView").css("background","#673AB7");
+    $(".headerBack").css("background","#7E57C2");
+  });
+  
+  $("#changeColor2").click(function() {
+    console.log("Clicked change color");
+    $(".channelView").css("background","#FF5722");
+    $(".headerBack").css("background","#FF7043");
+  });
+  
+  $("#changeColor3").click(function() {
+    console.log("Clicked change color");
+    $(".channelView").css("background","#4CAF50");
+    $(".headerBack").css("background","#66BB6A");
+  });
+  
+  $("#changeColor4").click(function() {
+    console.log("Clicked change color");
+    $(".channelView").css("background","#80DEEA");
+    $(".headerBack").css("background","#B2EBF2");
+  });
+  
+  $("#changeColor5").click(function() {
+    console.log("Clicked change color");
+    $(".channelView").css("background","#78909C");
+    $(".headerBack").css("background","#90A4AE");
+  });
 });
