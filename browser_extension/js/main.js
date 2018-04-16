@@ -2,9 +2,9 @@ var currChannel;
 var blackList = [];
 var blankArray = [];
 var isBlocked = false;
+
 chrome.storage.sync.get({
   'blackList': blankArray
-
 }, function (items) {
   blackList = items.blackList;
 
@@ -21,32 +21,31 @@ chrome.storage.sync.get({
       }
     }
     if (isBlocked == false) {
-      console.log("Not Blacklisted");
-
       $(function () {
-        const productionServer = 'https://app.chaddon.ca';
-        const developmentServer = 'http://localhost:3000';
+        const productionServer  = 'https://app.chaddon.ca';
+    // const developmentServer = 'http://localhost:3000';
 
         // Set event variables
         var $window = $(window)
         var $usernameInput = $('.usernameInput'); // Input for username
         var $channelHeader = $("#currentChannelHeader")
-        var $chatPage = $('.chat-page'); // The chatroom page
-        var $currentInput = $usernameInput.focus();
-        var $logout = $('#logout');
-        var $inputMessage = $('#userMessageInput'); // Input message input box
-        var $messages = $('.chat-messages'); // Message area
-        var $sendBtn = $('#sendChatMessageBtn');
+        var $chatPage      = $('.chat-page'); // The chatroom page
+        var $currentInput  = $usernameInput.focus();
+        var $logout        = $('#logout');
+        var $inputMessage  = $('#userMessageInput'); // Input message input box
+        var $messages      = $('.chat-messages'); // Message area
+        var $sendBtn       = $('#sendChatMessageBtn');
 
         // Set state variables
-        var roomsShown = 0;
-        var connected = false;
-        var typing = false;
+        var roomsShown        = 0;
+        var connected         = false;
+        var typing            = false;
+        var notificationTimer = new Date();
         var lastTypingTime;
         var currentChannel;
 
         // Configure settings
-        var FADE_TIME = 150;
+        var FADE_TIME           = 150;
         var TYPING_TIMER_LENGTH = 300;
         var COLORS = [
           '#e21400', '#91580f', '#f8a700', '#f78b00',
@@ -110,18 +109,12 @@ chrome.storage.sync.get({
           message = cleanInput(message);
           // if there is a non-empty message and a socket connection
           if (message && connected) {
-            $inputMessage.val(' : ');
-            // send users UID to server to send back right username
+            $inputMessage.val('');
             addChatMessage({
               username: payload.username,
               message: message
             });
             var subStr = message.toString();
-            if (subStr.indexOf("@marcob") > -1) { //TODO: handle '@username' notification for all users in the user array
-              console.log("Real: ", subStr);
-              show(payload.username, message);
-            }
-            // tell server to execute 'new message' and send along one parameter
             socket.emit('new message', {
               message: message,
               room: currentChannel
@@ -134,15 +127,40 @@ chrome.storage.sync.get({
          * @param message The message to display within the notification
          * @returns a new Notification popup
          */
+        var notifState;
+        chrome.storage.sync.get({
+          'setNotif': false
+        }, function (items) {
+          console.log("SetNotif is:" + items.setNotif)
+        });
+
         function show(username, message) {
-          var time = /(..)(:..)/.exec(new Date()); //The prettyprinted time.
-          var hour = time[1] % 12 || 12; //The prettyprinted hour.
-          var period = time[1] < 12 ? 'a.m.' : 'p.m.'; //The period of the day.
-          new Notification(hour + time[2] + ' ' + period, {
-            icon: '../../icons/icon48.png',
-            body: "From: @" + username + ": '" + message + "'"
-          })
+          chrome.storage.sync.get({
+            'setNotif': false
+          }, function (result) {
+            notifState = result.setNotif;
+            console.log("Notifs on are: " + notifState);
+            if (notifState === true) {
+              messageTime = new Date();
+              if (getTimeBetweenNotifications(messageTime)) {
+                var time = /(..)(:..)/.exec(new Date()); //The prettyprinted time.
+                var hour = time[1] % 12 || 12; //The prettyprinted hour.
+                var period = time[1] < 12 ? 'a.m.' : 'p.m.'; //The period of the day.
+                new Notification(hour + time[2] + ' ' + period, {
+                  icon: '../../icons/icon48.png',
+                  body: "From: @" + username + ": '" + message + "'"
+                })
+              }
+            }
+          });
         };
+
+        function getTimeBetweenNotifications(newTime) {
+          var timesUp = (newTime - notificationTimer) > 10000;
+
+          notificationTimer = newTime;
+          return timesUp;
+        }
 
         // Log a message
         function log(message, options) {
@@ -307,7 +325,7 @@ chrome.storage.sync.get({
         );
 
         //handle clicking channels in the channel box
-        $("div").on("click", ".changechannel", function (e) {
+        $(".changechannel").on("click", ".changechannel", function (e) {
           e.preventDefault();
           if (currentChannel != e.currentTarget.innerHTML) {
             var oldChannel;
@@ -332,12 +350,14 @@ chrome.storage.sync.get({
           log(message, {
             prepend: true
           });
+
         });
 
         // Whenever the server emits 'new message', update the chat body
         socket.on('new message', function (data) {
           if (data.room == currentChannel) {
             addChatMessage(data);
+            show(data.username, data.message);
           }
         });
 
@@ -373,7 +393,7 @@ chrome.storage.sync.get({
 
         //load history
         socket.on("loadHistory", function (data) {
-          $(".chat-messages").empty();
+          $(".messages").empty();
           for (var i = 0; i < data.length; i++) {
             console.log(data[i]);
             addChatMessage(data[i]);
