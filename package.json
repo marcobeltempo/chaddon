@@ -1,6 +1,6 @@
 {
   "name": "chaddon",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "LICENSE",
   "description": "A NodeJS socket server that connects users to a variety of channels all within a browser extension.",
   "keywords": [
