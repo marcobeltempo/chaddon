@@ -1,45 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chaddon</title>
   <link rel="stylesheet" href="/css/bootstrap/bootstrap-3.3.7.min.css">
-  <link rel="stylesheet" href="/css/Login-Form-Dark.css">
-  <link rel="stylesheet" href="/fonts/ionicons.min.css">
-  <link href="/css/bootstrap-social.css" rel="stylesheet" >
-
   <link href="/css/style.css" rel="stylesheet">
-
 </head>
 
 <body>
   <div class="chatPage">
-
   <div class="container headerBack"> 
     <div class="row">
       <div class="col-md-12">
           <p id="currentChannelHeader" class="headerTitle"> </p>
       </div>
-
     </div>
-
   </div>
-
-
   <div class="container columnPair" > 
-    <div class="row containerChat">
-        
+    <div class="row containerChat">     
       <div class="col-xs-4 channelView" >
           <div class="chaddon_headings">Channels</div>
           <div class="users_online">
-          
             <div class="dropdown">
             <ul id="usersChatList" class="list-group list-unstyled">
-              
-
            <li class="list-group-item-action">
            </li>
            <li class="list-group-item-action active">
@@ -50,12 +35,8 @@
           <div class="chaddon_headings">Online</div>
           <div class="users_online">
           <ul id="onlineUserList" class="list-unstyled"></ul>
-          </div>
-
-          
+          </div>   
           <i class="fas fa-cog themeSettings"></i>
-
-
           <div class="themeGroup">
           <i id="changeColor1" class="fas fa-circle theme1"></i>
           <i id="changeColor2" class="fas fa-circle theme2"></i>
@@ -63,41 +44,31 @@
           <i id="changeColor4" class="fas fa-circle theme4"></i>
           <i id="changeColor5" class="fas fa-circle theme5"></i>
         </div>
-        
-
-
       </div>
       <div class="col-xs-8 containerChat2" >
           <div class="chatArea">
             <div class="messageArea message-section" >
-                  <h2 class="sr-only">Login Form</h2>
                       <ul class="messages chat-messages">
-                          
                       </ul>
                       <div class="input-group" >
                         <input type="text" class="form-control" id="userMessageInput" placeholder="Message..." aria-label="Enter a message" aria-describedby="basic-addon2">
                           <span class="input-group-btn">
-              <button class="btn btn-success" id="sendChatMessageBtn" type="button">
-                <i class="fas fa-paper-plane"></i>
-              </button>
-              <button class="btn btn-warning" id="logoutBtn" type="button">
-                <i class="fas fa-sign-out-alt"></i>
-              </button>
-            </span>
-          </div>
-
-              </div>
+                          <button class="btn btn-success" id="sendChatMessageBtn" type="button">
+                            <i class="fas fa-paper-plane"></i>
+                          </button>
+                          <button class="btn btn-warning" id="logoutBtn" type="button">
+                            <i class="fas fa-sign-out-alt"></i>
+                          </button>
+                          </span>
+                      </div>
+             </div>
       </div>
     </div>  
-    
-    </div>
-  <div id="channels_users">
-    
-    
+  </div>
+  <div id="channels_users">  
   </div>
   </div>
 </div>
-
     <script type="text/javascript" src="/js/jquery/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="/js/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/js/bootstrap/bootstrap-3.3.7.min.js"></script>
