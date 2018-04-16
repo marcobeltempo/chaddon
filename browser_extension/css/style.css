@@ -49,9 +49,6 @@ html {
             inset 5px 5px 8px rgba(0,0,0,0.5);
 }
 
-#logout {
-  background:red;
-}
 .headerTitle {
   font-family: 'Pacifico'; 
   color: #ffc900; 
@@ -156,7 +153,6 @@ ul {
           color:red;
           border-radius: 25px;
           border: 2px ;
-
 }
 
 .transition {
@@ -216,7 +212,6 @@ ul {
 }
 
 /* Messages */
-
 .chatArea {
   height: 100%;
   padding-bottom: 60px;
@@ -228,8 +223,6 @@ ul {
   overflow-y: scroll;
   padding: 10px 20px 10px 20px;
 }
-
-
 
 input {
   color: #fff;
@@ -254,7 +247,6 @@ input {
 }
 
 /* Input */
-
 .inputMessage {
   bottom: 0;
   left: 0;
