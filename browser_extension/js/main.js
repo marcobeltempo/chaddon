@@ -2,9 +2,9 @@ var currChannel;
 var blackList = [];
 var blankArray = [];
 var isBlocked = false;
+
 chrome.storage.sync.get({
   'blackList': blankArray
-
 }, function (items) {
   blackList = items.blackList;
 
@@ -14,206 +14,107 @@ chrome.storage.sync.get({
   }, function (tabs) {
     var url = new URL(tabs[0].url);
     currChannel = url.domain;
-	  
+
     for (var i = 0; i < blackList.length; i++) {
       if (blackList[i] == currChannel.toString()) {
         isBlocked = true;
       }
     }
     if (isBlocked == false) {
-      console.log("Not Blacklisted");
-
       $(function () {
-        var FADE_TIME = 150; // ms
-        var TYPING_TIMER_LENGTH = 300; // ms
+        const productionServer  = 'https://app.chaddon.ca';
+    // const developmentServer = 'http://localhost:3000';
+
+        // Set event variables
+        var $window = $(window)
+        var $usernameInput = $('.usernameInput'); // Input for username
+        var $channelHeader = $("#currentChannelHeader")
+        var $chatPage      = $('.chat-page'); // The chatroom page
+        var $currentInput  = $usernameInput.focus();
+        var $logout        = $('#logout');
+        var $inputMessage  = $('#userMessageInput'); // Input message input box
+        var $messages      = $('.chat-messages'); // Message area
+        var $sendBtn       = $('#sendChatMessageBtn');
+
+        // Set state variables
+        var roomsShown        = 0;
+        var connected         = false;
+        var typing            = false;
+        var notificationTimer = new Date();
+        var lastTypingTime;
+        var currentChannel;
+
+        // Configure settings
+        var FADE_TIME           = 150;
+        var TYPING_TIMER_LENGTH = 300;
         var COLORS = [
           '#e21400', '#91580f', '#f8a700', '#f78b00',
           '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
           '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
         ];
 
-        // Initialize variables
-        var $window = $(window)
-        var $usernameInput = $('.usernameInput'); // Input for username
-        var $messages = $('.messages'); // Messages area
-        var $inputMessage = $('.inputMessage'); // Input message input box
-        var roomsShown = 0;
+        // Connect to socket server
+        var socket = io.connect(productionServer);
 
-        var $loginPage = $('.login.page'); // The login page
-        var $chatPage = $('.chat.page'); // The chatroom page
-        var $googleSignInButton = $('#btnGoogleSignIn'); // Google login button
-        var $guestSignInButton = $('#btnGuestLogin'); //Guest login button
-        var $guestSignInCheck = $('#btnGuestCheck'); //Guest login button
-        var $guestUser = $('#guestUser');
-        var $logout = $('#logout');
-
-        var connected = false;
-        var typing = false;
-        var lastTypingTime;
-        var $currentInput = $usernameInput.focus();
-
-        var socket = io.connect('http://localhost:3000');
-        var currentChannel;
-        var notificationTimer = new Date();
-
-        // Payload stores the username and channel
+        // Payload stores the username and current domain to be passed to the server
         var payload = {
           username: "",
           domain: ""
         }
 
-        chrome.storage.local.get(['UID'], function (result) {
-          if (result.UID) {
-            socket.emit('guestLoginCheck', result.UID)
-          } else {}
-        });
-
-
-        chrome.tabs.query({
-          'active': true,
-          'lastFocusedWindow': true
-        }, function (tabs) {
-          var url = new URL(tabs[0].url);
-          payload.domain = url.hostname;
-          currentChannel = payload.domain;
-        });
-
-        // Reveals the guest username input field
-        $guestSignInButton.click(function () {
-          console.log("sign in");
-          var username_ = $guestUser.val();
-          socket.emit('guest', username_);
-        });
-
-        $logout.click(function () {
-
-          chrome.storage.local.get(['UID'], function (result) {
-            if (result.UID) {
-              payload.username = null;
-              socket.emit("logout", result.UID);
-            }
+        socket.on('init user', function (data) {
+          payload.username = data;
+          chrome.tabs.query({
+            'active': true,
+            'lastFocusedWindow': true
+          }, function (tabs) {
+            var url = new URL(tabs[0].url);
+            payload.domain = url.hostname;
+            currentChannel = payload.domain;
+            init();
           });
-
-          chrome.storage.local.clear();
         });
 
-        socket.on('guestSuccess', function (data) {
-          console.info("Setting unique key " + data);
-          chrome.storage.local.set({
-            UID: data
-          }, function () {
-
-          });
-
-          chrome.storage.local.get(['UID'], function (result) {
-            if (result.UID) {
-              socket.emit('guestLoginCheck', result.UID)
-            }
-          });
-
-        });
-
-        socket.on('guestFailure', function (data) {
-          //show login
-        });
-
-        //TODO: Allow user to revoke their username
-        socket.on('guestCheckSuccess', function (username) {
-          console.info("This user is logged in " + username);
-          payload.username = username;
-          if (username) {
-            console.log("User logged in");
-            $loginPage.fadeOut();
-            $chatPage.show();
-            $loginPage.off('click');
-            $currentInput = $inputMessage.focus();
-            setUsername(); // Tell server to set username
+        $inputMessage.keydown(function (event) {
+          if (event.keyCode == 13) {
+            sendMessage();
+            return false;
           }
         });
 
-        // Reveals the guest username input field
-        $guestSignInCheck.click(function () {
-          console.info("guest Check");
-
-          chrome.storage.local.get(['UID'], function (result) {
-            if (result.UID) {
-              socket.emit('guestLoginCheck', result.UID)
-            }
-          });
+        $sendBtn.click(function () {
+          sendMessage();
         });
 
-        function loginGoogleUser() {
-          // Use identity API to get the logged in user.
-          chrome.identity.getAuthToken({
-            interactive: true
-          }, function (token) {
-
-            if (chrome.runtime.lastError) {
-              callback(chrome.runtime.lastError);
-              return;
-            }
-          });
-          //Get the response from background.js
-          chrome.extension.sendMessage({}, function (response) {
-            console.log("Response value", response);
-
-            if (response.emails.length > 0) {
-              console.log("response.emails is", response.emails);
-
-              payload.username = response.emails[0].split('@')[0]; // A Google users "username" is their email
-              console.log("Payload", payload);
-
-              if (payload.username) {
-                $loginPage.fadeOut();
-                $chatPage.show();
-                $loginPage.off('click');
-                $currentInput = $inputMessage.focus();
-
-                setUsername(); // Tell server to set username
-              }
-            } else {
-              console.log("Couldn't get email address of chrome user.");
-            }
-          });
+        function init() {
+          $chatPage.show();
+          $currentInput = $inputMessage.focus();
+          $channelHeader.text(currentChannel);
+          setUsername();
+          console.log("HERE", payload.domain, currentChannel)
         }
 
         // Sets the client's username
         function setUsername() {
-
-          $window.keydown(function (event) {
-            if (event.which == 13 && !payload.username) {
-              payload.username = cleanInput($usernameInput.val().trim());
-            }
-
-            // If the username is valid
-            if (payload.username) {
-              $loginPage.fadeOut();
-              $chatPage.show();
-              $loginPage.off('click');
-              $currentInput = $inputMessage.focus();
-              $("#chat_name").text(currentChannel);
-              // Tell the server your username
-            }
-          });
+          $("#currentChannelHeader").text(currentChannel);
+          $currentInput = $inputMessage.focus();
+          // Tell the server your username
           socket.emit('add user', payload);
         }
 
         // Sends a chat message
-        //TODO: handle '@username' notification for all users in the user array
         function sendMessage() {
           var message = $inputMessage.val();
-          // Prevent markup from being injected into the message
+          // prevent markup from being injected into the message
           message = cleanInput(message);
           // if there is a non-empty message and a socket connection
           if (message && connected) {
             $inputMessage.val('');
-            // send users UID to server to send back right username
             addChatMessage({
               username: payload.username,
               message: message
             });
             var subStr = message.toString();
-            // tell server to execute 'new message' and send along one parameter
             socket.emit('new message', {
               message: message,
               room: currentChannel
@@ -230,8 +131,6 @@ chrome.storage.sync.get({
         chrome.storage.sync.get({
           'setNotif': false
         }, function (items) {
-
-
           console.log("SetNotif is:" + items.setNotif)
         });
 
@@ -278,6 +177,8 @@ chrome.storage.sync.get({
             options.fade = false;
             $typingMessages.remove();
           }
+          var $username = $('.username');
+          $username.innerHTML = data.username;
 
           var $usernameDiv = $('<span class="username"/>')
             .text(data.username)
@@ -387,7 +288,7 @@ chrome.storage.sync.get({
         // Keyboard events
 
         $window.keydown(function (event) {
-          console.log("Detected a keydown", event.which);
+
           // Auto-focus the current input when a key is typed
           if (!(event.ctrlKey || event.metaKey || event.altKey)) {
             $currentInput.focus();
@@ -409,26 +310,13 @@ chrome.storage.sync.get({
 
         // Click events
 
-        // Launches thethe Google login flow
-        $googleSignInButton.click(function () {
-          loginGoogleUser();
-        });
-
-
-        // Focus input when clicking anywhere on login page
-        $loginPage.click(function () {
-          $currentInput.focus();
-        });
-
         // Focus input when clicking on the message input's border
         $inputMessage.click(function () {
           $inputMessage.focus();
         });
 
-        $("#userOpenChats").hover(
+        $("#usersChatList").hover(
           function () {
-            console.log("Hovered");
-
             $(".channelHidden").stop(true, true).slideDown();
           },
           function () {
@@ -445,7 +333,7 @@ chrome.storage.sync.get({
               oldChannel = currentChannel;
             }
             currentChannel = e.currentTarget.innerHTML;
-            $("#chat_name").text(currentChannel);
+            $("#currentChannelHeader").text(currentChannel);
             socket.emit("viewChannel", {
               oldChannel: oldChannel,
               room: currentChannel
@@ -454,8 +342,7 @@ chrome.storage.sync.get({
         });
 
         // Socket events
-
-        // Whenever the server emits 'login', log the login message
+        // Whenever the server emits 'login', log the message
         socket.on('login', function (data) {
           connected = true;
           // Display the welcome message
@@ -463,27 +350,25 @@ chrome.storage.sync.get({
           log(message, {
             prepend: true
           });
-          addParticipantsMessage(data);
+
         });
 
         // Whenever the server emits 'new message', update the chat body
         socket.on('new message', function (data) {
           if (data.room == currentChannel) {
             addChatMessage(data);
-
-            // if (payload.username != data.username) {
-            show(data.username, data.message);
-            //  }
+            if (payload.username != data.username) {
+              show(data.username, data.message);
+            }
           }
         });
 
         socket.on("updateUsers", function (data) {
-
           if (data.room == currentChannel) {
             $("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
             for (var key in data.usernames) {
               //add the user to the list of online users
-              $("#onlineUserList").append("<li class='userOnline' style='color: white;'>" + key + "</li>");
+              $("#onlineUserList").append("<li id='onlineUser'>" + key + "</li>");
             }
           }
         });
@@ -491,9 +376,9 @@ chrome.storage.sync.get({
         socket.on("updateRooms", function (data) {
           if (data != null && data.disconnectFlag == undefined) {
             if (roomsShown < 5) {
-              $("#userOpenChats").append("<li class='userOnline'><a href='' class='changechannel' value='" + data.room + "'>" + data.room + "</div></li>");
+              $("#usersChatList").append("<li class='onlineUser'><a href='' class='changechannel' value='" + data.room + "'>" + data.room + "</div></li>");
             } else if (roomsShown > 5) {
-              $("#userOpenChats").append("<li class='userOnline channelHidden' style='display:none'><a href='' class='changechannel' value='" + data.room + "'>" + data.room + "</div></li>");
+              $("#usersChatList").append("<li class='onlineUser channelHidden' style='display:none'><a href='' class='changechannel' value='" + data.room + "'>" + data.room + "</div></li>");
             }
             console.log("Rooms shown " + roomsShown);
             roomsShown = roomsShown + 1;
@@ -510,7 +395,7 @@ chrome.storage.sync.get({
 
         //load history
         socket.on("loadHistory", function (data) {
-          $(".messages").empty();
+          $messages.empty();
           for (var i = 0; i < data.length; i++) {
             console.log(data[i]);
             addChatMessage(data[i]);
@@ -520,13 +405,11 @@ chrome.storage.sync.get({
         // Whenever the server emits 'user joined', log it in the chat body
         socket.on('user joined', function (data) {
           log(data.username + ' joined');
-          addParticipantsMessage(data);
         });
 
         // Whenever the server emits 'user left', log it in the chat body
         socket.on('user left', function (data) {
           log(data.username + ' left');
-          addParticipantsMessage(data);
           removeChatTyping(data);
         });
 
@@ -547,7 +430,7 @@ chrome.storage.sync.get({
         socket.on('reconnect', function () {
           log('you have been reconnected');
           if (payload.username) {
-            $("#chat_name").text(payload.domain);
+            $("#currentChannelHeader").text(payload.domain);
             socket.emit('add user', payload);
           }
         });
@@ -560,4 +443,3 @@ chrome.storage.sync.get({
     isBlocked = false;
   });
 });
-

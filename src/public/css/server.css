@@ -1,0 +1,27 @@
+#serverStatusHeader{
+    color:#1d1d1d;
+    padding:10px;
+}
+
+.server-template {
+    padding: 100px 15px;
+    text-align: center;
+}
+
+.button-actions {
+    margin-top: 150px;
+    margin-bottom: 15px;
+}
+
+.button-actions .btn {
+    color:#fff;
+    margin-right: 10px;
+}
+
+#githubBtn{
+background: #454679;
+}
+
+#chaddonBtn{
+    background: #ffc900;
+}

@@ -1,21 +1,20 @@
-const { Pool } = require("pg");
-require("dotenv").load();
-
+require('dotenv').load();
+const { Pool } = require('pg');
+const debugDatabase = require('debug')('chaddon:database:postgresql');
 const connString = process.env.DATABASE_URL;
-
 const pool = new Pool({
   connectionString: connString,
   ssl: true
 });
 
 module.exports = {
-  query: (text, callback) => pool.query(text, (err, res) => {
-    if (err) {
-      //debugDatabase("There was an error executing a query.: %s,", debugDatabase.err);
-}
-    ;
-    //debugDatabase("Executing the following query: %s,", debugDatabase.text);
+  query: (text, callback) =>
+    pool.query(text, (err, res) => {
+      if (err) {
+        debugDatabase('There was an error executing a query.: %s,', err);
+      }
 
+      debugDatabase('Executing the following query: %s,', text);
       callback(err, res);
     }),
   getClient: callback => {
@@ -30,9 +29,10 @@ module.exports = {
 
       // set a timeout of 5 seconds, after which we will log this client's last query
       const timeout = setTimeout(() => {
-        console.error("A client has been checked out for more than 5 seconds!");
-        console.error(
-          `The last executed query on this client was: ${client.lastQuery}`
+        debugDatabase('A client has been checked out for more than 5 seconds!');
+        debugDatabase(
+          'The last executed query on this client was: ',
+          client.lastQuery
         );
       }, 5000);
 
@@ -46,7 +46,6 @@ module.exports = {
         // set the query method back to its old un-monkey-patched version
         client.query = query;
       };
-
       callback(err, client, done);
     });
   }

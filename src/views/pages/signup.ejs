@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+
+<head>
+    <% include ../partials/header %>
+        <title>Chaddon | Signup</title>
+        <link rel="stylesheet" type="text/css" href="css/login-index.css">
+        <link rel="stylesheet" type="text/css" href="css/signup.css">
+</head>
+
+<body>
+    <main>
+        <h1>
+            <span class="far fa-clipboard"></span> Signup
+        </h1>
+        <div class="login">
+            <div class="container">
+                        <form action="/signup" method="post">
+                            <% include ../partials/formInputFields %>
+                                <div class="row justify-content-center">
+                                    <div class="col-4">
+                                        <button type="submit" class="btn btn-success" id="loginBtn">Signup</button>
+                                    </div>
+                                </div>
+                        </form>
+                        <div class="row justify-content-center">
+                            <div class="col-4">
+                                <label>Already have an account?</label>
+                                <a href="/login">
+                                    <button type="submit" class="btn btn-outline-secondary" id="existingAccountBtn">Login</button>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <label>Return to login selection</label>
+                                <a href="/">
+                                    <button type="button" class="btn btn-outline-secondary" id="backToLoginBtn">Back</button>
+                                </a>
+
+                            </div>
+
+                        </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+</body>
+
+</html>
