@@ -325,7 +325,7 @@ chrome.storage.sync.get({
         );
 
         //handle clicking channels in the channel box
-        $(".changechannel").on("click", ".changechannel", function (e) {
+        $("div").on("click", ".changechannel", function (e) {
           e.preventDefault();
           if (currentChannel != e.currentTarget.innerHTML) {
             var oldChannel;
@@ -357,7 +357,9 @@ chrome.storage.sync.get({
         socket.on('new message', function (data) {
           if (data.room == currentChannel) {
             addChatMessage(data);
-            show(data.username, data.message);
+            if (payload.username != data.username) {
+              show(data.username, data.message);
+            }
           }
         });
 
@@ -393,7 +395,7 @@ chrome.storage.sync.get({
 
         //load history
         socket.on("loadHistory", function (data) {
-          $(".messages").empty();
+          $messages.empty();
           for (var i = 0; i < data.length; i++) {
             console.log(data[i]);
             addChatMessage(data[i]);
