@@ -32,13 +32,6 @@
     "https://accounts.google.com/*",
     "https://www.googleapis.com/*"
   ],
-  "oauth2": {
-    "client_id": "290957858380-g33uc6a8c3vovaejjojjvqg4ppvqhp5q.apps.googleusercontent.com",
-    "scopes": [
-      "https://www.googleapis.com/auth/plus.login",
-      "email"
-    ]
-  },
   "content_scripts": [{
     "matches": [
       "<all_urls>"
