@@ -22,8 +22,8 @@ chrome.storage.sync.get({
     }
     if (isBlocked == false) {
       $(function () {
-        const productionServer  = 'https://app.chaddon.ca';
-    // const developmentServer = 'http://localhost:3000';
+        //const productionServer  = 'https://app.chaddon.ca';
+        const productionServer  = 'http://localhost:3000';
 
         // Set event variables
         var $window = $(window)
@@ -368,7 +368,7 @@ chrome.storage.sync.get({
             $("#onlineUserList").html(""); //This is being called and clearing the list because data is not null
             for (var key in data.usernames) {
               //add the user to the list of online users
-              $("#onlineUserList").append("<li id='onlineUser'>" + key + "</li>");
+              $("#onlineUserList").append("<li id='onlineUser'><i class='far fa-user' style='padding-right:5%; font-size:150%'></i>" + key + "</li>");
             }
           }
         });
@@ -442,7 +442,7 @@ chrome.storage.sync.get({
     }
     isBlocked = false;
   });
-  
+
   $(".themeGroup").hover(
     function () {
       $(".themeGroup").stop(true, true).show();
