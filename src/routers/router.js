@@ -1,5 +1,5 @@
 const debugRouter = require('debug')('chaddon:router');
-var fs = require("fs");
+
 module.exports = function (app, passport) {
   // GET
   // Select authentication/ registration screen
