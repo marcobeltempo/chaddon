@@ -18,8 +18,10 @@ input[type=email] {
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=email]:focus {
-    box-shadow: none;
     border-bottom: 1px solid #ffc900;
+    background-color: transparent;
+    box-shadow: none;
+    color: 	#fff;
 }
 
 #loginBtn {
