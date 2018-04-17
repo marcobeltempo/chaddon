@@ -107,7 +107,7 @@ io.sockets.on('connection', function (socket) {
     socketUser = socket.request.user;
     var userType = null;
     if (socketUser.google.email) {
-      userType = socketUser.google;  // user linked Google account username used over local
+      userType = socketUser.google; // user linked Google account username used over local
     } else if (socketUser.local.email) {
       userType = socketUser.local;
     }
