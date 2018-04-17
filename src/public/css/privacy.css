@@ -1,0 +1,15 @@
+.privacy-policy {
+    color: white;
+    padding: 20px;
+}
+
+#privacyBackBtn {
+    background: #ffffffd0;
+    color: #454679;
+}
+
+#privacyBackBtn:hover {
+    background-color: transparent;
+    border: 2px solid #ffffffd0;
+    color: #ffffffd0;
+}
