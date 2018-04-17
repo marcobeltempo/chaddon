@@ -1,63 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chaddon</title>
   <link rel="stylesheet" href="/css/bootstrap/bootstrap-3.3.7.min.css">
-  <link rel="stylesheet" href="/css/style.css">
+  <link href="/css/style.css" rel="stylesheet">
 </head>
 
 <body>
-  <ul class="pages">
-    <li class="chat page">
-      <div class="chatArea">
-        <ul class="messages"></ul>
+  <div class="chatPage">
+  <div class="container headerBack"> 
+    <div class="row">
+      <div class="col-md-12">
+          <p id="currentChannelHeader" class="headerTitle"> </p>
       </div>
-      <input class="inputMessage" placeholder="Type here..." />
-    </li>
-    <li class="login page">
-      <div class="container">
-        <div id="user_info"></div>
-        <section id="Login">
-          <div id="row">
-            <div id="divError" class="alert alert-danger collapse">
-              <a id="lnkCloseError" class="close" href="#">&times;</a>
-              <div id="divErrorMessage">
-              </div>
-            </div>
+    </div>
+  </div>
+  <div class="container columnPair" > 
+    <div class="row containerChat">     
+      <div class="col-xs-4 channelView" >
+          <div class="chaddon_headings">Channels</div>
+          <div class="users_online">
+            <div class="dropdown">
+            <ul id="usersChatList" class="list-group list-unstyled">
+           <li class="list-group-item-action">
+           </li>
+           <li class="list-group-item-action active">
+           </li>
+          </ul>
           </div>
-          <div class="row">
-            <div class="col-md-10 .offset-md-2">
-              <div id="user_info"></div>
-              <div class="panel-body">
-                <input type="button" id="btnGoogleSignIn" class="btn btn-primary btn-block" value="Sign in with Google" />
-                <input type="button" id="getxhr" class="btn  btn-info btn-block" disabled value="Get personal data" />
-                <input type="button" id="revoke" class="btn btn-danger btn-block" value="Revoke token" disabled />
-              </div>
-            </div>
           </div>
-          <div class="row">
-            <div class="col-md-10 .offset-md-2">
-              <div class="panel-body" id="guestSignInBody">
-                <input type="button" id="btnGuestLogin" class="btn btn-basic btn-block" value="Guest Login" />
-                <input class="form-control usernameInput" id="guestUsername" placeholder="Username" type="text" style="display:none" maxlength="14"
-                />
-              </div>
-            </div>
-          </div>
-
-        </section>
+          <div class="chaddon_headings">Online</div>
+          <div class="users_online">
+          <ul id="onlineUserList" class="list-unstyled"></ul>
+          </div>   
+          <i class="fas fa-cog themeSettings"></i>
+          <div class="themeGroup">
+          <i id="changeColor1" class="fas fa-circle theme1"></i>
+          <i id="changeColor2" class="fas fa-circle theme2"></i>
+          <i id="changeColor3" class="fas fa-circle theme3"></i>
+          <i id="changeColor4" class="fas fa-circle theme4"></i>
+          <i id="changeColor5" class="fas fa-circle theme5"></i>
+        </div>
       </div>
-    </li>
-  </ul>
-  <script type="text/javascript" src="/js/jquery/jquery-3.3.1.min.js"></script>
-  <script type="text/javascript" src="/js/socket.io/socket.io.js"></script>
-  <script type="text/javascript" src="/js/bootstrap/bootstrap-3.3.7.min.js"></script>
-  <script type="text/javascript" src="/js/fontawesome/fontawesome-all.js"></script>
-  <script type="text/javascript" src="/js/main.js"></script>
+      <div class="col-xs-8 containerChat2" >
+          <div class="chatArea">
+            <div class="messageArea message-section" >
+                      <ul class="messages chat-messages">
+                      </ul>
+                      <div class="input-group" >
+                        <input type="text" class="form-control" id="userMessageInput" placeholder="Message..." aria-label="Enter a message" aria-describedby="basic-addon2">
+                          <span class="input-group-btn">
+                          <button class="btn btn-success" id="sendChatMessageBtn" type="button">
+                            <i class="fas fa-paper-plane"></i>
+                          </button>
+                          <button class="btn btn-warning" id="logoutBtn" type="button">
+                            <i class="fas fa-sign-out-alt"></i>
+                          </button>
+                          </span>
+                      </div>
+             </div>
+      </div>
+    </div>  
+  </div>
+  <div id="channels_users">  
+  </div>
+  </div>
+</div>
+    <script type="text/javascript" src="/js/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/js/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/js/bootstrap/bootstrap-3.3.7.min.js"></script>
+    <script type="text/javascript" src="/js/fontawesome/fontawesome-all.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
 </body>
 
 </html>

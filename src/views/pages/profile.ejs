@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+
+<head>
+    <% include ../partials/header %>
+        <title>Chaddon | Profile </title>
+</head>
+
+<body>
+    <main>
+        <div class="container">
+            <div class="page-header text-center">
+                <h1>
+                    <i class="far fa-comments"></i> Profile
+                </h1>
+
+            </div>
+            <!-- GUEST INFORMATION -->
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="dropdown show">
+                        <h4>
+                            <i class="far fa-user"></i> Guest</h4>
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="far fa-user"></i> Local
+                        </button>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <% if (user.local.email) { %>
+                                <a class="dropdown-item" href="/unlink/local">Unlink</a>
+                                <% } else { %>
+                                    <a class="dropdown-item" href="/connect/local">Connect</a>
+                                    <% } %>
+                        </div>
+                    </div>
+                    <% if (user.local.email) { %>
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseGuest" aria-expanded="false" aria-controls="collapseGuest">
+                            View Guest Data
+                        </button>
+                        <% } %>
+                            <div class="collapse" id="collapseGuest">
+                                <div class="card card-body">
+                                    <% if (user.local.email) { %>
+                                        <a href="/unlink/local" class="btn btn-default">Unlink</a>
+                                        <p>
+                                            <strong>id</strong>:
+                                            <%= user._id %>
+                                                <br>
+                                                <strong>email</strong>:
+                                                <%= user.local.email %>
+                                                    <br>
+                                                    <strong>password</strong>:
+                                                    <%= user.local.password %>
+                                        </p>
+
+                                        <% } else { %>
+                                            <a href="/connect/local" class="btn btn-default">Connect Local</a>
+                                            <% } %>
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GOOGLE INFORMATION -->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="dropdown show">
+                        <h4 class="text-danger">
+                            <i class="fab fa-google"></i> Google+
+                        </h4>
+
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+                            <% if (user.google.token) { %>
+                                <a class="dropdown-item" href="/unlink/google">Unlink Google</a>
+                                <% } else { %>
+
+                                    <a class="dropdown-item" href="/connect/google">Connect Google</a>
+                                    <% } %>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseGoogle" aria-expanded="false"
+                        aria-controls="collapseGoogle">
+                        View Google Data
+                    </button>
+                    </p>
+                    <div class="collapse" id="collapseGoogle">
+                        <div class="card card-body">
+                            <% if (user.google.token) { %>
+                                <a href="/unlink/google" class="btn btn-danger">Unlink</a>
+                                <p>
+                                    <strong>id</strong>:
+                                    <%= user.google.id %>
+                                        <br>
+                                        <strong>token</strong>:
+                                        <%= user.google.token %>
+                                            <br>
+                                            <strong>email</strong>:
+                                            <%= user.google.email %>
+                                                <br>
+                                                <strong>name</strong>:
+                                                <%= user.google.name %>
+                                </p>
+
+                                <% } else { %>
+                                    <a href="/connect/google" class="btn btn-danger">Connect Google</a>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </div>
+    </main>
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+html body {
+    background: #3d3d3d;
+}
+
+h3 {
+    background: #454679;
+    color: #ffc900;
+    margin: 0;
+    padding: 30px 0px 30px 18px;
+    text-align: center;
+}
+
+.btn {
+    border: 1px solid #868686;
+    border-radius: 1px;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    height: 45px;
+    margin: 0 auto;
+    text-align: center;
+    width: 95px;
+}
+
+.btn:hover {
+    border: 1px solid #FFF;
+    color: #1d1d1d;
+}
+
+label {
+    color: #fff;
+    font-size: 16px;
+}
+
+.login-index {
+    background: #3d3d3d;
+    padding: 70px 0 16px 0;
+}
+
+form {
+    padding: 70px 0 16px 0;
+}
+
+.form-control {
+    border: 1px solid #f1f1f1;
+    box-shadow: none;
+    color: #565656;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.forgot {
+    font-size: 16px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+#loginGroupBtn {
+    padding: 10px 0;
+}
+
+#googleLoginBtn {
+    padding: 0 15px;
+}
+
+#footerDivider {
+    background: #7b7b7b;
+    height: 1px;
+}
+
+footer {
+    bottom: 0;
+    padding-top: 20px;
+}
+
+#footerIcons a {
+    color: #fff;
+    font-size: 16px;
+    margin: 0 auto;
+    padding: 6px;
+}
+
+#footerIcons,
+#footerCopyright a:hover {
+    color: #ffc900;
+}
+
+#footerCopyright {
+    color: #fff;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+#footerCopyright a {
+    color: #fff;
+}
