@@ -1,5 +1,5 @@
 const debugRouter = require('debug')('chaddon:router');
-
+var fs = require("fs");
 module.exports = function (app, passport) {
   // GET
   // Select authentication/ registration screen
@@ -7,7 +7,9 @@ module.exports = function (app, passport) {
     if (req.isAuthenticated()) {
       res.redirect('/profile');
     } else {
-      res.render('pages/login-index');
+      res.render('pages/login-index', {
+        title: "Chaddon"
+      })
     }
   });
 
@@ -30,7 +32,8 @@ module.exports = function (app, passport) {
   // Display the login form
   app.get('/login', function (req, res) {
     res.render('pages/login', {
-      message: req.flash("loginMessage")
+      message: req.flash("loginMessage"),
+      title: "Login"
     });
   });
 
@@ -49,7 +52,8 @@ module.exports = function (app, passport) {
   // display the registration form
   app.get('/signup', function (req, res) {
     res.render('pages/signup', {
-      message: req.flash("signupMessage")
+      message: req.flash("signupMessage"),
+      title: "Sign Up"
     });
   });
 
@@ -157,6 +161,14 @@ module.exports = function (app, passport) {
     res.render('pages/server', {});
   });
 
+  // GET
+  // Displays privacy policy
+  app.get('/privacy', (req, res) => {
+    res.render('pages/privacy', {
+      title: 'Privacy Policy'
+    });
+  });
+
   // 404 Error
   // Redirect to 404 error page
   app.use(function (req, res) {
@@ -165,7 +177,7 @@ module.exports = function (app, passport) {
 };
 
 // Route middleware to ensure user is logged in
-function isLoggedIn (req, res, next) {
+function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }

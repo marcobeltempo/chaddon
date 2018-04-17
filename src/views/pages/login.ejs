@@ -3,38 +3,39 @@
 
 <head>
     <% include ../partials/header %>
-        <title>Chaddon | Guest Login</title>
+        <title>Chaddon |
+            <%= title %>
+        </title>
         <link rel="stylesheet" type="text/css" href="css/login-index.css">
         <link rel="stylesheet" type="text/css" href="css/login.css">
 </head>
 
 <body>
+    <header>
+        <h3>
+            <%= title %>
+                <i class="fas fa-sign-in-alt"></i>
+        </h3>
+    </header>
     <main>
-        <h1>
-            <span class="fas fa-sign-in-alt"></span> Login
-        </h1>
-        <div class="login">
-            <div class="container">
-                <% if (message.length > 0) { %>
-                    <div class="alert alert-danger">
-                        <%= message %>
-                    </div>
-                    <% } %>
-                        <form action="/login" method="post">
-                            <% include ../partials/formInputFields %>
-                                <div class="row justify-content-center">
-                                    <div class="col-4">
-                                        <button type="submit" class="btn btn-success" id="loginBtn">Login</button>
-                                    </div>
-                        </form>
-                        <div class="col-4">
-                            <a href="/profile">
-                                <button type="button" class="btn btn-outline-secondary" id="backToLoginBtn">Back</button>
-                            </a>
-                        </div>
-                        </div>
 
-            </div>
+        <div class="container">
+            <% if (message.length > 0) { %>
+                <div class="alert alert-danger">
+                    <%= message %>
+                </div>
+                <% } %>
+                    <div class="row justify-content-center">
+                        <div class="col-sm-12">
+                            <form action="/login" method="post">
+                                <% include ../partials/formInputFields %>
+                                    <button type="submit" class="btn btn-success" id="loginBtn">Login</button>
+                                    <a href="/">
+                                        <button type="button" class="btn btn-outline-secondary" id="backToLoginBtn">Back</button>
+                                    </a>
+                            </form>
+                        </div>
+                    </div>
         </div>
     </main>
     <footer>
