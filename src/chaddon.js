@@ -98,11 +98,23 @@ server.listen(serverConf.port, function () {
 });
 
 io.sockets.on('connection', function (socket) {
-  var addedUser = false;
 
-  const email = socket.request.user.local.email.substring(0, socket.request.user.local.email.indexOf("@"));
-  if (email) {
-    socket.emit('init user', email);
+  var addedUser = false;
+  var socketUser;
+  var email;
+
+  if (socket.request.user) { // we check for a valid user
+    socketUser = socket.request.user;
+    var userType = null;
+    if (socketUser.google.email) {
+      userType = socketUser.google;  // user linked Google account username used over local
+    } else if (socketUser.local.email) {
+      userType = socketUser.local;
+    }
+    if (userType) { // check valid user type before setting
+      email = userType.email.substring(0, userType.email.indexOf("@")); //parse first part of email
+      socket.emit('init user', email);
+    }
   }
 
   // when the client emits 'add user', this listens and executes
