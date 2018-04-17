@@ -1,52 +1,84 @@
-.login-index {
+html body {
     background: #3d3d3d;
 }
 
-h1 {
-    margin-top: 0;
-    font-weight: 600;
-    text-align: center;
-    color: #ffc900;
+h3 {
     background: #454679;
-    padding: 25px 0;
-}
-
-form {
-    padding: 60px 40px 25px 40px;
-}
-
-label {
-    font-weight: 400;
-    font-size: 15px;
-}
-
-.form-control {
-    box-shadow: none;
-    color: #565656;
-    font-size: 14px;
-    padding: 30px 10px;
-    margin-bottom: 30px;
-    border: 1px solid #f1f1f1;
+    color: #ffc900;
+    margin: 0;
+    padding: 30px 0px 30px 18px;
+    text-align: center;
 }
 
 .btn {
+    border: 1px solid #868686;
     border-radius: 1px;
-    display: table;
-    color: #ffffffd0;
-    font-size: 16px;
-    height: 48px;
-    line-height: 38px;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    height: 45px;
     margin: 0 auto;
-    width: 55%;
+    text-align: center;
+    width: 95px;
 }
 
 .btn:hover {
-    color: #1d1d1d;
     border: 1px solid #FFF;
+    color: #1d1d1d;
+}
+
+label {
+    color: #fff;
+    font-size: 16px;
+}
+
+.login-index {
+    background: #3d3d3d;
+    padding: 70px 0 16px 0;
+}
+
+form {
+    padding: 60px 0 25px 40px;
+}
+
+.form-control {
+    border: 1px solid #f1f1f1;
+    box-shadow: none;
+    color: #565656;
+    font-size: 14px;
+    margin-bottom: 30px;
 }
 
 .forgot {
-    text-align: center;
-    margin-top: 30px;
     font-size: 16px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+#loginGroupBtn {
+    padding: 10px 0;
+}
+
+#googleLoginBtn {
+    padding: 0 15px;
+}
+
+#footerDivider {
+    background: #7b7b7b;
+    height: 1px;
+}
+
+footer {
+    padding-top: 50px;
+}
+
+#footerIcons a {
+    color: #fff;
+    font-size: 16px;
+    margin: 0 auto;
+    padding: 6px;
+}
+
+#footerIcons a:hover {
+    color: #ffc900;
 }
