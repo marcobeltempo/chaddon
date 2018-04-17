@@ -9,7 +9,7 @@ module.exports = function (app, passport) {
     } else {
       res.render('pages/login-index', {
         title: "Chaddon"
-      })
+      });
     }
   });
 

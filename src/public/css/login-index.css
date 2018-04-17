@@ -69,7 +69,8 @@ form {
 }
 
 footer {
-    padding-top: 50px;
+    bottom: 0;
+    padding-top: 20px;
 }
 
 #footerIcons a {
@@ -79,6 +80,17 @@ footer {
     padding: 6px;
 }
 
-#footerIcons a:hover {
+#footerIcons,
+#footerCopyright a:hover {
     color: #ffc900;
+}
+
+#footerCopyright {
+    color: #fff;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+#footerCopyright a {
+    color: #fff;
 }

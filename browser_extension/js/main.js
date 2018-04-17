@@ -23,7 +23,7 @@ chrome.storage.sync.get({
     if (isBlocked == false) {
       $(function () {
         const productionServer  = 'https://app.chaddon.ca';
-    // const developmentServer = 'http://localhost:3000';
+     // const developmentServer = 'http://localhost:3000';
 
         // Set event variables
         var $window = $(window)
